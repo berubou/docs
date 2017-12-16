@@ -1,0 +1,137 @@
+<h1 id="-">单点登录</h1>
+<p>参照 <a href="chapter2.1.md">CAS集成</a>可以开启单点登录。</p>
+<p>Hap目前支持单点登录成功后，可以跳转至登录前的URL。</p>
+<blockquote>
+<p>注意系统管理-系统配置页面的配置项---登录成功跳转URL。默认设置为/index，则可以自动跳转至登录前的URL，如果改为自定义的其他页面，则会带上?targetUrl=xxx参数先跳转至系统配置的URL，可自行处理跳转。</p>
+</blockquote>
+<p>可以配置CAS和标准登录并存，默认登录页面为SSO登录页面，访问/login，则可以进入标准登录页面。可以参照如下配置：</p>
+<p>修改spring/casSecurity.xml</p>
+<pre><code class="lang-xml"><span class="xml"><span class="hljs-comment">&lt;!-- 此文件用于CAS sso登录方式 --&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">beans:beans</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">"http://www.springframework.org/schema/security"</span>
+             <span class="hljs-attr">xmlns:beans</span>=<span class="hljs-string">"http://www.springframework.org/schema/beans"</span>
+             <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">"http://www.w3.org/2001/XMLSchema-instance"</span>
+             <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+                                 http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd"</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- CAS 基本属性配置--&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">beans:bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"serviceProperties"</span>
+          <span class="hljs-attr">class</span>=<span class="hljs-string">"org.springframework.security.cas.ServiceProperties"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">beans:property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"service"</span>
+                  <span class="hljs-attr">value</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{cas.service}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">beans:property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"sendRenew"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"false"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">beans:bean</span>&gt;</span>
+
+    <span class="hljs-comment">&lt;!-- CAS 认证配置 --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">http</span>  <span class="hljs-attr">entry-point-ref</span>=<span class="hljs-string">"casEntryPoint"</span> <span class="hljs-attr">access-decision-manager-ref</span>=<span class="hljs-string">"accessDecisionManager"</span> &gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">csrf</span> <span class="hljs-attr">request-matcher-ref</span>=<span class="hljs-string">"csrfCasSecurityRequestMatcher"</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">intercept-url</span> <span class="hljs-attr">pattern</span>=<span class="hljs-string">"/resources/**"</span> <span class="hljs-attr">access</span>=<span class="hljs-string">"permitAll"</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">intercept-url</span> <span class="hljs-attr">pattern</span>=<span class="hljs-string">"/lib/**"</span> <span class="hljs-attr">access</span>=<span class="hljs-string">"permitAll"</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">intercept-url</span> <span class="hljs-attr">pattern</span>=<span class="hljs-string">"/common/**"</span> <span class="hljs-attr">access</span>=<span class="hljs-string">"permitAll"</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">intercept-url</span> <span class="hljs-attr">pattern</span>=<span class="hljs-string">"/login"</span> <span class="hljs-attr">access</span>=<span class="hljs-string">"permitAll"</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">intercept-url</span> <span class="hljs-attr">pattern</span>=<span class="hljs-string">"/login.html"</span> <span class="hljs-attr">access</span>=<span class="hljs-string">"permitAll"</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">intercept-url</span> <span class="hljs-attr">pattern</span>=<span class="hljs-string">"/timeout"</span> <span class="hljs-attr">access</span>=<span class="hljs-string">"permitAll"</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">intercept-url</span> <span class="hljs-attr">pattern</span>=<span class="hljs-string">"/websocket/**"</span> <span class="hljs-attr">access</span>=<span class="hljs-string">"permitAll"</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">intercept-url</span> <span class="hljs-attr">pattern</span>=<span class="hljs-string">"/**"</span> <span class="hljs-attr">access</span>=<span class="hljs-string">"hasRole('ROLE_USER')"</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">access-denied-handler</span> <span class="hljs-attr">error-page</span>=<span class="hljs-string">"/access-denied"</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">session-management</span> <span class="hljs-attr">invalid-session-url</span>=<span class="hljs-string">"/timeout"</span>/&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-name">form-login</span> <span class="hljs-attr">login-page</span>=<span class="hljs-string">'/login'</span> <span class="hljs-attr">authentication-success-handler-ref</span>=<span class="hljs-string">"successHandler"</span>
+                    <span class="hljs-attr">authentication-failure-handler-ref</span>=<span class="hljs-string">"loginFailureHandler"</span>/&gt;</span>
+        <span class="hljs-comment">&lt;!--authentication-failure-url="/login?error=true"/&gt;--&gt;</span>
+        <span class="hljs-comment">&lt;!-- 验证码拦截器 --&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">custom-filter</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"captchaVerifierFilter"</span> <span class="hljs-attr">before</span>=<span class="hljs-string">"FORM_LOGIN_FILTER"</span>/&gt;</span>
+
+
+        <span class="hljs-tag">&lt;<span class="hljs-name">custom-filter</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"requestSingleLogoutFilter"</span> <span class="hljs-attr">before</span>=<span class="hljs-string">"LOGOUT_FILTER"</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">custom-filter</span> <span class="hljs-attr">position</span>=<span class="hljs-string">"CAS_FILTER"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"casFilter"</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">custom-filter</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"singleLogoutFilter"</span> <span class="hljs-attr">before</span>=<span class="hljs-string">"CAS_FILTER"</span>/&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-name">headers</span> <span class="hljs-attr">defaults-disabled</span>=<span class="hljs-string">"true"</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">cache-control</span>/&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">headers</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">http</span>&gt;</span>
+
+    <span class="hljs-comment">&lt;!-- 认证管理器,确定用户,角色及相应的权限 --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">beans:bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"accessDecisionManager"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"org.springframework.security.access.vote.UnanimousBased"</span>&gt;</span>
+        <span class="hljs-comment">&lt;!-- 投票器 --&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">beans:constructor-arg</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">beans:list</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">beans:bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.hand.hap.security.PermissionVoter"</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">beans:bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"org.springframework.security.web.access.expression.WebExpressionVoter"</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">beans:bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"org.springframework.security.access.vote.RoleVoter"</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">beans:bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"org.springframework.security.access.vote.AuthenticatedVoter"</span>/&gt;</span>
+
+            <span class="hljs-tag">&lt;/<span class="hljs-name">beans:list</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">beans:constructor-arg</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">beans:bean</span>&gt;</span>
+
+
+    <span class="hljs-comment">&lt;!-- CAS Filter 配置 --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">beans:bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"casFilter"</span>
+          <span class="hljs-attr">class</span>=<span class="hljs-string">"org.springframework.security.cas.web.CasAuthenticationFilter"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">beans:property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"authenticationManager"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"authenticationManager"</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">beans:property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"authenticationSuccessHandler"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"successHandler"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">beans:bean</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">beans:bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"successHandler"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.hand.hap.security.CustomAuthenticationSuccessHandler"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">beans:property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"defaultTargetUrl"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"/index"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">beans:bean</span>&gt;</span>
+
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">beans:bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"casEntryPoint"</span>
+          <span class="hljs-attr">class</span>=<span class="hljs-string">"org.springframework.security.cas.web.CasAuthenticationEntryPoint"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">beans:property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"loginUrl"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{cas.ssoserver.loginurl}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">beans:property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"serviceProperties"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"serviceProperties"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">beans:bean</span>&gt;</span>
+
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">authentication-manager</span> <span class="hljs-attr">alias</span>=<span class="hljs-string">"authenticationManager"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">authentication-provider</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"casAuthenticationProvider"</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">authentication-provider</span> <span class="hljs-attr">user-service-ref</span>=<span class="hljs-string">"customUserDetailsService"</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">password-encoder</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"passwordManager"</span>/&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">authentication-provider</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">authentication-manager</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">beans:bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"casAuthenticationProvider"</span>
+          <span class="hljs-attr">class</span>=<span class="hljs-string">"org.springframework.security.cas.authentication.CasAuthenticationProvider"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">beans:property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"serviceProperties"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"serviceProperties"</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">beans:property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"authenticationUserDetailsService"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"customAuthenticationUserDetailsService"</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">beans:property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"ticketValidator"</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">beans:bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"org.jasig.cas.client.validation.Cas20ServiceTicketValidator"</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">beans:constructor-arg</span> <span class="hljs-attr">index</span>=<span class="hljs-string">"0"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{cas.ssoserver.url}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span> /&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">beans:bean</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">beans:property</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">beans:property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"key"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"an_id_for_this_auth_provider_only"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">beans:bean</span>&gt;</span>
+
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">beans:bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"customAuthenticationUserDetailsService"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.hand.hap.security.CustomAuthenticationUserDetailsService"</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">beans:bean</span>&gt;</span>
+
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">beans:bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"singleLogoutFilter"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"org.jasig.cas.client.session.SingleSignOutFilter"</span>/&gt;</span>
+    <span class="hljs-comment">&lt;!-- This filter redirects to the CAS Server to signal Single Logout should be performed --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">beans:bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"requestSingleLogoutFilter"</span>
+          <span class="hljs-attr">class</span>=<span class="hljs-string">"org.springframework.security.web.authentication.logout.LogoutFilter"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">beans:constructor-arg</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{cas.ssoserver.logouturl}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">beans:constructor-arg</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">beans:bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"</span>/&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">beans:constructor-arg</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">beans:property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"filterProcessesUrl"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"/logout"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">beans:bean</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">beans:bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"csrfCasSecurityRequestMatcher"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.hand.hap.security.CsrfSecurityRequestMatcher"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">beans:property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"excludeUrls"</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">beans:list</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">beans:value</span>&gt;</span>/login<span class="hljs-tag">&lt;/<span class="hljs-name">beans:value</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">beans:value</span>&gt;</span>/websocket/**<span class="hljs-tag">&lt;/<span class="hljs-name">beans:value</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">beans:list</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">beans:property</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">beans:bean</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">beans:bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"captchaVerifierFilter"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.hand.hap.security.CaptchaVerifierFilter"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">beans:property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"captchaField"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"verifiCode"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">beans:bean</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">beans:bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"loginFailureHandler"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.hand.hap.security.LoginFailureHandler"</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">beans:beans</span>&gt;</span></span>
+</code></pre>

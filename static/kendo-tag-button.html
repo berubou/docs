@@ -1,0 +1,57 @@
+<h1 id="button-">Button标签</h1>
+<p>此按钮标签为KendoUI原生按钮</p>
+<pre><code class="lang-xml">&lt;h:button <span class="hljs-attribute">id</span>=<span class="hljs-string">"button"</span> <span class="hljs-attribute">click</span>=<span class="hljs-string">"clickFunction"</span>/&gt;
+</code></pre>
+<h3 id="-"><strong>主要属性</strong></h3>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>enable</td>
+<td>Boolean</td>
+<td>是否启用</td>
+</tr>
+<tr>
+<td>icon</td>
+<td>String</td>
+<td>按钮图标iconFont</td>
+</tr>
+<tr>
+<td>imageUrl</td>
+<td>String</td>
+<td>按钮图片</td>
+</tr>
+<tr>
+<td>spriteCssClass</td>
+<td>String</td>
+<td>样式</td>
+</tr>
+<tr>
+<td>click</td>
+<td>Function</td>
+<td>点击函数</td>
+</tr>
+<tr>
+<td>text</td>
+<td>String</td>
+<td>按钮文本</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>属性用法请参考KendoUI文档 <a href="http://docs.telerik.com/kendo-ui/api/javascript/ui/button">http://docs.telerik.com/kendo-ui/api/javascript/ui/button</a> </p>
+</blockquote>
+<h3 id="-"><strong>用法示例</strong></h3>
+<pre><code class="lang-javascript"><span class="hljs-comment">//按钮点击事件响应函数</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">onButtonClick</span><span class="hljs-params">()</span></span>{
+    <span class="hljs-comment">//do something</span>
+}
+</code></pre>
+<pre><code class="lang-xml">&lt;h:button <span class="hljs-attribute">id</span>=<span class="hljs-string">"button"</span> <span class="hljs-attribute">click</span>=<span class="hljs-string">"onButtonClick"</span> <span class="hljs-attribute">enable</span>=<span class="hljs-string">"true"</span> <span class="hljs-attribute">imageUrl</span>=<span class="hljs-string">"/images/edit-icon.gif"</span>  <span class="hljs-attribute">spriteCssClass</span>=<span class="hljs-string">"myEditIcon"</span> <span class="hljs-attribute">text</span>=<span class="hljs-string">"按钮"</span>/&gt;
+</code></pre>

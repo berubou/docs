@@ -1,0 +1,173 @@
+<h1 id="datepicker-">DatePicker标签</h1>
+<p>日期选择器</p>
+<pre><code class="lang-xml"> &lt;h:datePicker <span class="hljs-attribute">id</span>=<span class="hljs-string">"datePicker"</span>/&gt;
+</code></pre>
+<h3 id="-"><strong>主要属性</strong></h3>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>culture</td>
+<td>String</td>
+</tr>
+<tr>
+<td>depth</td>
+<td>String</td>
+</tr>
+<tr>
+<td>footer</td>
+<td>String \</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>format</td>
+<td>String</td>
+</tr>
+<tr>
+<td>max</td>
+<td>String</td>
+</tr>
+<tr>
+<td>min</td>
+<td>String</td>
+</tr>
+<tr>
+<td>start</td>
+<td>String</td>
+</tr>
+<tr>
+<td>value</td>
+<td>String</td>
+</tr>
+<tr>
+<td>name</td>
+<td>String</td>
+</tr>
+<tr>
+<td>bind</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>required</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>change</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>close</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>open</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>placeholder</td>
+<td>String</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>提示:</strong> 属性用法请参考kendoui API文档 <a href="http://docs.telerik.com/kendo-ui/api/javascript/ui/datepicker">http://docs.telerik.com/kendo-ui/api/javascript/ui/datepicker</a></p>
+</blockquote>
+<h3 id="-"><strong>用法示例</strong></h3>
+<pre><code class="lang-javascript"><span class="hljs-comment">//注意是写在script标签内的</span>
+<span class="hljs-keyword">var</span> viewModel = kendo.observable({
+    data:{}
+});
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">open</span><span class="hljs-params">()</span></span>{
+<span class="hljs-comment">//...</span>
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">footer</span><span class="hljs-params">()</span></span>{
+<span class="hljs-comment">//...</span>
+}
+</code></pre>
+<pre><code class="lang-xml">&lt;h:datePicker <span class="hljs-attribute">id</span>=<span class="hljs-string">"datepicker"</span> 
+              <span class="hljs-attribute">max</span>=<span class="hljs-string">"2016-10-14"</span> 
+              <span class="hljs-attribute">name</span>=<span class="hljs-string">"datepicker"</span> 
+              <span class="hljs-attribute">placeholder</span>=<span class="hljs-string">"datepicker"</span> 
+              <span class="hljs-attribute">bind</span>=<span class="hljs-string">"value:data.birthday"</span> 
+              <span class="hljs-attribute">required</span>=<span class="hljs-string">"true"</span> <span class="hljs-attribute">open</span>=<span class="hljs-string">"open"</span> <span class="hljs-attribute">footer</span>=<span class="hljs-string">"fn:footer"</span>/&gt;
+</code></pre>
+<h4 id="-"><strong>子标签</strong></h4>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>animation</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>month</td>
+<td>Object</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>animation</th>
+<th>类型 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>close</td>
+<td>Object </td>
+</tr>
+<tr>
+<td>open</td>
+<td>Object</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h:datePicker</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"datePicker"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h:animation</span>&gt;</span>
+       <span class="hljs-comment">&lt;!--当属性仍然为一个对象时，继续添加子标签--&gt;</span>
+       <span class="hljs-tag">&lt;<span class="hljs-name">h:close</span> <span class="hljs-attr">effects</span>=<span class="hljs-string">"zoom:out"</span> <span class="hljs-attr">duration</span>=<span class="hljs-string">"300"</span>/&gt;</span>
+       <span class="hljs-tag">&lt;<span class="hljs-name">h:open</span> <span class="hljs-attr">effects</span>=<span class="hljs-string">"zoom:in"</span> <span class="hljs-attr">duration</span>=<span class="hljs-string">"300"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">h:animation</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:datePicker</span>&gt;</span>
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>month</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>content</td>
+<td>String</td>
+</tr>
+<tr>
+<td>empty</td>
+<td>String</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h:datePicker</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"datePicker"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h:month</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"&lt;div&gt;&lt;/div&gt;"</span> <span class="hljs-attr">empty</span>=<span class="hljs-string">"-"</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:datePicker</span>&gt;</span>
+</code></pre>
+<blockquote>
+<p><strong>提示</strong>：</p>
+<ul>
+<li>遇到<strong>object</strong>类型 就向下添加子标签，当遇到普通类型时，就添加到当前的标签上。</li>
+</ul>
+</blockquote>

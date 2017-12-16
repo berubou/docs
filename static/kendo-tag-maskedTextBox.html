@@ -1,0 +1,109 @@
+<h2 id="maskedtextbox">MaskedTextBox</h2>
+<p>格式框</p>
+<h5 id="xml-">xml配置</h5>
+<pre><code class="lang-xml"> <span class="hljs-comment">&lt;!--h:为命名空间,必须要加的;maskedTextBox为组件名;id可写可不写--&gt;</span>
+ <span class="hljs-tag">&lt;<span class="hljs-name">h:maskedTextBox</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"maskedTextBox"</span>/&gt;</span>
+</code></pre>
+<h4 id="-"><strong>一般属性</strong></h4>
+<blockquote>
+<p><strong>提示:</strong></p>
+<ul>
+<li>属性用法请参考kendoui API文档的maskedTextBox:<a href="http://docs.telerik.com/kendo-ui/api/javascript/ui/maskedtextbox">http://docs.telerik.com/kendo-ui/api/javascript/ui/maskedtextbox</a></li>
+</ul>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>clearPromptChar</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>culture</td>
+<td>String</td>
+</tr>
+<tr>
+<td>mask</td>
+<td>String</td>
+</tr>
+<tr>
+<td>promptChar</td>
+<td>String</td>
+</tr>
+<tr>
+<td>unmaskOnPost</td>
+<td>Boolean </td>
+</tr>
+<tr>
+<td>value</td>
+<td>String</td>
+</tr>
+<tr>
+<td>change</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>caseLetter</td>
+<td>String</td>
+</tr>
+<tr>
+<td>clearButton</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>placeholder</td>
+<td>String</td>
+</tr>
+<tr>
+<td>bind</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>required</td>
+<td>Boolean</td>
+</tr>
+</tbody>
+</table>
+<p>用法示例：</p>
+<pre><code class="lang-xml">&lt;h:maskedTextBox <span class="hljs-attribute">id</span>=<span class="hljs-string">"maskedtTextBox"</span> <span class="hljs-attribute">required</span>=<span class="hljs-string">"true"</span> <span class="hljs-attribute">placeholder</span>=<span class="hljs-string">"maskedTextBox"</span> <span class="hljs-attribute">clearButton</span>=<span class="hljs-string">"true"</span>/&gt;
+</code></pre>
+<blockquote>
+<p><strong>提示:</strong></p>
+<ul>
+<li>上述所有属性直接添加在标签内即可，（<strong>[属性名] = &quot;...&quot;</strong>）</li>
+</ul>
+</blockquote>
+<h4 id="-"><strong>子标签</strong></h4>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>rules</td>
+<td>Object</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">rules</span><span class="hljs-params">()</span></span>{
+<span class="hljs-comment">//...</span>
+}
+</code></pre>
+<pre><code class="lang-xml">&lt;h:maskedTextBox <span class="hljs-built_in">id</span>=<span class="hljs-string">"maskedtTextBox"</span>&gt;
+    &lt;h:rules  <span class="hljs-string">"~"</span>=<span class="hljs-string">"/[+-]/"</span>  <span class="hljs-string">"^"</span>=<span class="hljs-string">"fn:rules"</span>/&gt;
+&lt;/h:maskedTextBox&gt;
+</code></pre>
+<blockquote>
+<p><strong>提示</strong>：</p>
+<ul>
+<li>遇到<strong>object</strong>类型 就向下添加子标签，当遇到普通类型时，就添加到当前的标签上。</li>
+</ul>
+</blockquote>

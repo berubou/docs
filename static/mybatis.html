@@ -1,0 +1,159 @@
+<h1 id="mybatis-">MyBatis 使用手册</h1>
+<h2 id="-">依赖加入</h2>
+<p>在pom.xml中加入mybatis的相关依赖</p>
+<pre><code>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.mybatis<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>mybatis<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>3.3.1<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.mybatis<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>mybatis-spring<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.2.4<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+</code></pre><h2 id="-">加入配置文件</h2>
+<ol>
+<li>在web.xml中加入核心配置文件<pre><code> &lt;context-<span class="hljs-built_in">param</span>&gt;
+     &lt;<span class="hljs-built_in">param</span>-name&gt;contextConfigLocation&lt;/<span class="hljs-built_in">param</span>-name&gt;
+     &lt;<span class="hljs-built_in">param</span>-<span class="hljs-built_in">value</span>&gt;classpath:spring-mybatis.xml&lt;/<span class="hljs-built_in">param</span>-<span class="hljs-built_in">value</span>&gt;
+ &lt;/context-<span class="hljs-built_in">param</span>&gt;
+</code></pre></li>
+<li>在resource中加入mybatis配置文件,如：</li>
+</ol>
+<pre><code class="lang-xml"><span class="xml">
+<span class="php"><span class="hljs-meta">&lt;?</span>xml version=<span class="hljs-string">"1.0"</span> encoding=<span class="hljs-string">"UTF-8"</span><span class="hljs-meta">?&gt;</span></span>
+<span class="hljs-tag">&lt;<span class="hljs-name">beans</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">"http://www.springframework.org/schema/beans"</span>
+    <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">"http://www.w3.org/2001/XMLSchema-instance"</span> <span class="hljs-attr">xmlns:p</span>=<span class="hljs-string">"http://www.springframework.org/schema/p"</span>
+    <span class="hljs-attr">xmlns:context</span>=<span class="hljs-string">"http://www.springframework.org/schema/context"</span>
+    <span class="hljs-attr">xmlns:mvc</span>=<span class="hljs-string">"http://www.springframework.org/schema/mvc"</span>
+    <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">"http://www.springframework.org/schema/beans  
+                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd  
+                        http://www.springframework.org/schema/context  
+                        http://www.springframework.org/schema/context/spring-context-3.1.xsd  
+                        http://www.springframework.org/schema/mvc  
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd"</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- 自动扫描 --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">context:component-scan</span> <span class="hljs-attr">base-package</span>=<span class="hljs-string">"com.hand"</span> /&gt;</span>
+    <span class="hljs-comment">&lt;!-- 引入配置文件 --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"propertyConfigurer"</span>
+        <span class="hljs-attr">class</span>=<span class="hljs-string">"org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"location"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"classpath:jdbc.properties"</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"dataSource"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"org.apache.commons.dbcp.BasicDataSource"</span>
+        <span class="hljs-attr">destroy-method</span>=<span class="hljs-string">"close"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"driverClassName"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{jdbc.driver}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"url"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{jdbc.url}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"username"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{jdbc.username}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"password"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{jdbc.password}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span> /&gt;</span>
+        <span class="hljs-comment">&lt;!-- 初始化连接大小 --&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"initialSize"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{jdbc.initialSize}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+        <span class="hljs-comment">&lt;!-- 连接池最大数量 --&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"maxActive"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{jdbc.maxActive}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+        <span class="hljs-comment">&lt;!-- 连接池最大空闲 --&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"maxIdle"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{jdbc.maxIdle}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+        <span class="hljs-comment">&lt;!-- 连接池最小空闲 --&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"minIdle"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{jdbc.minIdle}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+        <span class="hljs-comment">&lt;!-- 获取连接最大等待时间 --&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"maxWait"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{jdbc.maxWait}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+
+    <span class="hljs-comment">&lt;!-- spring和MyBatis完美整合，不需要mybatis的配置映射文件 --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"sqlSessionFactory"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"org.mybatis.spring.SqlSessionFactoryBean"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"dataSource"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"dataSource"</span> /&gt;</span>
+        <span class="hljs-comment">&lt;!-- 自动扫描mapping.xml文件 --&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"mapperLocations"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"classpath:com/hand/mapping/*.xml"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+
+    <span class="hljs-comment">&lt;!-- DAO接口所在包名，Spring会自动查找其下的类 --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"org.mybatis.spring.mapper.MapperScannerConfigurer"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"basePackage"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"com.hand.dao"</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"sqlSessionFactoryBeanName"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"sqlSessionFactory"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+
+    <span class="hljs-comment">&lt;!-- (事务管理)transaction manager, use JtaTransactionManager for global tx --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"transactionManager"</span>
+        <span class="hljs-attr">class</span>=<span class="hljs-string">"org.springframework.jdbc.datasource.DataSourceTransactionManager"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"dataSource"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"dataSource"</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-name">beans</span>&gt;</span></span>
+</code></pre>
+<h2 id="-mybatis-">搭建mybatis环境</h2>
+<ol>
+<li>创建实体类</li>
+<li>创建数据访问接口（xxxMapper.java）</li>
+<li><p>加入SQL映射语句文件(xxxMapper.xml)</p>
+<p>常见标签</p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>标签名称</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>定义Sql语句</td>
+<td>insert</td>
+</tr>
+<tr>
+<td></td>
+<td>delete</td>
+</tr>
+<tr>
+<td></td>
+<td>update</td>
+</tr>
+<tr>
+<td></td>
+<td>select</td>
+</tr>
+<tr>
+<td>配置java对象属性与查询结果集中列名对应关系</td>
+<td>resultMap</td>
+</tr>
+<tr>
+<td>控制动态sqlpinjie</td>
+<td>foreach</td>
+</tr>
+<tr>
+<td></td>
+<td>if</td>
+</tr>
+<tr>
+<td></td>
+<td>choose</td>
+</tr>
+<tr>
+<td>格式化输出</td>
+<td>where</td>
+</tr>
+<tr>
+<td></td>
+<td>set</td>
+</tr>
+<tr>
+<td></td>
+<td>trim</td>
+</tr>
+<tr>
+<td>配置关联关系</td>
+<td>collection</td>
+</tr>
+<tr>
+<td></td>
+<td>association</td>
+</tr>
+<tr>
+<td>定义常量</td>
+<td>sql</td>
+</tr>
+<tr>
+<td>引用常量</td>
+<td>include</td>
+</tr>
+</tbody>
+</table>
+<p><strong>注：</strong> <em>具体标签使用请查看 ：<a href="http://wenku.baidu.com/link?url=PxezJi5EtQraPdUtiEXRvuOFuE_kWlvCfusPI_5ShNk47Dlj1JEG0rSKnZiRGu5frqU6zgdUG8Fagt7kZ2TC2RVjtqTEICcgbRP433rN5KG" title="mybatis中文教程">mybatis中文教程</a></em></p>

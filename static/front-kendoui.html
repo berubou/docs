@@ -1,0 +1,449 @@
+<h1 id="-2-0-">前端开发手册 (2.0)</h1>
+<h4 id="-">目录划分</h4>
+<p>按照web目录规范，前端文件存放在如下目录</p>
+<pre><code>  webapp
+    ├─<span class="hljs-class"><span class="hljs-keyword">lib</span></span>
+    │  ├─bootstrap-<span class="hljs-number">3.3</span>.<span class="hljs-number">7</span>
+    │  ├─font-awesome-<span class="hljs-number">4.6</span>.<span class="hljs-number">3</span>
+    │  └─kendoui
+    ├─resources
+    │  ├─css
+    │  ├─font
+    │  ├─images
+    │  ├─js
+    │  ├─upload
+    └─WEB-INF
+        ├─web.xml
+        └─view
+</code></pre><p>资源文件目录
+资源文件按照类型划分为两个目录：<strong><code>lib</code></strong>和<strong><code>resources</code></strong></p>
+<ul>
+<li><strong><code>lib</code></strong>目录存放kendoui的所有文件</li>
+<li><strong><code>resources</code></strong>目录存放程序通用的资源文件</li>
+</ul>
+<p>功能文件目录
+功能文件存放在<strong><code>view</code></strong>目录下，目录的命名规则按照</p>
+<blockquote>
+<p><strong>[模块代码]</strong>/<strong>[功能项代码]</strong></p>
+</blockquote>
+<p>例如：用户管理的功能代码是SYS001,那么用户管理相关的界面文件都存放在</p>
+<pre><code>src<span class="hljs-regexp">/main/</span>webapp<span class="hljs-regexp">/WEB-INF/</span>view<span class="hljs-regexp">/sys/</span>sys001<span class="hljs-regexp">/</span>
+</code></pre><h4 id="-">文件命名约定</h4>
+<p>界面文件按照如下格式：</p>
+<blockquote>
+<p>[模块代码]<u> </u>[业务对象]<u> </u>[功能操作].html</p>
+</blockquote>
+<p>例如：用户查询界面: sys_user_query.html</p>
+<p>####url命名约定
+对于系统中提交的url地址，按照以下格式命名</p>
+<blockquote>
+<p>[contextPath]/[模块代码]/[业务对象]/[操作类型]</p>
+</blockquote>
+<p>对于常见的几种操作类型定义如下</p>
+<p>查询URL</p>
+<blockquote>
+<p>[模块代码]/[业务对象]/query</p>
+</blockquote>
+<p>批量提交  </p>
+<blockquote>
+<p>[模块代码]/[业务对象]/submit</p>
+</blockquote>
+<p>批量删除</p>
+<blockquote>
+<p>[模块代码]/[业务对象]/remove</p>
+</blockquote>
+<p>例如用户的查询: sys/user/query</p>
+<p>####代码编程规范</p>
+<p>javascript注释
+文件头上定义版权声明以及文件的主要描述信息</p>
+<pre><code class="lang-javascript"><span class="hljs-comment">/**
+ * <span class="hljs-doctag">@summary</span> Hap
+ * <span class="hljs-doctag">@description</span> 抽象通用函数
+ * <span class="hljs-doctag">@version</span> 1.0
+ * <span class="hljs-doctag">@author</span> njq.niu<span class="hljs-doctag">@hand</span>-china.com
+ * <span class="hljs-doctag">@copyright</span> Copyright Hand China Co.,Ltd.
+ */</span>
+</code></pre>
+<p>函数上注释</p>
+<pre><code class="lang-javascript">/**
+ * 提交表单数据(头行数据可一起提交).
+ *
+ * <span class="hljs-symbol">&lt;ul&gt;</span>
+ * <span class="hljs-symbol">&lt;li&gt;</span><span class="hljs-keyword">options</span>.form: form对象&lt;/li&gt;
+ * <span class="hljs-symbol">&lt;li&gt;</span><span class="hljs-keyword">options</span>.grid: grid对象&lt;/li&gt;
+ * <span class="hljs-symbol">&lt;li&gt;</span><span class="hljs-keyword">options</span>.gridName: grid数据的name&lt;/li&gt;
+ * <span class="hljs-symbol">&lt;li&gt;</span><span class="hljs-keyword">options</span>.ur<span class="hljs-variable">l:</span> 提交的url&lt;/li&gt;
+ * <span class="hljs-symbol">&lt;li&gt;</span><span class="hljs-keyword">options</span>.succes<span class="hljs-variable">s:</span> success回调函数&lt;/li&gt;
+ * <span class="hljs-symbol">&lt;li&gt;</span><span class="hljs-keyword">options</span>.failure: failure回调函数&lt;/li&gt;
+ * &lt;/ul&gt;
+ * @param {<span class="hljs-keyword">options</span>}
+ */
+</code></pre>
+<p>freemarker 注释
+端界面主要采用freemarker模板技术，文件后缀名统一为.html</p>
+<pre><code class="lang-html">&lt;<span class="hljs-selector-id">#--</span>
+ * <span class="hljs-selector-tag">Description</span>: 快速编码修改界面
+ * <span class="hljs-selector-tag">Version</span>: 1<span class="hljs-selector-class">.0</span>
+ * <span class="hljs-selector-tag">Author</span>: <span class="hljs-selector-tag">njq</span><span class="hljs-selector-class">.niu</span>@<span class="hljs-keyword">hand</span>-<span class="hljs-keyword">china</span>.<span class="hljs-keyword">com</span>
+ * Copyright Hand China Co.,Ltd.
+--&gt;
+</code></pre>
+<p>css注释</p>
+<pre><code class="lang-css"><span class="hljs-string">/*!</span>
+ <span class="hljs-string">*</span> <span class="hljs-attr">description:通用样式文件</span>
+ <span class="hljs-string">*</span> <span class="hljs-attr">version:</span> <span class="hljs-number">1.0</span>
+ <span class="hljs-string">*</span> <span class="hljs-attr">author:</span> <span class="hljs-string">njq.niu@hand-china.com</span>
+ <span class="hljs-string">*</span> <span class="hljs-string">Copyright</span> <span class="hljs-string">Hand</span> <span class="hljs-string">China</span> <span class="hljs-string">Co.,Ltd.</span>
+ <span class="hljs-string">*/</span>
+</code></pre>
+<p>脚本变量
+变量命名原则是减少变量冲突，采用Camel命名法。</p>
+<blockquote>
+<p>var [开发项ID]_[具体业务含义] = {}</p>
+</blockquote>
+<p>例如：用户管理界面中用户查询的grid数据</p>
+<blockquote>
+<p>var d_um_002_grid = $(&#39;#d_um_002_grid&#39;).data(&quot;kendoGrid&quot;);</p>
+</blockquote>
+<p>脚本函数名
+函数命名也采用Camel命名法.</p>
+<blockquote>
+<p>function [开发项ID]_<a href="">具体业务含义</a>{...}</p>
+</blockquote>
+<p>例如用户查询函数</p>
+<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">d_um_002_query</span><span class="hljs-params">()</span></span>{
+    ....
+}
+</code></pre>
+<p>####开发实践
+前端界面采用kendoUI开源框架，相同的显示效果可以采用多种代码方式来实现，为了规范项目组成员的代码样式，统一编码风格，避免以后维护的工作量，根据不同的应用场景总结以下几种开发实践.</p>
+<p>通用引入头文件</p>
+<p>界面中会引入一些资源文件，例如脚本，样式文件等。为了避免每个界面都重复引入增加工作量以及后续维护的困难，每个界面应该引入通用的文件头。</p>
+<pre><code class="lang-html">&lt;<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-string">"../include/header.html"</span>&gt;</span>
+</code></pre>
+<p>界面多语言实现</p>
+<p>界面中的多语言在数据库中统一存放在sys_prompts表中，系统启动时加载进redis缓存。界面中实现多语言是通过freemarker的标签以及对应的多语言code来实现。
+例如：“确定”的多语言code是“sys.hand.btn.ok”在界面中的写法：</p>
+<pre><code class="lang-html">&lt;@<span class="hljs-keyword">spring</span>.<span class="hljs-keyword">message</span> <span class="hljs-string">"sys.hand.btn.ok"</span>/&gt;
+</code></pre>
+<p>表单(form)实现</p>
+<p>表单主要采用bootstrap的栅格来布局</p>
+<ul>
+<li><p>第一步首先创建一个form的容器对象，一般我们采用div</p>
+<pre><code class="lang-html">&lt;<span class="hljs-keyword">div</span> <span class="hljs-built_in">id</span>=<span class="hljs-string">"d_um_002_form"</span> &gt;&lt;/<span class="hljs-keyword">div</span>&gt;
+</code></pre>
+</li>
+<li>在脚本中根据容器id创建form对象<pre><code class="lang-javascript"><span class="hljs-string">window['d_um_002_form']</span> <span class="hljs-string">=</span> <span class="hljs-string">$("#d_um_002_form").ligerForm({</span>
+<span class="hljs-attr"> fields:</span> <span class="hljs-string">[{</span>
+<span class="hljs-attr">     type:</span> <span class="hljs-string">'text'</span><span class="hljs-string">,</span>
+<span class="hljs-attr">     label:</span> <span class="hljs-string">'loginname'</span><span class="hljs-string">,</span>
+<span class="hljs-attr">     name:</span> <span class="hljs-string">'loginName'</span>
+ <span class="hljs-string">},</span> <span class="hljs-string">{</span>
+<span class="hljs-attr">     type:</span> <span class="hljs-string">'text'</span><span class="hljs-string">,</span>
+<span class="hljs-attr">     label:</span> <span class="hljs-string">'name'</span><span class="hljs-string">,</span>
+<span class="hljs-attr">     newline:</span> <span class="hljs-literal">false</span><span class="hljs-string">,</span>
+<span class="hljs-attr">     name:</span> <span class="hljs-string">'name'</span>
+ <span class="hljs-string">}],</span>
+<span class="hljs-attr"> buttons:</span> <span class="hljs-string">[{</span>
+<span class="hljs-attr">     text:</span> <span class="hljs-string">'查询'</span><span class="hljs-string">,</span>
+<span class="hljs-attr">     width:</span> <span class="hljs-number">60</span><span class="hljs-string">,</span>
+<span class="hljs-attr">     click:</span> <span class="hljs-string">function()</span> <span class="hljs-string">{</span>
+         <span class="hljs-string">Hap.gridQuery({</span>
+<span class="hljs-attr">             form:</span> <span class="hljs-string">d_um_002_form,</span>
+<span class="hljs-attr">             grid:</span> <span class="hljs-string">d_um_002_grid</span>
+         <span class="hljs-string">})</span>
+     <span class="hljs-string">}</span>
+ <span class="hljs-string">}]</span>
+<span class="hljs-string">});</span>
+</code></pre>
+</li>
+</ul>
+<p>一般的查询界面都会包含一个查询的表单，以及一个数据展示的grid，查询按钮函数中调用kendoUIGrid的datasource中的read方法去提交查询数据。这里可以直接使用$(&#39;#grid&#39;).data(&#39;kendoGrid&#39;).dataSource.page(1);来调用查询方法,查询表单数据一般需要绑定在viewModel中,在查询数据时，将viewModel中的值传递到后台去</p>
+<ul>
+<li>viewModel绑定表单数据</li>
+</ul>
+<p>1.定义viewModel</p>
+<pre><code><span class="hljs-attribute">var</span> viewModel = kendo.observable({
+               <span class="hljs-attribute">model</span> : {}
+}
+</code></pre><p>   2.定义input标签并绑定viewModel</p>
+<pre><code><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"promptCode"</span> <span class="hljs-attr">data-bind</span>=<span class="hljs-string">"value:model.promptCode"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">kendo.bind($(<span class="hljs-string">'promptCode'</span>), viewModel);</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</code></pre><p>  3.查询时传递参数</p>
+<pre><code>parameterMap : <span class="hljs-keyword">function</span>(options) {
+    <span class="hljs-keyword">var</span> <span class="hljs-keyword">map</span> = viewModel.model.toJSON();
+    <span class="hljs-keyword">map</span>.page = options.page;
+    <span class="hljs-keyword">map</span>.pagesize = options.pageSize;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">map</span>;
+}
+</code></pre><p>表单校验</p>
+<p>表单验证采用的是kendoUI提供的kendoValidator组件来验证</p>
+<pre><code class="lang-html">&lt;input <span class="hljs-attribute">id</span>=<span class="hljs-string">"password"</span> <span class="hljs-attribute">type</span>=<span class="hljs-string">"password"</span>/&gt;
+</code></pre>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> validator = $(<span class="hljs-string">"#password"</span>).kendoValidator({
+    <span class="hljs-attr">messages</span>: {
+        <span class="hljs-attr">pwdlen</span>:<span class="hljs-string">'&lt;@spring.message "user.password.length"/&gt;'</span>
+    },
+    <span class="hljs-attr">rules</span>: {<span class="hljs-comment">//自定义规则</span>
+        pwdlen: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">input</span>)</span>{
+        {
+            <span class="hljs-keyword">if</span>(input.val().length &lt; <span class="hljs-number">10</span>){
+                <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+        }
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+     }
+});
+</code></pre>
+<p>对于简单的校验逻辑可直接定义一个验证错误的模板，如必需字段，无需在定义规则。</p>
+<p>表单加载数据</p>
+<p>加载form数据可以通过页面ajax请求,也可以通过后台传参，在viewModel.model里绑定，可直接加载到表单上</p>
+<pre><code class="lang-javascript"><span class="hljs-selector-tag">model</span>:{
+   <span class="hljs-attribute">length</span>: <span class="hljs-string">"${length}"</span>,
+   complexity:<span class="hljs-string">"${complexity}"</span>
+}
+</code></pre>
+<p>表格Grid</p>
+<ul>
+<li><p>定义grid的dom容器</p>
+<pre><code class="lang-html">&lt;<span class="hljs-keyword">div</span> style=<span class="hljs-string">"clear:both"</span>&gt;
+     &lt;<span class="hljs-keyword">div</span> <span class="hljs-built_in">id</span>=<span class="hljs-string">"grid"</span>&gt;&lt;/<span class="hljs-keyword">div</span>&gt;
+&lt;/<span class="hljs-keyword">div</span>&gt;
+</code></pre>
+</li>
+<li><p>根据id生成grid对象</p>
+<pre><code class="lang-javascript">$(<span class="hljs-string">"#grid"</span>).kendoGrid({
+<span class="hljs-symbol"> dataSource:</span>dataSource,
+ <span class="hljs-string">columns :</span> [{
+             <span class="hljs-string">field :</span> <span class="hljs-string">"promptCode"</span>,
+             <span class="hljs-string">title :</span> <span class="hljs-string">'&lt;@spring.message "prompt.promptcode"/&gt;'</span>,
+             <span class="hljs-string">width :</span> <span class="hljs-number">240</span>,
+<span class="hljs-symbol">             headerAttributes:</span> {
+                 <span class="hljs-string">"class"</span>: <span class="hljs-string">"table-header-cell"</span>,
+                 <span class="hljs-string">style  :</span> <span class="hljs-string">"text-align: center"</span>
+             },
+             <span class="hljs-string">attributes :</span> {
+                 <span class="hljs-comment">//输入只能小写</span>
+                 <span class="hljs-string">style :</span> <span class="hljs-string">"text-transform:lowercase"</span>
+             }
+     },
+     ...
+     ]
+});
+</code></pre>
+</li>
+</ul>
+<p>Grid工具栏</p>
+<ul>
+<li>新增按钮</li>
+</ul>
+<pre><code class="lang-javascript">toolbar    : [{
+     name: <span class="hljs-string">"create"</span>,
+     template : '&lt;span <span class="hljs-class"><span class="hljs-keyword">class</span></span>=<span class="hljs-string">"btn btn-primary k-grid-add"</span>&gt;&lt;<span class="hljs-meta">@spring</span>.message <span class="hljs-string">"hap.new"</span>/&gt;&lt;/span&gt;'<span class="hljs-comment">//自定义模板</span>
+ }
+</code></pre>
+<ul>
+<li><p>删除按钮(可在表单自定义按钮)</p>
+<pre><code class="lang-html">&lt;span onclick=<span class="hljs-string">"deleteData()"</span> <span class="hljs-class"><span class="hljs-keyword">class</span></span>=<span class="hljs-string">"btn btn-danger"</span>&gt;<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">@spring.message</span> "<span class="hljs-attr">hap.delete</span>"/&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span>
+</code></pre>
+</li>
+</ul>
+<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">deleteData</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">var</span> checked = grid.selectedDataItems();
+    <span class="hljs-keyword">if</span>(grid.selectedDataItems().length){  
+         kendo.ui.showConfirmDialog({
+             title:$l(<span class="hljs-string">'hap.tip.info'</span>),
+             message: $l(<span class="hljs-string">'hap.tip.delete_confirm'</span>)
+         }).done(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(event)</span> </span>{
+             <span class="hljs-keyword">if</span> (event.button == <span class="hljs-string">'OK'</span>) {
+                $.each(checked,<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(i,v)</span></span>{
+                    grid.dataSource.remove(v)
+                })
+                grid.dataSource.sync();
+             }
+         })
+    }
+}
+</code></pre>
+<ul>
+<li><p>保存函数(绑定viewModel方法)</p>
+<pre><code class="lang-html">&lt;span <span class="hljs-class"><span class="hljs-keyword">class</span></span>=<span class="hljs-string">"btn btn-success k-grid-save-changes"</span> data-bind=<span class="hljs-string">"click:saveFunction"</span>&gt;<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">@spring.message</span> "<span class="hljs-attr">hap.save</span>"/&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span>
+</code></pre>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> viewModel = kendo.observable({
+     <span class="hljs-attr">model</span>: {},
+     <span class="hljs-attr">saveFunction</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+          $(<span class="hljs-string">'#grid'</span>).data(<span class="hljs-string">'kendoGrid'</span>).saveChanges();
+     },
+     <span class="hljs-attr">queryResource</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>{
+          $(<span class="hljs-string">'#grid'</span>).data(<span class="hljs-string">'kendoGrid'</span>).dataSource.page(<span class="hljs-number">1</span>);
+     }
+});
+</code></pre>
+<p><strong>注意: 为了客户端不再重新刷新，服务端一定要返回提交的数据</strong></p>
+<pre><code class="lang-java"><span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-type">ResponseData</span>(users);
+</code></pre>
+</li>
+</ul>
+<p>JSON数据格式</p>
+<p>grid和服务端的数据交互统一采用json格式</p>
+<pre><code class="lang-javascript">{
+        <span class="hljs-attribute">success</span>:true,
+        rows[{},{}],
+        <span class="hljs-selector-tag">total</span><span class="hljs-selector-pseudo">:10</span>
+}
+</code></pre>
+<p>success: ajax是否成功的标志 true|false
+rows: 返回的数据集
+total: 总记录数</p>
+<p>需要在grid中定义json的格式属性</p>
+<pre><code class="lang-javascript"><span class="hljs-string">pageSize:</span> <span class="hljs-number">10</span>, <span class="hljs-comment">//分页大小</span>
+<span class="hljs-string">serverPaging:</span> <span class="hljs-literal">true</span>,<span class="hljs-comment">//服务器端是否分页</span>
+</code></pre>
+<p>头行关系</p>
+<p>头行数据建议采用form+grid的形式.其中form展现头信息，grid展现行信息。
+form和grid的定义参考以上章节，这里主要介绍保存逻辑</p>
+<pre><code class="lang-javascript"> Hap.submitForm({
+       <span class="hljs-attr">url</span>: <span class="hljs-string">'${base.contextPath}/sys/lov/submit'</span>,
+       <span class="hljs-attr">formModel</span>: viewModel.model,
+       <span class="hljs-attr">grid</span>: {
+             <span class="hljs-attr">lovItems</span>: $(<span class="hljs-string">'#grid'</span>)
+       },
+       <span class="hljs-attr">success</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">result</span>) </span>{
+            <span class="hljs-keyword">if</span> (!lovId) {
+                 lovId = viewModel.model.lovId
+            }
+       }
+});
+</code></pre>
+<blockquote>
+<p>头行保存这里调用了Hap.submitForm方法，参数对象中包含了form对象以及grid对象，gridName定义行数据存放在头上的属性名。</p>
+</blockquote>
+<pre><code class="lang-javascript">/**
+ * 提交表单数据(头行数据可一起提交).
+ *
+ * <span class="hljs-symbol">&lt;ul&gt;</span>
+ * <span class="hljs-symbol">&lt;li&gt;</span><span class="hljs-keyword">options</span>.formMode<span class="hljs-variable">l:</span> form对象即viewModel.model&lt;/li&gt;
+ * <span class="hljs-symbol">&lt;li&gt;</span><span class="hljs-keyword">options</span>.grid: grid对象&lt;/li&gt;
+ * <span class="hljs-symbol">&lt;li&gt;</span><span class="hljs-keyword">options</span>.gridName: grid数据的name&lt;/li&gt;
+ * <span class="hljs-symbol">&lt;li&gt;</span><span class="hljs-keyword">options</span>.ur<span class="hljs-variable">l:</span> 提交的url&lt;/li&gt;
+ * <span class="hljs-symbol">&lt;li&gt;</span><span class="hljs-keyword">options</span>.succes<span class="hljs-variable">s:</span> success回调函数&lt;/li&gt;
+ * <span class="hljs-symbol">&lt;li&gt;</span><span class="hljs-keyword">options</span>.failure: failure回调函数&lt;/li&gt;
+ * &lt;/ul&gt;
+ * @param {<span class="hljs-keyword">options</span>}
+ */
+</code></pre>
+<p>通用lov设置</p>
+<p>系统中可以设置一些常用的lov方便其他模块调用。
+进入系统功能-&gt;lov定义</p>
+<p>点击新增按钮，创建一个lov
+<img src="http://7xruj6.com1.z0.glb.clouddn.com/sys_lov_edit.png" alt="enter image description here"></p>
+<p>form字段说明：</p>
+<ul>
+<li><strong><code>代码</code></strong>  lov的编码，全局唯一，通过此code获取lov</li>
+<li><strong><code>描述</code></strong>   lov的描述字段，仅用于说明</li>
+<li><strong><code>sqlid</code></strong> lov查询的sqlid，对应后台xml中sql的id</li>
+<li><strong><code>标题</code></strong> 弹出lov的标题</li>
+<li><strong><code>valueField</code></strong> popup中的valueField字段</li>
+<li><strong><code>textField</code></strong> popup中的textField字段</li>
+<li><strong><code>宽度</code></strong> lov的宽度</li>
+<li><p><strong><code>高度</code></strong> lov的高度</p>
+<p>grid字段说明</p>
+</li>
+<li><p><strong><code>显示</code></strong> 字段的描述(支持多语言)</p>
+</li>
+<li><strong><code>字段名</code></strong> 字段的name</li>
+<li><strong><code>列宽度</code></strong> 字段的宽度</li>
+<li><ul>
+<li><strong><code>表格列</code></strong> 是否是表格字段</li>
+</ul>
+</li>
+<li><strong><code>查询字段</code></strong> 是否是查询字段</li>
+<li><strong><code>列序号</code></strong> 表格列排序号</li>
+<li><strong><code>查询配置</code></strong> 如果“查询字段”为“是”，配置查询字段类型</li>
+</ul>
+<p>点击&quot;查询配置&quot;，配置查询字段</p>
+<p><img src="http://7xruj6.com1.z0.glb.clouddn.com/sys_lov_select.png" alt="enter image description here"></p>
+<p><img src="http://7xruj6.com1.z0.glb.clouddn.com/sys_lov_lov.png" alt="enter image description here">
+查询字段可以配置两种类型，文本和下拉框</p>
+<ul>
+<li><strong><code>字段类型</code></strong> 查询字段的类型</li>
+<li><strong><code>查询字段宽度</code></strong> 查询字段宽度</li>
+<li><strong><code>查询字段序号</code></strong> 查询字段排序号</li>
+<li><strong><code>查询字段名</code></strong> 查询字段名</li>
+<li><strong><code>快速编码</code></strong> 当“字段类型”为“下拉框”时指定快速编码的code</li>
+<li><strong><code>url</code></strong> 当“字段类型”为“下拉框”时指定url的url,textFiled,valueFileds</li>
+</ul>
+<p>定义好lov配置后，在gird和form中通过以下代码使用lov</p>
+<p>grid中</p>
+<pre><code class="lang-javascript">{
+   field: <span class="hljs-string">"parentPositionId"</span>,
+   title: '&lt;@spring.message <span class="hljs-string">"position.parentpositionname"</span>/&gt;',
+   width: <span class="hljs-number">140</span>,
+   template  : function (<span class="hljs-name">dataItem</span>) {
+       return dataItem['parentPositionName'] || '';
+   },
+   editor  : function (<span class="hljs-name">container</span>, options) {
+      $(<span class="hljs-name">'&lt;input</span> name=<span class="hljs-string">"' + options.field + '"</span>/&gt;')
+                            .appendTo(<span class="hljs-name">container</span>)
+                            .kendoLov($.extend(<span class="hljs-name"><span class="hljs-builtin-name">&lt;</span></span>@lov <span class="hljs-string">"LOV_POSITION"</span>/&gt;, {
+          textField: 'parentPositionName',
+          query:function(<span class="hljs-name">e</span>){
+              //e.param['positionId'] = options.model.positionId;
+          },
+          model    : options.model
+       }))<span class="hljs-comment">;</span>
+    }
+ }
+</code></pre>
+<p>form中</p>
+<pre><code class="lang-html">&lt;input <span class="hljs-attribute">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attribute">id</span>=<span class="hljs-string">"role"</span> <span class="hljs-attribute">data-bind</span>=<span class="hljs-string">"value:model.roleId,text:model.roleName"</span>&gt;
+</code></pre>
+<pre><code class="lang-javascript">
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">     $(<span class="hljs-string">"#role"</span>).kendoLov(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">@lov</span> "<span class="hljs-attr">LOV_ROLE</span>"/&gt;</span>)  
+</span></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</code></pre>
+<p>字段说明 ：</p>
+<ul>
+<li><strong><code>textField</code></strong> 字段名</li>
+<li><strong><code>model</code></strong> viewModel中的mdel,在grid时，是当前操作绑定的model</li>
+<li><strong><code>query</code></strong> 向lov传递参数</li>
+<li><strong><code>select</code></strong>使用和query相同，在lov选中时触发</li>
+<li><strong><code>dto</code></strong> dto的类名</li>
+</ul>
+<p>###多语言编辑器###
+框架中提供了TLEdit编辑器来统一多语言设置。
+首先更新到最新的框架版本.</p>
+<p>form中使用TLEdit</p>
+<pre><code class="lang-html">&lt;input <span class="hljs-attribute">id</span>=<span class="hljs-string">"name"</span> <span class="hljs-attribute">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attribute">data-bind</span>=<span class="hljs-string">"value:model.name"</span>&gt;
+</code></pre>
+<pre><code class="lang-javascript"><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+    $(<span class="hljs-string">"#name"</span>).kendoTLEdit({
+        <span class="hljs-attr">idField</span>: <span class="hljs-string">'unitId'</span>,
+        <span class="hljs-attr">field</span>: <span class="hljs-string">'name'</span>,
+        <span class="hljs-attr">dto</span>: <span class="hljs-string">"com.hand.hap.hr.dto.HrOrgUnit"</span>,
+        <span class="hljs-attr">model</span>: newViewModel.model
+       })
+     kendo.bind($(<span class="hljs-string">'#name'</span>), newViewModel);
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</code></pre>
+<p>grid中使用TLEdit</p>
+<pre><code class="lang-javascript"> {
+     <span class="hljs-attribute">field </span>: <span class="hljs-string">"functionName"</span>,
+     title : <span class="hljs-string">'&lt;@spring.message "function.functionname"/&gt;'</span>,
+     width: <span class="hljs-number">120</span>,
+     editor: function (container, options) {
+        $(<span class="hljs-string">'&lt;input name="'</span> + options.field + <span class="hljs-string">'"/&gt;'</span>).<span class="hljs-built_in">appendTo</span>(container).<span class="hljs-built_in">kendoTLEdit</span>({
+              idField: <span class="hljs-string">'functionId'</span>,
+              field: <span class="hljs-string">'functionName'</span>,
+              dto: <span class="hljs-string">"com.hand.hap.function.dto.Function"</span>,
+              model: options.model
+         });
+      }
+}
+</code></pre>
+<p>字段说明 ：</p>
+<ul>
+<li><strong><code>field</code></strong> 多语言字段名</li>
+<li><strong><code>model</code></strong> viewModel中的mdel,在grid时，是当前操作绑定的model</li>
+<li><strong><code>idField</code></strong> dto中主键字段名（确保当前form中有对应的值)</li>
+<li><strong><code>dto</code></strong> dto的类名</li>
+</ul>

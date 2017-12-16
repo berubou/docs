@@ -1,0 +1,120 @@
+<p>Liquibase 使用手册</p>
+<hr>
+<p>本文档主要介绍如何在 hap 开发过程中使用 liquibase 来维护数据库数据。</p>
+<p><a href="http://www.liquibase.org/documentation/changes/index.html">参考 Liquibase 官方指令文档</a></p>
+<p>在 <code>hap-db</code> 模块 <code>com/hand/hap/db/data</code>目录</p>
+<p>有三个版本的数据库脚本：mysql,oracle,sqlserver。</p>
+<blockquote>
+<p>旧版的基于 sql 的建表方式已经废弃, 只有第三方的 sql 脚本存在.</p>
+</blockquote>
+<h2 id="-">新建表</h2>
+<hr>
+<p>修改文件 <code>[yyyy-MM-dd]-init-table-migration.groovy</code></p>
+<blockquote>
+<p>其他项目上, 应该是根据需要编写至少一个新的 groovy 文件, 命名规则同上.</p>
+</blockquote>
+<p>参考 现有的建表 changeSet 写法, 添加新的 changeSet</p>
+<p>注意 <code>author</code>,<code>id</code></p>
+<ul>
+<li>如果是 oracle 数据库, 注意 <code>sequence</code> 的创建</li>
+<li>如果有 tl 表, 写在一个 changeSet 中</li>
+</ul>
+<p>其他建表需要注意的内容包括:</p>
+<ul>
+<li>基础建表语句</li>
+<li>表描述信息</li>
+<li>主键设置</li>
+<li>列描述信息</li>
+<li>合理的类型，长度</li>
+<li>是否允许 NULL</li>
+<li>默认值（如果有）</li>
+<li>索引（唯一索引，普通索引）</li>
+<li>主键自增起始 10001<ul>
+<li>oracle 是设置 sequence start with</li>
+</ul>
+</li>
+<li>who 字段（8个）<pre><code>          <span class="hljs-selector-tag">column</span>(<span class="hljs-attribute">name</span>: <span class="hljs-string">"OBJECT_VERSION_NUMBER"</span>, <span class="hljs-attribute">type</span>: <span class="hljs-string">"BIGINT"</span>, <span class="hljs-attribute">defaultValue </span>: <span class="hljs-string">"1"</span>)
+          <span class="hljs-selector-tag">column</span>(<span class="hljs-attribute">name</span>: <span class="hljs-string">"REQUEST_ID"</span>, <span class="hljs-attribute">type</span>: <span class="hljs-string">"BIGINT"</span>, <span class="hljs-attribute">defaultValue </span>: <span class="hljs-string">"-1"</span>)
+          <span class="hljs-selector-tag">column</span>(<span class="hljs-attribute">name</span>: <span class="hljs-string">"PROGRAM_ID"</span>, <span class="hljs-attribute">type</span>: <span class="hljs-string">"BIGINT"</span>, <span class="hljs-attribute">defaultValue </span>: <span class="hljs-string">"-1"</span>)
+          <span class="hljs-selector-tag">column</span>(<span class="hljs-attribute">name</span>: <span class="hljs-string">"CREATED_BY"</span>, <span class="hljs-attribute">type</span>: <span class="hljs-string">"BIGINT"</span>, <span class="hljs-attribute">defaultValue </span>: <span class="hljs-string">"-1"</span>)
+          <span class="hljs-selector-tag">column</span>(<span class="hljs-attribute">name</span>: <span class="hljs-string">"CREATION_DATE"</span>, <span class="hljs-attribute">type</span>: <span class="hljs-string">"DATETIME"</span>, <span class="hljs-attribute">defaultValueComputed </span>: <span class="hljs-string">"CURRENT_TIMESTAMP"</span>)
+          <span class="hljs-selector-tag">column</span>(<span class="hljs-attribute">name</span>: <span class="hljs-string">"LAST_UPDATED_BY"</span>, <span class="hljs-attribute">type</span>: <span class="hljs-string">"BIGINT"</span>, <span class="hljs-attribute">defaultValue </span>: <span class="hljs-string">"-1"</span>)
+          <span class="hljs-selector-tag">column</span>(<span class="hljs-attribute">name</span>: <span class="hljs-string">"LAST_UPDATE_DATE"</span>, <span class="hljs-attribute">type</span>: <span class="hljs-string">"DATETIME"</span>, <span class="hljs-attribute">defaultValueComputed </span>: <span class="hljs-string">"CURRENT_TIMESTAMP"</span>)
+          <span class="hljs-selector-tag">column</span>(<span class="hljs-attribute">name</span>: <span class="hljs-string">"LAST_UPDATE_LOGIN"</span>, <span class="hljs-attribute">type</span>: <span class="hljs-string">"BIGINT"</span>, <span class="hljs-attribute">defaultValue </span>: <span class="hljs-string">"-1"</span>)
+</code></pre></li>
+<li>扩展字段 16个（可以不要）<blockquote>
+<p>如果不要，在DTO类上加@ExtensionAttribute(disable=true)</p>
+</blockquote>
+</li>
+</ul>
+<blockquote>
+<p>TL 表均为联合主键，没有自增长、sequence 等</p>
+</blockquote>
+<p><strong>请注意保持脚本格式工整</strong></p>
+<h2 id="-">修改表结构</h2>
+<p> 也是通过添加 changeSet, 顺序添加</p>
+<h2 id="-">初始数据</h2>
+<hr>
+<p>HAP 2.0 中采用了全新的基于 excel 的基础数据维护.</p>
+<p>请参考 <code>hap-db</code> 中 com/hand/hap/db/data/2016-09-30-init-data.xlsx</p>
+<p>在项目中新建一个 excel 文件. <a href="http://files.saas.hand-china.com/hap_dev/yyyy-MM-dd-init-data.xlsx.tar.gz">点击下载模板</a></p>
+<p>excel 数据管理的主要特点有:</p>
+<ul>
+<li>利用 <code>公式</code> 来解决外键依赖问题.</li>
+<li>可进行 <code>唯一性检查</code>, (重复执行, 不会重复插入)</li>
+<li>数据可更新, 可持续维护</li>
+</ul>
+<p>excel 更直观, 便于维护, 所有的基础数据, 只需要维护一份 excel 即可.</p>
+<blockquote>
+<p>excel 在每次执行 mvn process-resoures ... 时 都会解析执行,
+会插入新的数据, 更改已存在的数据.</p>
+</blockquote>
+<p>使用参数 <code>-Ddb.skipUpdateTables=SYS_ROLE_B,SYS_USER</code> 可以禁止更新表中的数据（只插入，不更新）</p>
+<p>更具体的用法 请参见 excel 第一 sheet 页的说明.</p>
+<p>注意：</p>
+<ul>
+<li>作者</li>
+<li>时间</li>
+</ul>
+<blockquote>
+<p>可以不通过 maven 命令直接执行 excel 导入, 参考代码</p>
+</blockquote>
+<pre><code class="lang-java">    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> main(String[] args) <span class="hljs-keyword">throws</span> Exception {
+        System.setProperty(<span class="hljs-string">"db.url"</span>, <span class="hljs-string">"jdbc:mysql://127.0.0.1:3306/hap_dev"</span>);
+        System.setProperty(<span class="hljs-string">"db.user"</span>, <span class="hljs-string">"hap_dev"</span>);
+        System.setProperty(<span class="hljs-string">"db.password"</span>, <span class="hljs-string">"hap_dev"</span>);
+        System.setProperty(<span class="hljs-string">"db.override"</span>, <span class="hljs-string">"true"</span>);
+
+        ExcelDataLoader processor = <span class="hljs-keyword">new</span> ExcelDataLoader();
+        URL url = ExcelDataLoader.<span class="hljs-keyword">class</span>.getResource(<span class="hljs-string">"/com/hand/hap/db/data/2016-09-30-init-data.xlsx"</span>);
+        <span class="hljs-keyword">if</span> (url == <span class="hljs-keyword">null</span>) {
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> FileNotFoundException(<span class="hljs-string">"excel not found."</span>);
+        }
+        processor.setFilePath(<span class="hljs-keyword">new</span> <span class="hljs-keyword">File</span>(url.toURI()).getAbsolutePath());
+        processor.execute(<span class="hljs-keyword">null</span>);
+    }
+</code></pre>
+<h2 id="-">补丁数据</h2>
+<hr>
+<p>在需要执行比较特殊的数据库操作, 或者不方便归类的操作时 , 可以将脚本写在 patch 中.</p>
+<p>patch.groovy 中即可以写 liquibase 命令, 也可以执行 sql 语句.</p>
+<p>补丁脚本放在 <code>patch</code> 目录。</p>
+<p>脚本内容可以包括，但不限于：</p>
+<ul>
+<li><p>修改表</p>
+</li>
+<li><p>增删改 表中的数据</p>
+</li>
+</ul>
+<blockquote>
+<p>请注意，这些操作应该都是增量的进行</p>
+</blockquote>
+<p>补丁文件的命名方式：20161212-工号-序号.sql</p>
+<p>每次提交都是一个单独的 sql 文件，每天提交多次时，需要指定<code>序号</code>加以区分</p>
+<blockquote>
+<p>脚本内部注释，写明作者，目的，时间，概要</p>
+</blockquote>
+<p>编写完毕以后，将补丁配置到 patch.groovy 中。</p>
+<blockquote>
+<p>补丁将会是用的比较多的方式，主要是增加新的数据，由于主键是手动指定的，请注意不要与他人的重复，必须在本地测试过之后再commit。</p>
+</blockquote>

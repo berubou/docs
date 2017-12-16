@@ -1,0 +1,123 @@
+<h1 id="-">报表管理</h1>
+<hr>
+<p>HAP 框架的报表功能集成了开源的 UReport2。UReport2 是基于 Apache-2.0 开源协议的中式报表引擎。</p>
+<p><strong>建议在使用 HAP 的报表功能前，首先查阅 <a href="http://wiki.bsdn.org/pages/viewpage.action?pageId=76448364">UReport2 文档</a>，熟悉如何使用。</strong></p>
+<p><strong>支持数据库：MYSQL，ORACLE，SQLSERVER</strong></p>
+<p><strong>由于Ureport2自身设计的原因，HAP 的报表功能不适用于数据量较大的情况。</strong></p>
+<h2 id="-">功能描述</h2>
+<p>3.3.0-RELEASE之后新增功能，可实现套打报表。</p>
+<h2 id="-">使用说明</h2>
+<h3 id="-">报表设计</h3>
+<p>首先进入 <strong>报表管理/报表设计界面</strong>，点击数据源，选中内置数据源</p>
+<p><img src="/assets/sys_report_01.png" alt=""></p>
+<p>然后在<strong>数据源上点击右键添加数据集，定义报表的SQL和查询参数</strong></p>
+<p><img src="/assets/sys_report_02.png" alt=""></p>
+<p>选中单元格，点击属性，设计报表内容</p>
+<p><img src="/assets/sys_report_03.png" alt=""></p>
+<p>设计好报表内容后，点击保存，即可保存报表设计文件。<strong>该文件可以在报表定义时使用</strong>。</p>
+<p><img src="/assets/sys_report_04.png" alt=""></p>
+<p><strong>注意事项</strong></p>
+<ul>
+<li><p>设计界面属于 UReport2 自带界面，建议首先阅读 <a href="http://wiki.bsdn.org/pages/viewpage.action?pageId=76448364">UReport2 文档</a>，熟悉如何使用。 </p>
+</li>
+<li><p>SQL 表达式动态传参示例：
+${
+&quot;select user_id,user_name,email,status,employee_id,start_active_date from sys_user where 1=1 &quot;+
+(param(&quot;userId&quot;)==null || param(&quot;userId&quot;)==&quot;&quot;?&quot;&quot;: &quot; and user_id=:userId&quot;)+
+(param(&quot;status&quot;)==null || param(&quot;status&quot;)==&quot;&quot;?&quot;&quot;: &quot; and status=:status&quot;)+
+(param(&quot;employeeId&quot;)==null || param(&quot;employeeId&quot;)==&quot;&quot;?&quot;&quot;: &quot; and employee_id=:employeeId&quot;)+
+(param(&quot;startActiveDate&quot;)==null || param(&quot;startActiveDate&quot;)==&quot;&quot;?&quot;&quot;: &quot; and start_active_date=:startActiveDate&quot;)+&quot; order by user_id asc&quot;
+}</p>
+</li>
+<li><p>如果参数值有多个，添加参数时，参数类型需选择List类型
+${
+&quot;select * from sys_role_b where 1=1 &quot;+
+param(&quot;roleId&quot;)==null || param(&quot;roleId&quot;)==&quot;&quot;?&quot;&quot;: &quot; and role_Id in(:roleId)&quot;
+} </p>
+</li>
+<li><p>报表设计界面的参数默认值，不需要配置，如有需要，可在报表定义界面配置。</p>
+</li>
+</ul>
+<h3 id="-">报表定义</h3>
+<p>首先进入 <strong>报表管理/报表定义界面</strong>，点击新建，输入相应信息，点击保存，即可新增一条报表。如下图：</p>
+<p><img src="/assets/sys_report_05.png" alt=""></p>
+<h4 id="-">报表属性:</h4>
+<ul>
+<li><p>报表编码：报表的唯一标识，建议为大写的英文字母。</p>
+</li>
+<li><p>报表文件：报表设计时保存的文件。</p>
+</li>
+<li><p>报表名称：报表的名称。</p>
+</li>
+<li><p>报表描述：描述报表的功能。</p>
+</li>
+<li><p>默认查询：预览界面打开时，是否查询报表数据。</p>
+</li>
+<li><p>报表定义URL：用于资源管理挂载报表。</p>
+</li>
+<li><p>报表设计： 报表设计的另一个入口，方便直接打开文件，修改报表设计。</p>
+</li>
+</ul>
+<h4 id="-">报表参数</h4>
+<p>打开报表参数界面，可设置报表预览时，条件查询的参数。见下图：</p>
+<p><img src="/assets/sys_report_06.png" alt=""></p>
+<h5 id="-">报表参数属性:</h5>
+<ul>
+<li><p>表单控件：参数的展现形式，有LOV，输入框，日期框，下拉框，多选框等。</p>
+</li>
+<li><p>表字段名：报表设计 SQL 中定义的参数名。</p>
+</li>
+<li><p>标题：预览时参数的标题。</p>
+</li>
+<li><p>描述：预览时描述该参数的功能。</p>
+</li>
+<li><p>行号：预览时描述该参数的位置，1 表示第一行，2 表示第二行。</p>
+</li>
+<li><p>必输：控制预览时该参数是否必输，默认为否。</p>
+</li>
+<li><p>只读：控制预览时该参数是否只读，默认为否。</p>
+</li>
+<li><p>启用：控制预览时该参数是否启用，默认为是。</p>
+</li>
+</ul>
+<h5 id="-">参数配置:</h5>
+<p>可设置报表参数的数据源，默认值，限制范围，级联等。</p>
+<h5 id="-">参数配置属性</h5>
+<ul>
+<li><p>数据源：暂时只支持LOV为控件提供数据源，LOV、下拉框，多选框控件必须选择数据源。</p>
+</li>
+<li><p>默认类型：常量（直接设置默认值）、SQL语句（通过SQL设置默认值）、当前日期（取系统当前日期作为默认值）。</p>
+</li>
+<li><p>默认值：预览报表时，参数的初始值。</p>
+</li>
+<li><p>日期从：日期框控件可供选择范围的开始日期。</p>
+</li>
+<li><p>日期至：日期框控件可供选择范围的结束日期。</p>
+</li>
+<li><p>级联来源： 当前下拉框的父级下拉框来源。</p>
+</li>
+<li><p>级联字段： 根据当前数据源的哪个字段等于父级下拉框选中的值来筛选当前下拉框的数据。</p>
+</li>
+</ul>
+<h5 id="sql-">SQL 语句注意事项</h5>
+<ul>
+<li><p>当默认类型选择为 SQL 语句，Lov 控件需返回 text 和 value 字段,其他控件只需返回 value 字段，日期类型返回字段格式为yyyy-MM-dd。</p>
+</li>
+<li><p>返回字段必须取别名as text 或as value。</p>
+</li>
+<li><p>支持IRequest的动态参数，HAP 内置的有当前登录人的userId，roleId，userName，companyId，employeeCode，locale。</p>
+</li>
+</ul>
+<p>如下图：</p>
+<p><img src="/assets/sys_report_07.png" alt=""></p>
+<p><img src="/assets/sys_report_08.png" alt=""></p>
+<p>点击执行，可看到SQL执行效果</p>
+<p><img src="/assets/sys_report_09.png" alt=""></p>
+<h5 id="-">下拉框级联示例</h5>
+<p>下拉框级联时，父级下拉框的行号需在子级下拉框的行号前面，<a href="https://docs.telerik.com/kendo-ui/api/javascript/ui/combobox#configuration-cascadeFromField">kendoui级联API</a></p>
+<p><img src="/assets/sys_report_10.png" alt=""></p>
+<p><img src="/assets/sys_report_11.png" alt=""></p>
+<p><img src="/assets/sys_report_12.png" alt="">  <img src="/assets/sys_report_13.png" alt=""></p>
+<h4 id="-">预览</h4>
+<p>打开预览界面，可在线预览报表，如果设置了参数，可实现条件查询，实时预览结果。见下图：</p>
+<p><img src="/assets/sys_report_14.png" alt=""></p>

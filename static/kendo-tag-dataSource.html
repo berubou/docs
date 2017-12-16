@@ -1,0 +1,400 @@
+<h1 id="datasource-">dataSource标签</h1>
+<p>数据源组件</p>
+<pre><code class="lang-xml">&lt;h:dataSource id=<span class="hljs-string">"gridDataSource"</span> batch=<span class="hljs-string">"true"</span> pageSize=<span class="hljs-string">"10"</span> serverPaging=<span class="hljs-string">"true"</span> error=<span class="hljs-string">"requestError"</span>&gt; 
+  &lt;h:transport parameterMap=<span class="hljs-string">"parameterMap"</span>&gt; 
+    &lt;h:read url=<span class="hljs-string">"${base.contextPath}/sys/resource/query"</span> type=<span class="hljs-string">"<span class="hljs-keyword">POST</span>"</span> dataType=<span class="hljs-string">"json"</span>/&gt;  
+    &lt;h:create url=<span class="hljs-string">"${base.contextPath}/sys/resource/submit"</span> type=<span class="hljs-string">"<span class="hljs-keyword">POST</span>"</span> contentType=<span class="hljs-string">"application/json"</span>/&gt;  
+    &lt;h:update url=<span class="hljs-string">"${base.contextPath}/sys/resource/submit"</span> type=<span class="hljs-string">"<span class="hljs-keyword">POST</span>"</span> contentType=<span class="hljs-string">"application/json"</span>/&gt;  
+    &lt;h:destroy url=<span class="hljs-string">"${base.contextPath}/sys/resource/remove"</span> type=<span class="hljs-string">"<span class="hljs-keyword">POST</span>"</span> contentType=<span class="hljs-string">"application/json"</span>/&gt; 
+  &lt;/h:transport&gt;  
+  &lt;h:schema data=<span class="hljs-string">"rows"</span> total=<span class="hljs-string">"total"</span> errors=<span class="hljs-string">"schemaError"</span>&gt; 
+    &lt;h:model id=<span class="hljs-string">"resourceId"</span> editable=<span class="hljs-string">"dsEditable"</span>&gt; 
+      &lt;h:fields&gt; 
+        &lt;h:item name=<span class="hljs-string">"loginRequire"</span> defaultValue=<span class="hljs-string">"Y"</span> type=<span class="hljs-string">"boolean"</span> checkedValue=<span class="hljs-string">"Y"</span> uncheckedValue=<span class="hljs-string">"N"</span>/&gt;  
+        &lt;h:item name=<span class="hljs-string">"accessCheck"</span> defaultValue=<span class="hljs-string">"Y"</span> type=<span class="hljs-string">"boolean"</span> checkedValue=<span class="hljs-string">"Y"</span> uncheckedValue=<span class="hljs-string">"N"</span>/&gt;  
+        &lt;h:item name=<span class="hljs-string">"type"</span> defaultValue=<span class="hljs-string">""</span>/&gt;  
+        &lt;h:item name=<span class="hljs-string">"url"</span>&gt; 
+          &lt;h:validation required=<span class="hljs-string">"true"</span>/&gt; 
+        &lt;/h:item&gt;  
+        &lt;h:item name=<span class="hljs-string">"name"</span>&gt; 
+          &lt;h:validation required=<span class="hljs-string">"true"</span>/&gt; 
+        &lt;/h:item&gt; 
+      &lt;/h:fields&gt; 
+    &lt;/h:model&gt; 
+  &lt;/h:schema&gt; 
+&lt;/h:dataSource&gt;
+</code></pre>
+<h3 id="-"><strong>主要属性</strong></h3>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>data</td>
+<td>Array &amp; String</td>
+</tr>
+<tr>
+<td>autoSync</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>batch</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>page</td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>pageSize</td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>serverAggregates</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>serverFiltering</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>serverGrouping</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>serverPaging</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>serverSorting</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>type</td>
+<td>String</td>
+</tr>
+<tr>
+<td>change</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>error</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>push</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>requestEnd</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>requestStart</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>sync</td>
+<td>Function</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>提示:</strong> 属性用法请参考kendoui API文档 <a href="http://docs.telerik.com/kendo-ui/api/javascript/data/datasource">http://docs.telerik.com/kendo-ui/api/javascript/data/datasource</a></p>
+</blockquote>
+<h3 id="-"><strong>主要子节点</strong></h3>
+<ul>
+<li>transport</li>
+<li>schema</li>
+<li>sort</li>
+</ul>
+<h3 id="-transport-"><strong>transport</strong></h3>
+<p>服务端交互配置</p>
+<h4 id="-transport-"><strong>transport属性</strong></h4>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>parameterMap</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>push</td>
+<td>Function</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h:dataSource</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"gridDataSource"</span> &gt;</span> 
+  <span class="hljs-tag">&lt;<span class="hljs-name">h:transport</span> <span class="hljs-attr">parameterMap</span>=<span class="hljs-string">"parameterMap"</span>&gt;</span> 
+    ...
+  <span class="hljs-tag">&lt;/<span class="hljs-name">h:transport</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:dataSource</span>&gt;</span>
+</code></pre>
+<h4 id="-transport-"><strong>transport子节点</strong></h4>
+<p>主要有以下几种节点类型</p>
+<ul>
+<li>read</li>
+<li>create</li>
+<li>update</li>
+<li>destroy</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cache</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>contentType</td>
+<td>String</td>
+</tr>
+<tr>
+<td>data</td>
+<td>Object \</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>dataType</td>
+<td>String</td>
+</tr>
+<tr>
+<td>type</td>
+<td>String</td>
+</tr>
+<tr>
+<td>url</td>
+<td>String \</td>
+<td>Function</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-xml">  &lt;h:transport parameterMap=<span class="hljs-string">"parameterMap"</span>&gt; 
+    &lt;h:read url=<span class="hljs-string">"${base.contextPath}/sys/resource/query"</span> type=<span class="hljs-string">"<span class="hljs-keyword">POST</span>"</span> dataType=<span class="hljs-string">"json"</span>/&gt;  
+    &lt;h:create url=<span class="hljs-string">"${base.contextPath}/sys/resource/submit"</span> type=<span class="hljs-string">"<span class="hljs-keyword">POST</span>"</span> contentType=<span class="hljs-string">"application/json"</span>/&gt;  
+    &lt;h:update url=<span class="hljs-string">"${base.contextPath}/sys/resource/submit"</span> type=<span class="hljs-string">"<span class="hljs-keyword">POST</span>"</span> contentType=<span class="hljs-string">"application/json"</span>/&gt;  
+    &lt;h:destroy url=<span class="hljs-string">"${base.contextPath}/sys/resource/remove"</span> type=<span class="hljs-string">"<span class="hljs-keyword">POST</span>"</span> contentType=<span class="hljs-string">"application/json"</span>/&gt; 
+  &lt;/h:transport&gt;
+</code></pre>
+<h3 id="-schema-"><strong>schema</strong></h3>
+<p>定义datasource的数据结构</p>
+<h4 id="-schema-"><strong>schema属性</strong></h4>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>data</td>
+<td>String \</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>errors</td>
+<td>String \</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>groups</td>
+<td>String \</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>parse</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>total</td>
+<td>String \</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>type</td>
+<td>String</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h:dataSource</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"gridDataSource"</span> &gt;</span> 
+  <span class="hljs-tag">&lt;<span class="hljs-name">h:schema</span> <span class="hljs-attr">data</span>=<span class="hljs-string">"rows"</span> <span class="hljs-attr">total</span>=<span class="hljs-string">"total"</span> <span class="hljs-attr">errors</span>=<span class="hljs-string">"schemaError"</span>&gt;</span>  
+    ...
+  <span class="hljs-tag">&lt;/<span class="hljs-name">h:schema</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:dataSource</span>&gt;</span>
+</code></pre>
+<h4 id="-schema-"><strong>schema子节点</strong></h4>
+<ul>
+<li>model</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td>String</td>
+</tr>
+<tr>
+<td>editable</td>
+<td>Function</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h:schema</span> <span class="hljs-attr">data</span>=<span class="hljs-string">"rows"</span> <span class="hljs-attr">total</span>=<span class="hljs-string">"total"</span> <span class="hljs-attr">errors</span>=<span class="hljs-string">"schemaError"</span>&gt;</span> 
+    <span class="hljs-tag">&lt;<span class="hljs-name">h:model</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"resourceId"</span> <span class="hljs-attr">editable</span>=<span class="hljs-string">"dsEditable"</span>&gt;</span> 
+      <span class="hljs-tag">&lt;<span class="hljs-name">h:fields</span>&gt;</span> 
+         ... 
+      <span class="hljs-tag">&lt;/<span class="hljs-name">h:fields</span>&gt;</span> 
+    <span class="hljs-tag">&lt;/<span class="hljs-name">h:model</span>&gt;</span> 
+  <span class="hljs-tag">&lt;/<span class="hljs-name">h:schema</span>&gt;</span>
+</code></pre>
+<h4 id="-model-"><strong>model子节点</strong></h4>
+<ul>
+<li>field</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>String</td>
+</tr>
+<tr>
+<td>defaultValue</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>editable</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>nullable</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>parse</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>type</td>
+<td>String</td>
+</tr>
+<tr>
+<td>from</td>
+<td>String</td>
+</tr>
+<tr>
+<td>checkedValue</td>
+<td>String</td>
+</tr>
+<tr>
+<td>uncheckedValue</td>
+<td>String</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h:schema</span> <span class="hljs-attr">data</span>=<span class="hljs-string">"rows"</span> <span class="hljs-attr">total</span>=<span class="hljs-string">"total"</span> <span class="hljs-attr">errors</span>=<span class="hljs-string">"schemaError"</span>&gt;</span> 
+    <span class="hljs-tag">&lt;<span class="hljs-name">h:model</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"resourceId"</span> <span class="hljs-attr">editable</span>=<span class="hljs-string">"dsEditable"</span>&gt;</span> 
+      <span class="hljs-tag">&lt;<span class="hljs-name">h:fields</span>&gt;</span> 
+        <span class="hljs-tag">&lt;<span class="hljs-name">h:item</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"loginRequire"</span> <span class="hljs-attr">defaultValue</span>=<span class="hljs-string">"Y"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"boolean"</span> <span class="hljs-attr">checkedValue</span>=<span class="hljs-string">"Y"</span> <span class="hljs-attr">uncheckedValue</span>=<span class="hljs-string">"N"</span>/&gt;</span>  
+        <span class="hljs-tag">&lt;<span class="hljs-name">h:item</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"accessCheck"</span> <span class="hljs-attr">defaultValue</span>=<span class="hljs-string">"Y"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"boolean"</span> <span class="hljs-attr">checkedValue</span>=<span class="hljs-string">"Y"</span> <span class="hljs-attr">uncheckedValue</span>=<span class="hljs-string">"N"</span>/&gt;</span>  
+        <span class="hljs-tag">&lt;<span class="hljs-name">h:item</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"type"</span> <span class="hljs-attr">defaultValue</span>=<span class="hljs-string">""</span>/&gt;</span>  
+        <span class="hljs-tag">&lt;<span class="hljs-name">h:item</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"url"</span>&gt;</span> 
+          <span class="hljs-tag">&lt;<span class="hljs-name">h:validation</span> <span class="hljs-attr">required</span>=<span class="hljs-string">"true"</span>/&gt;</span> 
+        <span class="hljs-tag">&lt;/<span class="hljs-name">h:item</span>&gt;</span>  
+        <span class="hljs-tag">&lt;<span class="hljs-name">h:item</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"name"</span>&gt;</span> 
+          <span class="hljs-tag">&lt;<span class="hljs-name">h:validation</span> <span class="hljs-attr">required</span>=<span class="hljs-string">"true"</span>/&gt;</span> 
+        <span class="hljs-tag">&lt;/<span class="hljs-name">h:item</span>&gt;</span> 
+      <span class="hljs-tag">&lt;/<span class="hljs-name">h:fields</span>&gt;</span> 
+    <span class="hljs-tag">&lt;/<span class="hljs-name">h:model</span>&gt;</span> 
+  <span class="hljs-tag">&lt;/<span class="hljs-name">h:schema</span>&gt;</span>
+</code></pre>
+<h4 id="-field-"><strong>field子节点</strong></h4>
+<ul>
+<li>validation</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>required</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>max</td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>min</td>
+<td>Integer</td>
+</tr>
+</tbody>
+</table>
+<h3 id="-sort-"><strong>sort</strong></h3>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dir</td>
+<td>String</td>
+</tr>
+<tr>
+<td>field</td>
+<td>String</td>
+</tr>
+<tr>
+<td>compare</td>
+<td>function</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">h:dataSource</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"gridDataSource"</span> <span class="hljs-attr">batch</span>=<span class="hljs-string">"true"</span> <span class="hljs-attr">pageSize</span>=<span class="hljs-string">"10"</span> <span class="hljs-attr">serverPaging</span>=<span class="hljs-string">"true"</span> <span class="hljs-attr">serverSorting</span>=<span class="hljs-string">"true"</span> <span class="hljs-attr">error</span>=<span class="hljs-string">"requestError"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h:transport</span> <span class="hljs-attr">parameterMap</span>=<span class="hljs-string">"parameterMap"</span>&gt;</span>
+        ...
+      <span class="hljs-tag">&lt;/<span class="hljs-name">h:transport</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h:schema</span> <span class="hljs-attr">data</span>=<span class="hljs-string">"rows"</span> <span class="hljs-attr">total</span>=<span class="hljs-string">"total"</span> <span class="hljs-attr">errors</span>=<span class="hljs-string">"schemaError"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">h:model</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"resourceId"</span> <span class="hljs-attr">editable</span>=<span class="hljs-string">"dsEditable"</span>&gt;</span>
+           <span class="hljs-tag">&lt;<span class="hljs-name">h:fields</span>&gt;</span>
+               ...
+           <span class="hljs-tag">&lt;/<span class="hljs-name">h:fields</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">h:model</span>&gt;</span>        
+      <span class="hljs-tag">&lt;/<span class="hljs-name">h:schema</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h:sort</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">h:item</span> <span class="hljs-attr">field</span>=<span class="hljs-string">"url"</span> <span class="hljs-attr">dir</span>=<span class="hljs-string">"desc"</span>/&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">h:sort</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">h:dataSource</span>&gt;</span>
+</code></pre>

@@ -1,0 +1,170 @@
+<h1 id="-">工作流-请假申请</h1>
+<h2 id="-">简介：</h2>
+<p>工作流请假流程的简单示例。</p>
+<h2 id="-">使用说明：</h2>
+<h3 id="-">设计流程</h3>
+<p><img src="/assets/activiti-demo1.png" alt=""></p>
+<h4 id="1-">1.创建工作流</h4>
+<p>以请假申请为例：首先创建请假申请的工作流定义，下载以下附件。</p>
+<blockquote>
+<p><a href="/assets/VACATION_REQUEST.bpmn20.xml">VACATION_REQUEST.bpmn20.xml</a></p>
+</blockquote>
+<p>选择下载的工作流文件，导入工作流</p>
+<p><img src="/assets/activiti_demo2.png" alt=""></p>
+<p>打开编辑按钮查看此流程。</p>
+<p><img src="/assets/activiti-demo3t.png" alt=""></p>
+<p>流程定义注意事项：</p>
+<ul>
+<li><p>节点表单的标识key属性对应业务单据的展示页面（vacation_view.html_）</p>
+</li>
+<li><p>开始节点的表单标识key属性为流程的单据页面（在流程监控页面查看）</p>
+</li>
+</ul>
+<p>发布流程后可在流程部署页面查看</p>
+<p><img src="/assets/activiti_demo4.png" alt=""></p>
+<h4 id="-act-_demo-_vacation-">创建相对应业务单据表（act_demo_vacation）</h4>
+<p><img src="/assets/activiti-demo5.png" alt=""></p>
+<h4 id="-mapper-http-localhost-8080-hap-generator-generator-html-http-localhost-8080-hap-generator-generator-html-29-">通过代码生成器生成对应Mapper(<a href="http://localhost:8080/hap/generator/generator.html%29\">http:\/\/localhost:8080\/hap\/generator\/generator.html\</a></h4>
+<p><a href="/code-generator.md">代码生成器相关文档</a></p>
+<p><img src="/assets/activiti-demo6.png" alt=""></p>
+<p><img src="/assets/demo_vacation1.png" alt=""></p>
+<h3 id="-">创建一个请假流程</h3>
+<p>1.DemoVacationServiceImpl类</p>
+<pre><code class="lang-java"><span class="hljs-meta">@Service</span>
+<span class="hljs-meta">@Transactional</span>
+public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DemoVacationServiceImpl</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseServiceImpl&lt;DemoVacation&gt;</span> <span class="hljs-title">implements</span> <span class="hljs-title">IDemoVacationService</span></span>{
+
+    <span class="hljs-meta">@Autowired</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-type">IActivitiService</span> activitiService; <span class="hljs-comment">//工作流相关Service</span>
+    <span class="hljs-meta">@Autowired</span>
+    <span class="hljs-keyword">private</span>  <span class="hljs-type">DemoVacationMapper</span> demoVacationMapper;
+
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> processDefinitionKey=<span class="hljs-string">"VACATION_REQUEST"</span>; 流程标识，通过其启动流程
+
+<span class="hljs-comment">//    @Autowired</span>
+<span class="hljs-comment">//    private IDemoVacationService vacationService;</span>
+<span class="hljs-comment">/*
+* 创建请假流程 将业务表单存放在act_demo_vacation 表将此表单通过businessKey与流程相关。启动此流程
+* DemoVacation为业务表单数据。可根据流程需要将表单数据加入流程变量中，如我们在请假流程审批过程中我们可能
+* 需要请假时间参数对流程逻辑做出相关处理，则可以把其放入流程变量中。
+* */</span>
+    <span class="hljs-meta">@Override</span>
+    public void createVacationInstance(<span class="hljs-type">IRequest</span> iRequest, <span class="hljs-type">DemoVacation</span> demoVacation) {
+        demoVacation.setUserCode(iRequest.getEmployeeCode());
+        <span class="hljs-type">DemoVacation</span> demo = <span class="hljs-keyword">this</span>.insertSelective(iRequest, demoVacation);
+        <span class="hljs-type">ProcessInstanceCreateRequest</span> instanceCreateRequest = <span class="hljs-keyword">new</span> <span class="hljs-type">ProcessInstanceCreateRequest</span>();
+        instanceCreateRequest.setBusinessKey(<span class="hljs-type">String</span>.valueOf(demo.getId()));
+        instanceCreateRequest.setProcessDefinitionKey(processDefinitionKey);
+        <span class="hljs-comment">//添加流程变量</span>
+        <span class="hljs-type">List</span>&lt;<span class="hljs-type">RestVariable</span>&gt; variables = <span class="hljs-keyword">new</span> <span class="hljs-type">ArrayList</span>&lt;&gt;();
+        <span class="hljs-type">RestVariable</span> variable = <span class="hljs-keyword">new</span> <span class="hljs-type">RestVariable</span>();
+        variable.setName(<span class="hljs-string">"needDays"</span>);
+        variable.setType(<span class="hljs-string">"long"</span>);
+        variable.setValue(demo.getNeedDays());
+
+        variables.add(variable);
+        instanceCreateRequest.setVariables(variables);
+
+        activitiService.startProcess(iRequest, instanceCreateRequest);
+    }
+
+    <span class="hljs-comment">/*
+    * 查看历史请假记录(查询单据表）
+    * c*/</span>
+    <span class="hljs-meta">@Override</span>
+    public <span class="hljs-type">List</span>&lt;<span class="hljs-type">DemoVacation</span>&gt; selectVacationHistory(<span class="hljs-type">IRequest</span> iRequest) {
+        <span class="hljs-type">DemoVacation</span> demoVacation=<span class="hljs-keyword">new</span> <span class="hljs-type">DemoVacation</span>();
+        demoVacation.setUserCode(iRequest.getEmployeeCode());
+        <span class="hljs-type">List</span>&lt;<span class="hljs-type">DemoVacation</span>&gt; demoVacations= demoVacationMapper.select(demoVacation);
+        <span class="hljs-keyword">return</span>  demoVacations;
+    }
+}
+</code></pre>
+<p>DemoVacationController</p>
+<pre><code class="lang-java"><span class="hljs-meta">@Controller</span>
+public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DemoVacationController</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseController</span> </span>{
+
+    <span class="hljs-meta">@Autowired</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-type">IDemoVacationService</span> vacationService;
+
+    <span class="hljs-comment">/*
+    * 请假流程demo
+    * */</span>
+    <span class="hljs-meta">@RequestMapping</span>(value = <span class="hljs-string">"/wfl/runtime/process-instances/vacation"</span>, method = <span class="hljs-type">RequestMethod</span>.<span class="hljs-type">POST</span>, produces = <span class="hljs-string">"application/json"</span>)
+    <span class="hljs-meta">@ResponseBody</span>
+    public <span class="hljs-type">ResponseData</span> createVacationProcessInstance(<span class="hljs-meta">@RequestBody</span> <span class="hljs-type">DemoVacation</span> demoVacation,
+                                                      <span class="hljs-type">HttpServletRequest</span> httpRequest, <span class="hljs-type">HttpServletResponse</span> response) {
+        <span class="hljs-type">IRequest</span> iRequest = createRequestContext(httpRequest);
+        vacationService.createVacationInstance(iRequest, demoVacation);
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-type">ResponseData</span>();
+    }
+
+    <span class="hljs-comment">/*
+    请假流程通过businessKey获取流程表单
+    * */</span>
+    <span class="hljs-meta">@RequestMapping</span>(<span class="hljs-string">"/wfl/history/form/details/vacation/{businessKey}"</span>)
+    <span class="hljs-meta">@ResponseBody</span>
+    public <span class="hljs-type">DemoVacation</span> getProcessFrom(<span class="hljs-type">HttpServletRequest</span> request, <span class="hljs-meta">@PathVariable</span> <span class="hljs-type">String</span> businessKey) {
+        <span class="hljs-type">DemoVacation</span> demoVacation = <span class="hljs-keyword">new</span> <span class="hljs-type">DemoVacation</span>();
+        demoVacation.setId(<span class="hljs-type">Long</span>.parseLong(businessKey));
+        <span class="hljs-type">DemoVacation</span> demo = vacationService.selectByPrimaryKey(createRequestContext(request), demoVacation);
+        <span class="hljs-keyword">return</span> demo;
+    }
+
+    <span class="hljs-comment">/*
+    * 获取当前用户历史请假记录
+    * */</span>
+    <span class="hljs-meta">@ResponseBody</span>
+    <span class="hljs-meta">@RequestMapping</span>(<span class="hljs-string">"/wfl/vacation/query"</span>)
+    public <span class="hljs-type">ResponseData</span> getVacationHistory(<span class="hljs-type">HttpServletRequest</span> request, <span class="hljs-type">HttpServletResponse</span> response, <span class="hljs-type">DemoVacation</span> demoVacation, <span class="hljs-meta">@RequestParam</span>(defaultValue = <span class="hljs-type">DEFAULT_PAGE</span>) int page,
+                                           <span class="hljs-meta">@RequestParam</span>(defaultValue = <span class="hljs-type">DEFAULT_PAGE_SIZE</span>) int pagesize) {
+        <span class="hljs-type">IRequest</span> iRequest = createRequestContext(request);
+        <span class="hljs-type">List</span>&lt;<span class="hljs-type">DemoVacation</span>&gt; lists = vacationService.selectVacationHistory(iRequest);
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-type">ResponseData</span>(lists);
+    }
+}
+</code></pre>
+<p>1.展示页面</p>
+<p><img src="/assets/demo_vacation9.png" alt=""></p>
+<p>2.发布流程：提交申请页面,表单属性与具体业务表对应。</p>
+<p><img src="/assets/demo_vacation_html.png" alt=""></p>
+<p>3.提交之后通过调用DemoVcationServiceImpl.createVacationInstance方法启动流程</p>
+<h4 id="-assets-demo_vacation3-png-"><img src="/assets/demo_vacation3.png" alt=""></h4>
+<p>4.将对应表单数据写入业务表，获取其id当做流程businissKey并通过procssDefinitonKey启动该流程。</p>
+<h4 id="-">获取表单信息：</h4>
+<p>在运行到对应节点会通过表单key加载相应页面并传入businesskey，在页面可通过此参数查询业务单据。</p>
+<p>（vacation_view.html）</p>
+<p><img src="/assets/activiti-emo6.png" alt=""><img src="/assets/demo_vacation6.png" alt=""></p>
+<p>审批页面或者监控页面可查看对应的表单数据。</p>
+<p><img src="/assets/demo_vacaation9.png" alt=""></p>
+<h4 id="-">保存流程变量：</h4>
+<p>在表单页面，通过getFormProperties()函数返回需要保存的流程变量</p>
+<blockquote>
+<p> 将必要的业务数据通过getFormProperties以json对象返回，HAP将会自动将数据保存到流程变量里，便于控制流程</p>
+</blockquote>
+<pre><code class="lang-js"> <span class="hljs-keyword">var</span> viewModel = kendo.observable({
+ <span class="hljs-comment">//...</span>
+ <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getFormProperties</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">return</span> viewModel.model.toJSON()
+ }
+</code></pre>
+<h4 id="-">保存表单数据</h4>
+<p>在表单页面，通过回调函数executeWorkFlowTask实现业务数据的保存</p>
+<pre><code class="lang-js">var executeWorkFlowTask = function(actionCallBack,p){
+        $.ajax({
+            url: <span class="hljs-string">"${base.contextPath}/wfl/vacation/save"</span>,
+            type: <span class="hljs-string">"<span class="hljs-keyword">POST</span>"</span>,
+            dataType: <span class="hljs-string">"json"</span>,
+            contentType: <span class="hljs-string">"application/json"</span>,
+            data: kendo.stringify(viewModel.model),
+            success: function (args) {
+                actionCallBack.call(window.parent,p);
+            }
+        });
+    }
+</code></pre>
+<p>注意更新完业务数据以后，调用回调函数actionCallBack来完成审批动作。</p>
+<blockquote>
+<p>参数p 包含这次的审批动作(action)</p>
+</blockquote>

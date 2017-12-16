@@ -1,0 +1,210 @@
+<h1 id="-">锁机制</h1>
+<p>hap提供两种锁机制, 满足项目上对数据并发修改的需求.</p>
+<h2 id="1-">1.数据库锁</h2>
+<hr>
+<p>根据适当的参数进行物理锁定（数据库级锁），支持3种数据库：oracle，mysql，sqlserver。提供 API, 自动执行 sql</p>
+<blockquote>
+<p>   mysql,orcale 执行 select * from xxx where ... for update </p>
+<p> sqlserver 执行 select * from xxx with (ROWLOCK) where ...</p>
+<p> 都是数据库原生的锁机制</p>
+</blockquote>
+<p>使用方式：</p>
+<h3 id="-">单数据源</h3>
+<p>在Java代码中，注入<code>DatabaseLockProvider</code>类，</p>
+<pre><code class="lang-java">
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">XXXServiceImpl</span> {
+
+  @Autowired
+  <span class="hljs-keyword">private</span> DatabaseLockProvider databaseLockProvider;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">update</span> (<span class="hljs-params">XXX dto, ...</span>)</span>{
+
+    <span class="hljs-comment">// 传入锁定对象，锁定数据库相关行</span>
+    databaseLockProvider.<span class="hljs-keyword">lock</span>(dto);
+
+    <span class="hljs-comment">//...</span>
+  }
+}
+</code></pre>
+<h3 id="-">多数据源</h3>
+<p>在Java代码中，<code>自己创建DatabaseLockProvider类</code>，指定<code>dataSource</code></p>
+<pre><code class="lang-java">
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">XXXServiceImpl</span> </span>{
+
+  <span class="hljs-meta">@Autowired</span>
+  <span class="hljs-meta">@Qualifier</span>(<span class="hljs-string">"xxxDataSource"</span>)
+  <span class="hljs-keyword">private</span> DataSource dataSource;
+
+  <span class="hljs-keyword">private</span> DatabaseLockProvider databaseLockProvider;
+
+  <span class="hljs-meta">@Transactional</span>(propagation = Propagation.REQUIRED)
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">update</span> <span class="hljs-params">(XXX dto, ...)</span></span>{
+
+    databaseLockProvider = <span class="hljs-keyword">new</span> DatabaseLockProvider(dataSource)
+    <span class="hljs-comment">// 传入锁定对象，锁定数据库相关行</span>
+    databaseLockProvider.lock(dto);
+    <span class="hljs-comment">//...</span>
+  }
+}
+</code></pre>
+<blockquote>
+<p>事务提交以后，锁会自动释放</p>
+</blockquote>
+<p>DatabaseLockProvider提供的接口</p>
+<pre><code class="lang-java">
+<span class="hljs-comment">//根据传入对象，自动加锁。</span>
+<span class="hljs-comment">//确保bean上有@Table 注解，能自动解析出对应的表。 默认根据有@ID注解的字段进行加锁，确保id有值</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> lock(<span class="hljs-keyword">Object</span> dto) 
+
+<span class="hljs-comment">//根据传入对象和自定义的where条件，自动加锁。</span>
+<span class="hljs-comment">//传入类似 "name = ? and age = ?" 的条件语句，根据whereCondition，依次对应传入属性对应的值。</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> lock(<span class="hljs-keyword">Object</span> dto, <span class="hljs-keyword">String</span> whereCondition, <span class="hljs-keyword">Object</span>... whereParameter)
+
+<span class="hljs-comment">// 可以自定义表名，不必传入dto</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> lock(<span class="hljs-keyword">String</span> tableName, <span class="hljs-keyword">String</span> whereCondition, <span class="hljs-keyword">Object</span>... whereParameter)
+</code></pre>
+<h2 id="2-">2.分布式锁</h2>
+<p> 基于<code>redis</code>的锁，实现跨平台, 分布式锁</p>
+<p>使用方式：</p>
+<p> 1.根据实际配置的redis，修改配置文件<code>config.properties</code></p>
+<pre><code class="lang-properties">redisson<span class="hljs-selector-class">.server</span><span class="hljs-selector-class">.url</span>=<span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">6379</span>
+<span class="hljs-selector-id">#redissson</span><span class="hljs-selector-class">.server</span><span class="hljs-selector-class">.password</span>=
+</code></pre>
+<blockquote>
+<p>支持<code>多节点</code>配置，按照如下规范配置</p>
+<p>redisson.server.url=\</p>
+<p>   127.0.0.1:6379,\</p>
+<p>   10.211.103.142:6379</p>
+<p>内部使用redisson提供的<code>RedLock</code>进行加锁</p>
+</blockquote>
+<p> 2.在java代码中注入DistributedLockProvider</p>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">XXXServiceImpl</span> </span>{
+
+ <span class="hljs-meta">@Autowired</span>
+ <span class="hljs-meta">@Qualifier</span>(<span class="hljs-string">"distributeLockTemplate"</span>)
+ <span class="hljs-keyword">private</span> DistributedLockProvider distributedLockProvider;
+
+ <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">update</span> <span class="hljs-params">(XXX dto, ...)</span></span>{
+
+     <span class="hljs-comment">//使用回调方式，执行自己的业务逻辑</span>
+     distributedLockProvider.lock(dto,<span class="hljs-keyword">new</span> DistributedLockCallback&lt;Object&gt;() {
+                <span class="hljs-meta">@Override</span>
+                <span class="hljs-function"><span class="hljs-keyword">public</span> Object <span class="hljs-title">process</span><span class="hljs-params">()</span> </span>{
+                   <span class="hljs-comment">//doSomething();</span>
+                   <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+                })
+     }
+}
+</code></pre>
+<blockquote>
+<p>回调函数执行以后，锁都会自动释放</p>
+</blockquote>
+<p>DistributedLockProvider提供的接口：</p>
+<pre><code class="lang-java">    <span class="hljs-comment">/**
+     * 使用分布式锁，使用锁默认超时时间。
+     *
+     * <span class="hljs-doctag">@param</span> lockKey
+     *            加锁对象，确保有<span class="hljs-doctag">@ID</span>属性，建议BaseDto
+     * <span class="hljs-doctag">@param</span> callback
+     * <span class="hljs-doctag">@return</span>    回调函数返回的内容
+     */</span>
+    &lt;T&gt; <span class="hljs-function">T <span class="hljs-title">lock</span><span class="hljs-params">(Object lockKey, DistributedLockCallback&lt;T&gt; callback)</span></span>;
+
+    <span class="hljs-comment">/**
+     * 使用分布式锁，使用锁默认超时时间。
+     *
+     * <span class="hljs-doctag">@param</span> lockKey
+     *            确保唯一
+     * <span class="hljs-doctag">@param</span> callback
+     * <span class="hljs-doctag">@return</span>    回调函数返回的内容
+     */</span>
+    &lt;T&gt; <span class="hljs-function">T <span class="hljs-title">lock</span><span class="hljs-params">(String lockKey, DistributedLockCallback&lt;T&gt; callback)</span></span>;
+
+    <span class="hljs-comment">/**
+     * 使用分布式锁。自定义锁的超时时间
+     *
+     * <span class="hljs-doctag">@param</span> lockKey
+     *            加锁对象，确保有<span class="hljs-doctag">@ID</span>属性，建议BaseDto
+     * <span class="hljs-doctag">@param</span> callback
+     * <span class="hljs-doctag">@param</span> leaseTime
+     *            锁超时时间。超时后自动释放锁。
+     * <span class="hljs-doctag">@param</span> timeUnit
+     * <span class="hljs-doctag">@return</span>    回调函数返回的内容
+     */</span>
+    &lt;T&gt; <span class="hljs-function">T <span class="hljs-title">lock</span><span class="hljs-params">(Object lockKey, DistributedLockCallback&lt;T&gt; callback, <span class="hljs-keyword">long</span> leaseTime, TimeUnit timeUnit)</span></span>;
+
+    <span class="hljs-comment">/**
+     * 使用分布式锁。自定义锁的超时时间
+     *
+     * <span class="hljs-doctag">@param</span> lockKey
+     *            确保唯一
+     * <span class="hljs-doctag">@param</span> callback
+     * <span class="hljs-doctag">@param</span> leaseTime
+     *            锁超时时间。超时后自动释放锁。
+     * <span class="hljs-doctag">@param</span> timeUnit
+     * <span class="hljs-doctag">@return</span>    回调函数返回的内容
+     */</span>
+    &lt;T&gt; <span class="hljs-function">T <span class="hljs-title">lock</span><span class="hljs-params">(String lockKey, DistributedLockCallback&lt;T&gt; callback, <span class="hljs-keyword">long</span> leaseTime, TimeUnit timeUnit)</span></span>;
+
+    <span class="hljs-comment">/**
+     * 使用分布式锁，使用锁默认超时时间。
+     *
+     * <span class="hljs-doctag">@param</span> lockKey
+     *            确保唯一
+     * <span class="hljs-doctag">@param</span> callback
+     * <span class="hljs-doctag">@return</span>    回调函数返回的内容
+     *
+     * <span class="hljs-doctag">@exception</span> Exception 加锁过程的异常，比如锁已被占用，加锁失败
+     */</span>
+    &lt;T&gt; <span class="hljs-function">T <span class="hljs-title">tryLock</span><span class="hljs-params">(String lockKey, DistributedLockCallback&lt;T&gt; callback)</span> <span class="hljs-keyword">throws</span> Exception</span>;
+
+    <span class="hljs-comment">/**
+     * 使用分布式锁，使用锁默认超时时间。默认等待时间1秒
+     *
+     * <span class="hljs-doctag">@param</span> lockKey
+     *            加锁对象，确保有<span class="hljs-doctag">@ID</span>属性，建议BaseDto
+     * <span class="hljs-doctag">@param</span> callback
+     * <span class="hljs-doctag">@return</span>    回调函数返回的内容
+     *
+     * <span class="hljs-doctag">@exception</span> Exception 加锁过程的异常，比如锁已被占用，加锁失败
+     */</span>
+    &lt;T&gt; <span class="hljs-function">T <span class="hljs-title">tryLock</span><span class="hljs-params">(Object lockKey, DistributedLockCallback&lt;T&gt; callback)</span> <span class="hljs-keyword">throws</span> Exception</span>;
+
+    <span class="hljs-comment">/**
+     * 使用分布式锁。自定义锁的超时时间
+     *
+     * <span class="hljs-doctag">@param</span> lockKey
+     *            加锁对象，确保有<span class="hljs-doctag">@ID</span>属性，建议BaseDto
+     * <span class="hljs-doctag">@param</span> callback
+     * <span class="hljs-doctag">@param</span> waitTime
+     *            获取锁等待时间，超过设置时间未获得锁则抛出异常
+     * <span class="hljs-doctag">@param</span> leaseTime
+     *            锁超时时间。超时后自动释放锁。
+     * <span class="hljs-doctag">@param</span> timeUnit
+     *            waitTime，leaseTime 时间单位
+     * <span class="hljs-doctag">@return</span>    回调函数返回的内容
+     *
+     * <span class="hljs-doctag">@exception</span> Exception 加锁过程的异常，比如锁已被占用，加锁失败
+     */</span>
+    &lt;T&gt; <span class="hljs-function">T <span class="hljs-title">tryLock</span><span class="hljs-params">(Object lockKey, DistributedLockCallback&lt;T&gt; callback, <span class="hljs-keyword">long</span> waitTime, <span class="hljs-keyword">long</span> leaseTime, TimeUnit timeUnit)</span>
+            <span class="hljs-keyword">throws</span> Exception</span>;
+
+    <span class="hljs-comment">/**
+     * 使用分布式锁。自定义锁的超时时间
+     *
+     * <span class="hljs-doctag">@param</span> lockKey
+     *            确保唯一
+     * <span class="hljs-doctag">@param</span> callback
+     * <span class="hljs-doctag">@param</span> waitTime
+     *            获取锁等待时间，超过设置时间未获得锁则抛出异常
+     * <span class="hljs-doctag">@param</span> leaseTime
+     *            锁超时时间。超时后自动释放锁。
+     * <span class="hljs-doctag">@param</span> timeUnit
+     *            waitTime，leaseTime 的时间单位
+     * <span class="hljs-doctag">@return</span>    回调函数返回的内容
+     *
+     * <span class="hljs-doctag">@exception</span> Exception 加锁过程的异常，比如锁已被占用，加锁失败
+     */</span>
+    &lt;T&gt; <span class="hljs-function">T <span class="hljs-title">tryLock</span><span class="hljs-params">(String lockKey, DistributedLockCallback&lt;T&gt; callback, <span class="hljs-keyword">long</span> waitTime, <span class="hljs-keyword">long</span> leaseTime, TimeUnit timeUnit)</span>
+            <span class="hljs-keyword">throws</span> Exception</span>;
+</code></pre>

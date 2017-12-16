@@ -1,0 +1,213 @@
+<h1 id="-">多数源配置</h1>
+<hr>
+<p>HAP框架的多数据源配置：</p>
+<ul>
+<li>单独配置多个数据源，配置不同的sessionFactory，mapperScannerConfigurer。根据不同业务自行选择使用哪个数据源，针对每一个数据源，单独配置transactionManager。</li>
+</ul>
+<p>下面贴出一个配置demo:</p>
+<pre><code class="lang-xml"><span class="xml"><span class="hljs-comment">&lt;!-- jndi dataSource--&gt;</span>
+ <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"dataSource"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"org.springframework.jndi.JndiObjectFactoryBean"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"jndiName"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{db.jndiName}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"dataSource2"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"org.springframework.jndi.JndiObjectFactoryBean"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"jndiName"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{db.jndiName2}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"sqlSessionFactory"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"org.mybatis.spring.SqlSessionFactoryBean"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"dataSource"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"dataSource"</span>/&gt;</span>
+        <span class="hljs-comment">&lt;!-- 注意：这里针对不同的数据源，应该配置不同的扫描路径！！！--&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"mapperLocations"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"classpath*:com/hand/hap/**/*Mapper.xml"</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"plugins"</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">array</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.hand.hap.core.interceptor.RequestContextInterceptor"</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.hand.hap.core.interceptor.MultiLanguageInterceptor"</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.hand.hap.core.interceptor.SecurityTokenInterceptor"</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.hand.hap.core.interceptor.OvnInterceptor"</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.hand.hap.core.interceptor.AuditInterceptor"</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.hand.hap.core.interceptor.DataPermissionInterceptor"</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.github.pagehelper.PageHelper"</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.hand.hap.core.interceptor.CacheJoinInterceptor"</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"cacheJoinType"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"cacheJoinType"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">array</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"configLocation"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"classpath:mybatis-configuration.xml"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"sqlSessionFactory2"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"org.mybatis.spring.SqlSessionFactoryBean"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"dataSource"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"dataSource2"</span>/&gt;</span>
+        <span class="hljs-comment">&lt;!-- 注意：这里针对不同的数据源，应该配置不同的扫描路径！！！--&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"mapperLocations"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"classpath*:com/hand/test/**/*Mapper.xml"</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"plugins"</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">array</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.hand.hap.core.interceptor.RequestContextInterceptor"</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.hand.hap.core.interceptor.MultiLanguageInterceptor"</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.hand.hap.core.interceptor.SecurityTokenInterceptor"</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.hand.hap.core.interceptor.OvnInterceptor"</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.hand.hap.core.interceptor.AuditInterceptor"</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.hand.hap.core.interceptor.DataPermissionInterceptor"</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.github.pagehelper.PageHelper"</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.hand.hap.core.interceptor.CacheJoinInterceptor"</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"cacheJoinType"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"cacheJoinType"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">array</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"configLocation"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"classpath:mybatis-configuration.xml"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"sqlSession"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"org.mybatis.spring.SqlSessionTemplate"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">constructor-arg</span> <span class="hljs-attr">index</span>=<span class="hljs-string">"0"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"sqlSessionFactory"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"sqlSessionFactory"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+
+    <span class="hljs-comment">&lt;!-- mapper definition --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"mapperScannerConfigurer"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.hand.hap.mybatis.spring.MapperScannerConfigurer"</span>&gt;</span>
+        <span class="hljs-comment">&lt;!-- 注意：这里针对不同的数据源，应该配置不同的扫描路径！！！--&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"basePackage"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"com.hand.hap.**.mapper"</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"processPropertyPlaceHolders"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"true"</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"propertiesMap"</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">map</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">entry</span> <span class="hljs-attr">key</span>=<span class="hljs-string">"mappers"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"com.hand.hap.mybatis.common.Mapper"</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">entry</span> <span class="hljs-attr">key</span>=<span class="hljs-string">"IDENTITY"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{mybatis.identity}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">entry</span> <span class="hljs-attr">key</span>=<span class="hljs-string">"dataBaseType"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{db.type}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">entry</span> <span class="hljs-attr">key</span>=<span class="hljs-string">"seqFormat"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"</span></span></span><span class="hljs-template-variable">{3}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">_s.nextVal"</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">entry</span> <span class="hljs-attr">key</span>=<span class="hljs-string">"enableMethodAnnotation"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"true"</span>/&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">map</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"sqlSessionFactoryBeanName"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"sqlSessionFactory"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"mapperScannerConfigurer2"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.hand.hap.mybatis.spring.MapperScannerConfigurer"</span>&gt;</span>
+      <span class="hljs-comment">&lt;!-- 注意：这里针对不同的数据源，应该配置不同的扫描路径！！！--&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"basePackage"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"com.hand.test.**.mapper"</span>/&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"processPropertyPlaceHolders"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"true"</span>/&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"propertiesMap"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">map</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">entry</span> <span class="hljs-attr">key</span>=<span class="hljs-string">"mappers"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"com.hand.hap.mybatis.common.Mapper"</span>/&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">entry</span> <span class="hljs-attr">key</span>=<span class="hljs-string">"IDENTITY"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{mybatis.identity2}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>/&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">entry</span> <span class="hljs-attr">key</span>=<span class="hljs-string">"dataBaseType"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{db.type2}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>/&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">entry</span> <span class="hljs-attr">key</span>=<span class="hljs-string">"seqFormat"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"</span></span></span><span class="hljs-template-variable">{3}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">_s.nextVal"</span>/&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">entry</span> <span class="hljs-attr">key</span>=<span class="hljs-string">"enableMethodAnnotation"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"true"</span>/&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">map</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"sqlSessionFactoryBeanName"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"sqlSessionFactory2"</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- config transactionManager --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"transactionManager"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"org.springframework.jdbc.datasource.DataSourceTransactionManager"</span>&gt;</span>
+     <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"dataSource"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"dataSource"</span>/&gt;</span>
+ <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"transactionManager2"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"org.springframework.jdbc.datasource.DataSourceTransactionManager"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"dataSource"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"dataSource2"</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+ <span class="hljs-tag">&lt;<span class="hljs-name">tx:annotation-driven</span>/&gt;</span></span>
+</code></pre>
+<p>配置完成后，因为不同的数据源配置的mapper扫描路径不一样，所以根据包名可以区分使用的数据源。</p>
+<blockquote>
+<p>注意 不同的transactionManager管理不同的数据源，在service层的Transactional注解上需要指定transactionManager的ID，默认不指定是用transactionManager</p>
+</blockquote>
+<pre><code class="lang-Java"><span class="hljs-keyword">package</span> com.hand.test.test.service.impl;
+
+<span class="hljs-meta">@Service</span>
+<span class="hljs-meta">@Transactional</span>(value = <span class="hljs-string">"transactionManager2"</span>,rollbackFor = <span class="hljs-type">Exception</span>.<span class="hljs-keyword">class</span>)
+public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DemoServiceImpl</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseServiceImpl&lt;Demo&gt;</span> <span class="hljs-title">implements</span> <span class="hljs-title">IDemoService</span></span>{
+
+    <span class="hljs-meta">@Autowired</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-type">IUserService</span> userService;
+
+    <span class="hljs-meta">@Override</span>
+    public <span class="hljs-type">Demo</span> insertSelective(<span class="hljs-type">IRequest</span> request, <span class="hljs-type">Demo</span> record) {
+        <span class="hljs-type">Demo</span> demo =  <span class="hljs-keyword">super</span>.insertSelective(request, record);
+        userService.insertSelective(request,<span class="hljs-keyword">new</span> <span class="hljs-type">User</span>());
+        <span class="hljs-comment">//throw Exception</span>
+        int i = <span class="hljs-number">1</span>/<span class="hljs-number">0</span>;
+        <span class="hljs-keyword">return</span> demo;
+    }
+}
+</code></pre>
+<p>但是以上代码有个问题,因为IUserService使用的是dataSource，但是事务管理器transactionManager2管理的是dataSource2，因此抛出异常后，userService插入的数据不会回滚，插入的demo则会回滚。</p>
+<p>所以使用这个配置，要小心业务代码里同时使用多个数据源。
+如果你想保证事务一致性，抛出异常后，两个数据源都可以一致回滚，可以采用Atomikos，一个分布式事务的解决方案，下面给出配置demo:</p>
+<p>首先在pom里添加如下依赖：</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+           <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.atomikos<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+           <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>transactions-jdbc<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+           <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>4.0.2<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+       <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+       <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+           <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>javax.transaction<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+           <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>jta<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+           <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.1<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+</code></pre>
+<p>配置数据源：</p>
+<pre><code class="lang-xml"><span class="hljs-comment">&lt;!-- 两个数据源的功用配置，方便下面直接引用 --&gt;</span>
+  <span class="hljs-comment">&lt;!-- 数据源配置必须使用AtomikosDataSourceBean，因此JNDI配置不能用了--&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"abstractXADataSource"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.atomikos.jdbc.AtomikosDataSourceBean"</span> <span class="hljs-attr">init-method</span>=<span class="hljs-string">"init"</span>
+        <span class="hljs-attr">destroy-method</span>=<span class="hljs-string">"close"</span> <span class="hljs-attr">abstract</span>=<span class="hljs-string">"true"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"poolSize"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"10"</span> /&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"minPoolSize"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"10"</span>/&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"maxPoolSize"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"30"</span>/&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"borrowConnectionTimeout"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"60"</span>/&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"reapTimeout"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"20"</span>/&gt;</span>
+      <span class="hljs-comment">&lt;!-- 最大空闲时间 --&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"maxIdleTime"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"60"</span>/&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"maintenanceInterval"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"60"</span> /&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"loginTimeout"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"60"</span>/&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"logWriter"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"60"</span>/&gt;</span>
+     <span class="hljs-comment">&lt;!-- &lt;property name="testQuery"&gt;
+          &lt;value&gt;select 1&lt;/value&gt;
+      &lt;/property&gt;--&gt;</span>
+
+  <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+
+  <span class="hljs-comment">&lt;!-- 配置第一个数据源 --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"dataSource"</span> <span class="hljs-attr">parent</span>=<span class="hljs-string">"abstractXADataSource"</span>&gt;</span>
+      <span class="hljs-comment">&lt;!-- value只要两个数据源不同就行，随便取名 --&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"uniqueResourceName"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"oracle/sitestone"</span> /&gt;</span>
+      <span class="hljs-comment">&lt;!-- 注意className,不同的数据库不一样 --&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"xaDataSourceClassName"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"oracle.jdbc.xa.client.OracleXADataSource"</span>/&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"xaProperties"</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">props</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-name">prop</span> <span class="hljs-attr">key</span>=<span class="hljs-string">"URL"</span>&gt;</span>jdbc:oracle:thin:@10.211.107.202:1521:xe<span class="hljs-tag">&lt;/<span class="hljs-name">prop</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-name">prop</span> <span class="hljs-attr">key</span>=<span class="hljs-string">"user"</span>&gt;</span>hap_dev<span class="hljs-tag">&lt;/<span class="hljs-name">prop</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-name">prop</span> <span class="hljs-attr">key</span>=<span class="hljs-string">"password"</span>&gt;</span>hap_dev<span class="hljs-tag">&lt;/<span class="hljs-name">prop</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-name">props</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+
+  <span class="hljs-comment">&lt;!-- 配置第二个数据源--&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"dataSource2"</span> <span class="hljs-attr">parent</span>=<span class="hljs-string">"abstractXADataSource"</span>&gt;</span>
+      <span class="hljs-comment">&lt;!-- value只要两个数据源不同就行，随便取名 --&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"uniqueResourceName"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"mysql/sitesttwo"</span> /&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"xaDataSourceClassName"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"com.mysql.jdbc.jdbc2.optional.MysqlXADataSource"</span>/&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"xaProperties"</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">props</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-name">prop</span> <span class="hljs-attr">key</span>=<span class="hljs-string">"url"</span>&gt;</span>jdbc:mysql://10.211.107.202:3306/hap_dev<span class="hljs-tag">&lt;/<span class="hljs-name">prop</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-name">prop</span> <span class="hljs-attr">key</span>=<span class="hljs-string">"user"</span>&gt;</span>hap_dev<span class="hljs-tag">&lt;/<span class="hljs-name">prop</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-name">prop</span> <span class="hljs-attr">key</span>=<span class="hljs-string">"password"</span>&gt;</span>hap_dev<span class="hljs-tag">&lt;/<span class="hljs-name">prop</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-name">props</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+
+  <span class="hljs-comment">&lt;!-- 其他sqlSessionFactory，mapperScannerConfigurer配置跟上面一样 --&gt;</span>
+  <span class="hljs-comment">&lt;!-- 分布式事务 --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"atomikosTransactionManager"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.atomikos.icatch.jta.UserTransactionManager"</span> <span class="hljs-attr">init-method</span>=<span class="hljs-string">"init"</span>
+          <span class="hljs-attr">destroy-method</span>=<span class="hljs-string">"close"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"forceShutdown"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"true"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"atomikosUserTransaction"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.atomikos.icatch.jta.UserTransactionImp"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"transactionTimeout"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"300"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"transactionManager"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"org.springframework.transaction.jta.JtaTransactionManager"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"transactionManager"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"atomikosTransactionManager"</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"userTransaction"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"atomikosUserTransaction"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">tx:annotation-driven</span>/&gt;</span>
+</code></pre>
+<p>注意：
+ 以上配置导致mybatis拦截器有一个问题，HAP3.3.0-RELEASE规避了这个问题，使用以上配置需要升级至HAP3.3.0-RELEASE及以上版本。</p>
+<p> 因为使用分布式事务管理，Transactional注解不再需要指定value，所有数据源的事务都讲统一管理，上述例子两个插入操作都会回滚。</p>
+<blockquote>
+<p>使用多数据源配置，因为需要修改mapper的扫描路径，所以需要覆盖HAP的spring/applicationContext.xml 修改默认数据源dataSource的配置，其他数据源可以写在项目上的其他xml文件中</p>
+</blockquote>

@@ -1,0 +1,221 @@
+<h1 id="ligerui-">LigerUI开发实践</h1>
+<h5 id="njq-niu-hand-chian-com">njq.niu@hand-chian.com</h5>
+<hr>
+<h2 id="ligerui-grid">LigerUI Grid</h2>
+<h3 id="-canselect-">增加canSelect可选择函数</h3>
+<p>grid中每一行的复选框可以动态通过canSelect函数进行</p>
+<p>例如：ID大于8的不能选中</p>
+<pre><code class="lang-javascript">canSelect:<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(item)</span></span>{
+   <span class="hljs-keyword">return</span> item.ID &gt; <span class="hljs-number">8</span>;  
+},
+</code></pre>
+<h3 id="-">如何动态控制一列中数据是否可以编辑</h3>
+<p>往往有这样的需求，某一行的数据是否可以编辑要取决于其他字段的值。
+grid可以通过onBeforeEdit事件函数来实现</p>
+<pre><code class="lang-javascript">onBeforeEdit:function(item){
+    <span class="hljs-comment">//获取编辑的列名name,以及当前行的数据data</span>
+    <span class="hljs-keyword">var</span> name = item.column.name,<span class="hljs-keyword">data</span> = item.record;
+    <span class="hljs-comment">//判断编辑的列名是否是"RealName"</span>
+     <span class="hljs-keyword">if</span>(name == <span class="hljs-string">'RealName'</span>){
+         <span class="hljs-comment">//ID小于10的返回false表明不能编辑</span>
+         <span class="hljs-keyword">return</span> !(<span class="hljs-keyword">data</span>.ID&lt;<span class="hljs-number">10</span>);
+     }
+     <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+ }
+</code></pre>
+<h3 id="form-lov">form上实现lov</h3>
+<p>form上lov的实现代码</p>
+<pre><code class="lang-javascript">{
+    <span class="hljs-string">display :</span> <span class="hljs-string">"用户 2"</span>,
+    <span class="hljs-string">name :</span> <span class="hljs-string">"userId"</span>,<span class="hljs-comment">//最终选中的值字段名</span>
+    <span class="hljs-string">type :</span> <span class="hljs-string">"popup"</span>,
+    <span class="hljs-string">newline :</span> <span class="hljs-literal">false</span>,
+    <span class="hljs-comment">//如果不需要把lov选中的textField值放进data中那么这个属性可以不设置，如果需要放在data中就需要设置</span>
+<span class="hljs-symbol">    textField:</span><span class="hljs-string">'userName'</span>,
+<span class="hljs-symbol">    options:</span>{
+<span class="hljs-symbol">        readonly:</span><span class="hljs-literal">false</span>,<span class="hljs-comment">//是否可编辑</span>
+        <span class="hljs-string">valueField :</span> <span class="hljs-string">'userId'</span>,<span class="hljs-comment">//选中的valueField</span>
+        <span class="hljs-string">textField :</span> <span class="hljs-string">'loginName'</span>,<span class="hljs-comment">//选中的textField</span>
+        <span class="hljs-string">grid :</span> {
+            <span class="hljs-string">columns :</span> [ {
+                <span class="hljs-string">display :</span> <span class="hljs-string">'loginName'</span>,
+                <span class="hljs-string">name :</span> <span class="hljs-string">"loginName"</span>,
+                <span class="hljs-string">width :</span> <span class="hljs-number">150</span>,
+                <span class="hljs-string">type :</span> <span class="hljs-string">"int"</span>,
+                <span class="hljs-string">align :</span> <span class="hljs-string">"left"</span>
+            }, {
+                <span class="hljs-string">display :</span> <span class="hljs-string">'name'</span>,
+                <span class="hljs-string">name :</span> <span class="hljs-string">"name"</span>,
+                <span class="hljs-string">width :</span> <span class="hljs-number">150</span>,
+                <span class="hljs-string">type :</span> <span class="hljs-string">"text"</span>,
+                <span class="hljs-string">align :</span> <span class="hljs-string">"left"</span>
+            }, {
+                <span class="hljs-string">display :</span> <span class="hljs-string">"email"</span>,
+                <span class="hljs-string">name :</span> <span class="hljs-string">"email"</span>,
+                <span class="hljs-string">width :</span> <span class="hljs-number">150</span>,
+                <span class="hljs-string">type :</span> <span class="hljs-string">"text"</span>,
+                <span class="hljs-string">align :</span> <span class="hljs-string">"left"</span>
+            }, {
+                <span class="hljs-string">display :</span> <span class="hljs-string">"phone"</span>,
+                <span class="hljs-string">name :</span> <span class="hljs-string">"phone"</span>,
+                <span class="hljs-string">width :</span> <span class="hljs-number">150</span>,
+                <span class="hljs-string">type :</span> <span class="hljs-string">"text"</span>,
+                <span class="hljs-string">align :</span> <span class="hljs-string">"left"</span>
+            } ],
+            <span class="hljs-comment">//数据查询的url</span>
+            <span class="hljs-string">url :</span> <span class="hljs-string">'${base.contextPath}/sys/user/select'</span> 
+        },
+        <span class="hljs-comment">//lov上的查询条件</span>
+        <span class="hljs-string">condition :</span> {
+            <span class="hljs-string">inputWidth :</span> <span class="hljs-number">150</span>,
+            <span class="hljs-string">labelWidth :</span> <span class="hljs-number">70</span>,
+            <span class="hljs-string">fields :</span> [ {
+                <span class="hljs-string">display :</span> <span class="hljs-string">'loginName'</span>,
+                <span class="hljs-string">name :</span> <span class="hljs-string">"loginName"</span>,
+                <span class="hljs-string">newline :</span> <span class="hljs-literal">true</span>,
+                <span class="hljs-string">type :</span> <span class="hljs-string">"text"</span>
+            }, {
+                <span class="hljs-string">display :</span> <span class="hljs-string">'name'</span>,
+                <span class="hljs-string">name :</span> <span class="hljs-string">"name"</span>,
+                <span class="hljs-string">newline :</span> <span class="hljs-literal">false</span>,
+                <span class="hljs-string">type :</span> <span class="hljs-string">"text"</span>
+            } ]
+        }
+    }
+
+}
+</code></pre>
+<h3 id="grid-lov">grid上实现lov</h3>
+<pre><code class="lang-javascript">{
+    <span class="hljs-string">display :</span> <span class="hljs-string">'lov'</span>,
+    <span class="hljs-string">name :</span> <span class="hljs-string">'userId'</span>,
+    <span class="hljs-string">width :</span> <span class="hljs-number">220</span>,
+    <span class="hljs-comment">//很重要，否则无法显示选中的描述</span>
+<span class="hljs-symbol">    textField:</span><span class="hljs-string">'loginName'</span>,
+    <span class="hljs-string">editor :</span> {
+        <span class="hljs-string">type :</span> <span class="hljs-string">'popup'</span>,
+        <span class="hljs-string">valueField :</span> <span class="hljs-string">'userId'</span>,<span class="hljs-comment">//lov的valueField</span>
+        <span class="hljs-string">textField :</span> <span class="hljs-string">'loginName'</span>,<span class="hljs-comment">//lov的textField</span>
+        <span class="hljs-string">grid :</span> {
+            <span class="hljs-string">columns :</span> [ {
+                <span class="hljs-string">display :</span> <span class="hljs-string">'&lt;@spring.message "type.com.hand.hap.dto.sys.user.loginname"/&gt;'</span>,
+                <span class="hljs-string">name :</span> <span class="hljs-string">"loginName"</span>,
+                <span class="hljs-string">width :</span> <span class="hljs-number">150</span>,
+                <span class="hljs-string">type :</span> <span class="hljs-string">"int"</span>
+            }, {
+                <span class="hljs-string">display :</span> <span class="hljs-string">'&lt;@spring.message "type.com.hand.hap.dto.sys.user.name"/&gt;'</span>,
+                <span class="hljs-string">name :</span> <span class="hljs-string">"name"</span>,
+                <span class="hljs-string">width :</span> <span class="hljs-number">150</span>,
+                <span class="hljs-string">type :</span> <span class="hljs-string">"text"</span>
+            }, {
+                <span class="hljs-string">display :</span> <span class="hljs-string">"email"</span>,
+                <span class="hljs-string">name :</span> <span class="hljs-string">"email"</span>,
+                <span class="hljs-string">width :</span> <span class="hljs-number">150</span>,
+                <span class="hljs-string">type :</span> <span class="hljs-string">"text"</span>
+            }, {
+                <span class="hljs-string">display :</span> <span class="hljs-string">"phone"</span>,
+                <span class="hljs-string">name :</span> <span class="hljs-string">"phone"</span>,
+                <span class="hljs-string">width :</span> <span class="hljs-number">150</span>,
+                <span class="hljs-string">type :</span> <span class="hljs-string">"text"</span>
+            } ],
+            <span class="hljs-string">url :</span> <span class="hljs-string">'${base.contextPath}/sys/user/select'</span>
+        },
+        <span class="hljs-comment">//lov上的查询条件</span>
+        <span class="hljs-string">condition :</span> {
+            <span class="hljs-string">inputWidth :</span> <span class="hljs-number">150</span>,
+            <span class="hljs-string">labelWidth :</span> <span class="hljs-number">70</span>,
+            <span class="hljs-string">fields :</span> [ {
+                <span class="hljs-string">display :</span> <span class="hljs-string">'&lt;@spring.message "type.com.hand.hap.dto.sys.user.loginname"/&gt;'</span>,
+                <span class="hljs-string">name :</span> <span class="hljs-string">"loginName"</span>,
+                <span class="hljs-string">newline :</span> <span class="hljs-literal">true</span>,
+                <span class="hljs-string">type :</span> <span class="hljs-string">"text"</span>
+            }, {
+                <span class="hljs-string">display :</span> <span class="hljs-string">'&lt;@spring.message "type.com.hand.hap.dto.sys.user.name"/&gt;'</span>,
+                <span class="hljs-string">name :</span> <span class="hljs-string">"name"</span>,
+                <span class="hljs-string">newline :</span> <span class="hljs-literal">false</span>,
+                <span class="hljs-string">type :</span> <span class="hljs-string">"text"</span>
+            } ]
+        }
+    }
+}
+</code></pre>
+<h3 id="form-select-">form上的select联动</h3>
+<p>form上select的联动是通过onBeforeOpen事件函数来实现，在打开select的时候触发设置查询参数</p>
+<pre><code class="lang-javascript">{
+    display: <span class="hljs-string">"Employee"</span>,
+    name: <span class="hljs-string">"employeeId"</span>,
+    type: <span class="hljs-string">"select"</span>,
+    textField:<span class="hljs-string">"employeeName"</span>,
+    options: {
+        readonly: <span class="hljs-literal">false</span>,
+        valueField: <span class="hljs-string">'employeeId'</span>,
+        textField: <span class="hljs-string">'employeeName'</span>,
+        url: <span class="hljs-string">'host/employee/query'</span>,
+        triggerToLoad: <span class="hljs-literal">true</span>,<span class="hljs-comment">//注意</span>
+        onBeforeOpen: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+            <span class="hljs-comment">//这里设置查询参数</span>
+            <span class="hljs-keyword">this</span>.setParm(<span class="hljs-string">'deptId'</span>, liger.get(<span class="hljs-string">'deptId'</span>).getValue());
+            <span class="hljs-keyword">this</span>.triggerLoaded = <span class="hljs-literal">false</span>;<span class="hljs-comment">//注意</span>
+        }
+    }
+}
+</code></pre>
+<h3 id="form-lov-">form上的lov联动</h3>
+<p>form上lov的动态参数设置通过onLoadData事件函数实现</p>
+<pre><code class="lang-javascript">{
+    <span class="hljs-attribute">display</span>: <span class="hljs-string">"角色"</span>,
+    name: <span class="hljs-string">"roleId"</span>,
+    type: <span class="hljs-string">"popup"</span>,
+    textField: <span class="hljs-string">'roleName'</span>,
+    options:{
+         // 其他popup配置
+        onLoadData: <span class="hljs-built_in">function</span>() {
+             //设置参数
+            this.<span class="hljs-built_in">setParm</span>(<span class="hljs-string">'deptId'</span>, $.ligerui.get(<span class="hljs-string">'deptId'</span>).<span class="hljs-built_in">getValue</span>())
+        }
+    })
+}
+</code></pre>
+<p>对于通用lov，可以通过extend方式扩展onLoadData事件</p>
+<pre><code class="lang-javascript">options: $.extend($ {lovService.getLov(base<span class="hljs-selector-class">.contextPath</span>, base<span class="hljs-selector-class">.locale</span>, <span class="hljs-string">"lov_role"</span>)},{
+    onLoadData: function() {
+        this.setParm(<span class="hljs-string">'deptId'</span>, $<span class="hljs-selector-class">.ligerui</span><span class="hljs-selector-class">.get</span>(<span class="hljs-string">'deptId'</span>).getValue())
+    }
+})
+</code></pre>
+<h3 id="grid-select-">grid上的select联动</h3>
+<pre><code class="lang-javascript"><span class="hljs-attribute">display</span>: <span class="hljs-string">'Emplooyee'</span>,
+<span class="hljs-attribute">width</span>: <span class="hljs-number">150</span>,
+name: <span class="hljs-string">'employeeId'</span>,
+type: <span class="hljs-string">'text'</span>,
+textField: <span class="hljs-string">'employeeName'</span>,
+editor: {
+    type: <span class="hljs-string">'select'</span>,
+    textField: <span class="hljs-string">'name'</span>,
+    valueField: <span class="hljs-string">'id'</span>,
+    url: <span class="hljs-string">'${base.contextPath}/demo/user/query'</span>,
+    <span class="hljs-comment">//设置参数</span>
+    staticOptions: function(e) {
+        e<span class="hljs-selector-class">.column</span><span class="hljs-selector-class">.editor</span><span class="hljs-selector-class">.parms</span> = {
+            name: e<span class="hljs-selector-class">.record</span><span class="hljs-selector-class">.name</span>,
+            age: <span class="hljs-number">11</span>
+        }
+    }
+</code></pre>
+<h3 id="grid-lov-">grid上lov联动</h3>
+<pre><code class="lang-javascript">{
+    <span class="hljs-attribute">display </span>: <span class="hljs-string">'通用lov3'</span>,  
+    name : <span class="hljs-string">'roleId'</span>,
+    width : <span class="hljs-number">150</span>,
+    textField:<span class="hljs-string">'roleName'</span>,
+    align: <span class="hljs-string">'left'</span>,
+    editor: $.<span class="hljs-built_in">extend</span>(${lovService.getLov(base.contextPath,base.locale, <span class="hljs-string">"lov_role"</span>)},{
+        <span class="hljs-attribute">staticOptions </span>: <span class="hljs-built_in">function</span>(e){
+            //设置参数
+            e.column.editor.parms = {
+                deptId : e.record.deptId
+            }
+        }
+    })
+}
+</code></pre>

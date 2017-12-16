@@ -1,0 +1,200 @@
+<h2 id="form-">Form表单</h2>
+<p>页面表单部分</p>
+<blockquote>
+<p><strong>kendoui的表单部分常用的有</strong></p>
+<ul>
+<li>textbox</li>
+<li>combobox</li>
+<li>lov</li>
+<li>datapicker
+<strong>当组件被加载时，首先通过data-role去判断当前组件是什么，然后在根据data-bind去绑定资源</strong><h4 id="-i-class-icon-file-i-textbox"><i class="icon-file"></i>textbox</h4>
+</li>
+</ul>
+</blockquote>
+<pre><code class="lang-html"><span class="hljs-comment">//1.</span>
+ &lt;input <span class="hljs-class"><span class="hljs-keyword">type</span></span>=<span class="hljs-string">"text"</span> placeholder='...' data-bind=<span class="hljs-string">"value:model.url"</span> <span class="hljs-class"><span class="hljs-keyword">class</span></span>=<span class="hljs-string">"k-textbox"</span>&gt;
+
+<span class="hljs-comment">//2.</span>
+&lt;div <span class="hljs-class"><span class="hljs-keyword">class</span></span>=<span class="hljs-string">"form-group"</span>&gt;
+    &lt;label <span class="hljs-class"><span class="hljs-keyword">class</span></span>=<span class="hljs-string">"col-sm-2 control-label"</span>&gt;...&lt;/label&gt;
+    &lt;div <span class="hljs-class"><span class="hljs-keyword">class</span></span>=<span class="hljs-string">"col-sm-10"</span>&gt;
+        &lt;input <span class="hljs-class"><span class="hljs-keyword">type</span></span>=<span class="hljs-string">"text"</span> <span class="hljs-class"><span class="hljs-keyword">class</span></span>=<span class="hljs-string">"k-textbox"</span> data-bind=<span class="hljs-string">"value:model.placeholder"</span>&gt;                                   
+     &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<blockquote>
+<p><strong>注意:</strong></p>
+<ul>
+<li>kendoui中textbox的样式：.k-textbox
+data-role = &quot;maskedtextbox&quot;,如果data-role不存在，会默认为文本框</li>
+</ul>
+</blockquote>
+<h4 id="-i-class-icon-file-i-combobox"><i class="icon-file"></i>combobox</h4>
+<p>在下拉框原有定义上，加入了data-role属性，使kendoui通过data-role寻找到的组件特性加载它，并且同时根据data-bind里面的source属性加载数据源，也就是下拉框的内容</p>
+<pre><code class="lang-html">&lt;<span class="hljs-keyword">select</span> <span class="hljs-built_in">data</span><span class="hljs-params">-role</span>=<span class="hljs-string">"combobox"</span> <span class="hljs-built_in">data</span><span class="hljs-params">-value</span><span class="hljs-params">-primitive</span>=<span class="hljs-string">"true"</span> placeholder=<span class="hljs-string">'...'</span>  <span class="hljs-built_in">data</span><span class="hljs-params">-text</span><span class="hljs-params">-field</span>=<span class="hljs-string">"meaning"</span> <span class="hljs-built_in">data</span><span class="hljs-params">-value</span><span class="hljs-params">-field</span>=<span class="hljs-string">"value"</span> <span class="hljs-built_in">data</span><span class="hljs-params">-bind</span>=<span class="hljs-string">"source: resourceTypeData2, value: model.type"</span>&gt;
+&lt;/<span class="hljs-keyword">select</span>&gt;
+</code></pre>
+<blockquote>
+<p><strong>注意:</strong></p>
+<ul>
+<li>data-bind中的source指定了下拉框的<strong>数据来源</strong>,</li>
+<li>data-text-field 指定下拉框显示字段</li>
+<li>data-value-field 指定下拉框显示属性字段名<ul>
+<li>data-value-primitive 绑定会是一条数据，而不是一个对象</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h4 id="-i-class-icon-file-i-lov"><i class="icon-file"></i>lov</h4>
+<p>kendoui并没有实现lov，所以没有data-role</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"role"</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">'...'</span>  <span class="hljs-attr">data-bind</span>=<span class="hljs-string">"value:model.roleId,text:model.roleName"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+  $(<span class="hljs-string">"#role"</span>).kendoLov(${lovProvider.getLov(base.contextPath, base.locale, <span class="hljs-string">"LOV_ROLE"</span>)})  
+ </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</code></pre>
+<blockquote>
+<p><strong>注意:</strong></p>
+<ul>
+<li>LOV_ROLE是在lov定义中自定义的lov</li>
+<li>data-bind中text 是值从lov中选中数据后会在输入框中显示的字段</li>
+</ul>
+</blockquote>
+<h4 id="-i-class-icon-file-i-datapicker"><i class="icon-file"></i>datapicker</h4>
+<p>时间选择器，会弹出一个日历让你选择</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"startTime"</span> <span class="hljs-attr">data-bind</span>=<span class="hljs-string">"value:model.start"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+$(<span class="hljs-string">"#startTime"</span>).kendoDatePicker({
+                <span class="hljs-attr">animation</span>: {
+                    <span class="hljs-attr">close</span>: {
+                    },
+                    <span class="hljs-attr">open</span>: {
+                    }
+                },
+                <span class="hljs-attr">format</span>: <span class="hljs-string">"{0:yyyy-MM-dd}"</span>,
+                <span class="hljs-attr">change</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{                    
+                }
+            });
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</code></pre>
+<blockquote>
+<p><strong>注意:</strong></p>
+<ul>
+<li>日期选择器kendoDatePicker中有多种方法属性，例如change:当日期发生变化时触发的函数，format格式属性等等</li>
+</ul>
+</blockquote>
+<hr>
+<h4 id="-"><strong>表单回车查询</strong></h4>
+<pre><code class="lang-javascript">$(<span class="hljs-string">'#query-form input'</span>).keydown(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>{
+        <span class="hljs-keyword">if</span> (e.keyCode == <span class="hljs-number">13</span>) {
+            e.target.blur();
+            viewModel.queryResource(e);
+        }
+});
+</code></pre>
+<blockquote>
+<p><strong>详解：</strong></p>
+<ul>
+<li>query-form 是表单id，input指表单内所有输入框</li>
+<li>viewModel.queryResource(e)当按下回车按钮时都执行查询方法</li>
+</ul>
+</blockquote>
+<hr>
+<h4 id="-i-class-icon-file-i-"><i class="icon-file"></i> 表单校验</h4>
+<p>1.前端校验</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"priorityLevel"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"priorityLevel"</span> <span class="hljs-attr">required</span> 
+  <span class="hljs-attr">data-bind</span>=<span class="hljs-string">"value: model.priorityLevel"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+$(<span class="hljs-string">"#priorityLevel"</span>).kendoValidator({
+     <span class="hljs-attr">errorTemplate</span> :<span class="hljs-string">"..."</span>;
+ }).data(<span class="hljs-string">"kendoValidator"</span>);
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</code></pre>
+<blockquote>
+<p><strong>注意:</strong></p>
+<ul>
+<li>input中必须有<strong>name</strong>字段</li>
+<li>前段验证主要为了增强用户体验，告诉用户此字段这样子是否合法，重点校验还是在后端验证</li>
+<li>errorTemplate错误提示模板，可自定义</li>
+</ul>
+</blockquote>
+<p>2.后端验证</p>
+<pre><code class="lang-java"><span class="hljs-comment">//控制层（以代码维护为例）</span>
+<span class="hljs-meta">@RequestMapping(value = <span class="hljs-meta-string">"/sys/code/submit"</span>, method = RequestMethod.POST)</span>
+    <span class="hljs-keyword">public</span> ResponseData submitCode(<span class="hljs-meta">@RequestBody</span> List&lt;Code&gt; codes, BindingResult result, HttpServletRequest request) {
+         validator.validate(codes, result);<span class="hljs-comment">//验证</span>
+        <span class="hljs-keyword">if</span> (result.hasErrors()) {
+            ResponseData rd = new ResponseData(<span class="hljs-literal">false</span>);
+            rd.setMessage(getErrorMessage(result, request));
+            <span class="hljs-keyword">return</span> rd;
+        }
+        IRequest requestContext = createRequestContext(request);
+        <span class="hljs-keyword">return</span> new ResponseData(codeService.batchUpdate(requestContext, codes));
+    }
+
+<span class="hljs-comment">//如果验证失败 就会返回失败信息</span>
+</code></pre>
+<blockquote>
+<p><strong>注意:</strong></p>
+<ul>
+<li>后端验证验证的是数据处理时的合法性，最终处理数据的是后端，如果数据不合法，则会返回数据错误信息，默认情况是根据dto层对字段所做的限制来进行验证</li>
+</ul>
+</blockquote>
+<h4 id="-i-class-icon-file-i-mvvm"><i class="icon-file"></i> MVVM</h4>
+<p>viewModel用法
+Kendo MVVM是一种MVVM的实现，当然可以跟Kendo 组件(widgets)和数据源(datasource)进行无缝结合</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> viewModel = kendo.observable({
+        <span class="hljs-attr">model</span>: {
+        <span class="hljs-comment">//model 中可设置绑定初值</span>
+            id:<span class="hljs-number">5</span>
+        },
+        <span class="hljs-comment">//可以自定义函数方法 :如saveFunction方法</span>
+        saveFunction: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            $(<span class="hljs-string">'#grid'</span>).data(<span class="hljs-string">'kendoGrid'</span>).saveChanges();
+        },
+        <span class="hljs-attr">queryResource</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>{
+            $(<span class="hljs-string">'#grid'</span>).data(<span class="hljs-string">'kendoGrid'</span>).dataSource.page(<span class="hljs-number">1</span>);
+        }
+    });
+</code></pre>
+<p>使用:（<strong>注意data-bind</strong>
+）</p>
+<pre><code class="lang-html">&lt;<span class="hljs-selector-tag">div</span> id=<span class="hljs-string">"view"</span>&gt;
+    &lt;<span class="hljs-selector-tag">input</span> data-bind=<span class="hljs-string">"value: model.id"</span> /&gt;
+    &lt;<span class="hljs-selector-tag">button</span> data-bind=<span class="hljs-string">"click: saveFunction"</span>&gt;Display&lt;/button&gt;
+&lt;/div&gt;
+</code></pre>
+<p>关于绑定</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"view"</span> <span class="hljs-attr">data-bind</span>=<span class="hljs-string">"value: model.name"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+    <span class="hljs-keyword">var</span> viewModel = kendo.observable({
+        <span class="hljs-attr">model</span>: {
+            <span class="hljs-attr">name</span>: <span class="hljs-string">"John Doe"</span>
+        }
+    });
+    kendo.bind($(<span class="hljs-string">"#view"</span>), viewModel);
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</code></pre>
+<blockquote>
+<p><strong>注意:</strong></p>
+<ul>
+<li>viewModel中绑定是实时的，即viewModel中的name字段发生变化，则input中的value会一起变化，反之，当input中的value值变化，则viewModel中的name字段也会一同发生变化</li>
+<li>viewModel中的所有字段属性都是可自定义的</li>
+<li>绑定需要input中data-bind 和kendo-bind两次绑定 第一是将数值绑定到model上，第二次是将此div绑定到viewModel上，这样才能访问到viewModel的model属性，也就是第一次绑定才有效</li>
+</ul>
+</blockquote>
+<p>重置按钮</p>
+<pre><code class="lang-javascript">resetForm : <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(e)</span> </span>{
+        <span class="hljs-keyword">var</span> formData = viewModel.model.toJSON();
+        <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">var</span> k <span class="hljs-keyword">in</span> formData) {
+            viewModel.model.set(k, <span class="hljs-literal">null</span>);
+        }
+}
+</code></pre>
+<pre><code class="lang-html">&lt;span <span class="hljs-class"><span class="hljs-keyword">class</span></span>=<span class="hljs-string">"btn btn-default"</span> data-bind=<span class="hljs-string">"click:resetForm"</span> <span class="hljs-class"><span class="hljs-keyword">type</span></span>=<span class="hljs-string">"button"</span>&gt;&lt;<span class="hljs-meta">@spring</span>.message <span class="hljs-string">"hap.reset"</span>/&gt;&lt;/span&gt;
+</code></pre>
+<blockquote>
+<p><strong>注意:</strong></p>
+<ul>
+<li>viewModel与表单绑定后，model里面的字段变化，input框里的value里一起变化，所以在清空viewModel的同时，清空了表单里的数据</li>
+</ul>
+</blockquote>

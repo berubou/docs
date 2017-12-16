@@ -1,0 +1,103 @@
+<h1 id="lov-">LOV标签</h1>
+<pre><code class="lang-xml">
+//<span class="hljs-meta">code</span>、locale、contenxtPath为必须的参数，其中<span class="hljs-meta">code</span>为所需lov在lov定义时的<span class="hljs-meta">code</span>的值
+
+ &lt;h:lov id=<span class="hljs-string">"lov"</span> <span class="hljs-meta">code</span>=<span class="hljs-string">"LOV_ROLE"</span> locale=<span class="hljs-string">"${base.locale}"</span> contextPath=<span class="hljs-string">"${base.contextPath}"</span> /&gt;
+</code></pre>
+<h4 id="-"><strong>必须参数</strong></h4>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>类型/值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>code</td>
+<td>String</td>
+</tr>
+<tr>
+<td>locale</td>
+<td>String (一般为${base.locale})</td>
+</tr>
+<tr>
+<td>contextPath</td>
+<td>String（一般为${base.contextPath}）</td>
+</tr>
+</tbody>
+</table>
+<h4 id="-"><strong>一般属性</strong></h4>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>String</td>
+</tr>
+<tr>
+<td>enabled</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>valuePrimitive</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>text</td>
+<td>String</td>
+</tr>
+<tr>
+<td>dataTextField</td>
+<td>String</td>
+</tr>
+<tr>
+<td>dataValueField</td>
+<td>String</td>
+</tr>
+<tr>
+<td>open</td>
+<td>function</td>
+</tr>
+<tr>
+<td>close</td>
+<td>function</td>
+</tr>
+<tr>
+<td>select</td>
+<td>function</td>
+</tr>
+<tr>
+<td>query</td>
+<td>function</td>
+</tr>
+</tbody>
+</table>
+<p>用法示例：</p>
+<pre><code class="lang-javascript"><span class="hljs-comment">//以下代码写在script标签内</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">lovQuery</span><span class="hljs-params">(e)</span> </span>{
+       <span class="hljs-comment">//...</span>
+      };
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">lovSelect</span><span class="hljs-params">(e)</span> </span>{
+      <span class="hljs-comment">//...</span>
+      };
+</code></pre>
+<pre><code class="lang-xml"><span class="xml"><span class="hljs-comment">&lt;!--xml代码--&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">h:lov</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"lov"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"lov"</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">"lov"</span> <span class="hljs-attr">bind</span>=<span class="hljs-string">"enabled: isEnabled, value:data.userId,text:data.userName"</span> <span class="hljs-attr">style</span>=<span class="hljs-string">"width: 100%"</span> <span class="hljs-attr">code</span>=<span class="hljs-string">"LOV_ROLE"</span> <span class="hljs-attr">locale</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{base.locale}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span> <span class="hljs-attr">contextPath</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{base.contextPath}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span> <span class="hljs-attr">query</span>=<span class="hljs-string">"lovQuery"</span> <span class="hljs-attr">select</span>=<span class="hljs-string">"lovSelect"</span> /&gt;</span></span>
+</code></pre>
+<blockquote>
+<p><strong>提示:</strong></p>
+<ul>
+<li>上述所有属性直接添加在标签内即可，（<strong>[属性名] = &quot;...&quot;</strong>）,对于既是<strong>String</strong>类型又是<strong>Function</strong>类型的属性，只需要加<strong>fn:</strong>前缀区分即可,（<strong>fn:函数名</strong>）</li>
+</ul>
+</blockquote>
+<h4 id="-bind-required-"><strong>其他(bind required)</strong></h4>
+<p>用法：</p>
+<pre><code class="lang-xml"><span class="xml"> <span class="hljs-comment">&lt;!--bind 相当于data-bind的作用--&gt;</span>
+ <span class="hljs-tag">&lt;<span class="hljs-name">h:lov</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"combobox"</span> <span class="hljs-attr">bind</span>=<span class="hljs-string">"model.functionId"</span> <span class="hljs-attr">required</span>=<span class="hljs-string">"true"</span> <span class="hljs-attr">code</span>=<span class="hljs-string">"LOV_ROLE"</span> <span class="hljs-attr">locale</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{base.locale}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span> <span class="hljs-attr">contextPath</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{base.contextPath}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span> /&gt;</span></span>
+</code></pre>

@@ -1,0 +1,182 @@
+<h1 id="-">开发流程</h1>
+<h2 id="-">后端开发</h2>
+<h3 id="-">业务需求整理</h3>
+<h3 id="-">设计表结构</h3>
+<h3 id="-liquibase-">编写 liquibase 脚本</h3>
+<p>先列一个参考资料 <a href="https://github.com/tlberglund/groovy-liquibase/blob/master/src/test/changelog/changelog.groovy">https://github.com/tlberglund/groovy-liquibase/blob/master/src/test/changelog/changelog.groovy</a></p>
+<h3 id="-dto">编写 DTO</h3>
+<h4 id="-dto-">创建 DTO 类</h4>
+<ul>
+<li>DTO 类不需要提供任何实现，所以属于供应方的服务接口层。创建在 <code>项目模块</code> 的 <code>xxx.&lt;module&gt;.dto</code> 包下。</li>
+<li>每一个 DTO 类即为一个实体类，对应数据库中的一个具体表。</li>
+<li><p>名称与表名称相同，表名中 <code>_</code> 替换为驼峰命名法，首字母大写，且忽略前缀。如：<code>UserRole</code> 对应表为 <code>sys_user_role</code>。</p>
+<blockquote>
+<p>关于字段命名<br>HAP 依赖 <code>java bean</code> 命名规范.<br>请严格遵循规范定义<code>属性</code>,<code>getter</code>,<code>setter</code>等.</p>
+</blockquote>
+</li>
+</ul>
+<h4 id="-">指定对应表</h4>
+<ul>
+<li><code>@Table(name = &quot;table_name&quot;)</code> 指定 DTO 对应数据库中表的名称。</li>
+<li>每一个 DTO 对应数据库中的一个具体表，一般都需要继承 BaseDTO 类。</li>
+</ul>
+<h4 id="-">属性规范</h4>
+<ul>
+<li>所有属性均为<code>private</code>属性。</li>
+<li>每一个属性需要生成对应的 <code>getter</code> 和 <code>setter</code> 方法。</li>
+<li>字段名称应根据<code>驼峰命名规则</code>从数据库列名转换过来<ul>
+<li>例如：数据库列名为 USER_NAME，则字段名为 userName</li>
+<li>特殊字段名称，可以在字段在添加<code>@Column(name = &quot;xxx&quot;)</code> 注解，指定数据库列名</li>
+</ul>
+</li>
+<li>非数据库字段，需要用<code>@Transient</code> 标注<ul>
+<li>javax.persistence.Transient</li>
+</ul>
+</li>
+<li>属性的的类型与字段的 type 对应<ul>
+<li>不使用基本类型，全部使用基本类型的包装类，如 <code>Long</code> 对应数据库中的 <code>INTEGER</code>，而不是使用 <code>long</code></li>
+<li>数字类型主键统一采用 <code>Long</code></li>
+<li>金额、数量 等精度严格浮点类型采用 <code>BigDecimal</code><ul>
+<li>注意 BigDecimal 在计算、比较方面的特殊性</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>所有的主键字段都需要用<code>@Id</code>标注<ul>
+<li>对于自增张、序列（SEQUENCE）类型的主键，需要添加注解<code>@GeneratedValue</code></li>
+<li>序列命名规范：<code>表名_S</code><ul>
+<li>例如：表 SYS_USER 对应的序列为 SYS_USER_S</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="-">数据多语言支持</h4>
+<blockquote>
+<p>hap 数据多语言可以通过在 DTO 上添加注解来自动完成</p>
+</blockquote>
+<ul>
+<li>DTO 类上添加<code>@MultiLanguage</code><ul>
+<li>此注解说明该 DTO 需要支持数据多语言</li>
+</ul>
+</li>
+<li><p>DTO 字段上添加 <code>@MultiLanguageField</code></p>
+<ul>
+<li><p>此注解说明该字段是一个多语言字段</p>
+</li>
+<li><p>当有多个多语言字段时，这些字段都需要添加</p>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>实际作用</p>
+</blockquote>
+<ul>
+<li>当使用 DTO 执行标准 insert 操作时，框架会自动插入多条数据到对应的 TL 表</li>
+<li>当执行 delete 操作时，会自动删除对应的多语言数据</li>
+<li>当执行标准 query 时，会自动关联 TL 表</li>
+</ul>
+<h4 id="-">参照</h4>
+<p><a href="https://rdc.hand-china.com/gitlab/HAP/hap/raw/master/hap/src/main/java/com/hand/hap/account/dto/Role.java">https://rdc.hand-china.com/gitlab/HAP/hap/raw/master/hap/src/main/java/com/hand/hap/account/dto/Role.java</a></p>
+<h3 id="-mapper">编写 Mapper</h3>
+<h4 id="-mapper-">创建 Mapper 接口类</h4>
+<ul>
+<li>Mapper 接口类即为传统意义上的 DAO，但与 <code>interface</code> 不同，Mapper 本身就是对数据访问的具体实现，所以属于供应方的服务实现层。创建在 <code>项目模块</code> 的 <code>xxx.&lt;module&gt;.mapper</code> 包下。</li>
+<li>每一个 Mapper 接口类封装了对数据库表的操作，每一个 Mapper 对应一个 DTO 类，所以命名为 DTO 类名 + <code>Mapper</code>。如：<code>UserRoleMapper</code> 对应表为 <code>UserRole</code> 类。</li>
+<li>基础的 CRUD 操作不需要再次实现，通过继承 <code>Mapper&lt;T&gt;</code> 类实现。其中 T 为 对应 DTO 的泛型。</li>
+<li>复杂的数据库操作需要定义具体的接口方法。</li>
+</ul>
+<h4 id="-mapper-xml">创建 Mapper.xml</h4>
+<ul>
+<li>Mapper.xml 是数据库的的具体映射，与 Mapper 接口同级，创建在 <code>项目模块</code> resources 目录的 <code>xxx.&lt;module&gt;.mapper</code> 包下。</li>
+<li>Mapper.xml，与 Mapper 接口对应。所以命名 Mapper 接口类相同。</li>
+<li>对于基本的 CRUD 不需要进行配置，所以也就不需要创建对应的 Mapper.xml 文件。</li>
+<li>对于自定义的数据库方法，需要创建对应的 Mapper.xml 文件。</li>
+<li>Mapper.xml  中的操作 id 对应 Mapper 接口类的方法名。</li>
+</ul>
+<h4 id="-crud-">基础 CRUD 操作</h4>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>插入</strong></td>
+<td>###</td>
+</tr>
+<tr>
+<td>插入一条</td>
+<td><code>int insertSelective( T entity );</code></td>
+</tr>
+<tr>
+<td><strong>删除</strong></td>
+<td>###</td>
+</tr>
+<tr>
+<td>根据 ID 删除一条</td>
+<td><code>int deleteByPrimaryKey( Object id );</code></td>
+</tr>
+<tr>
+<td><strong>修改</strong></td>
+<td>###</td>
+</tr>
+<tr>
+<td>根据 ID 修改</td>
+<td><code>int updateByPrimaryKeySelective( T entity );</code></td>
+</tr>
+<tr>
+<td><strong>查询</strong></td>
+<td>###</td>
+</tr>
+<tr>
+<td>根据 ID 查询</td>
+<td><code>T selectByPrimaryKey( Object id );</code></td>
+</tr>
+<tr>
+<td>根据条件查询一条记录</td>
+<td><code>T selectOne( T entity );</code></td>
+</tr>
+<tr>
+<td>根据条件，查询全部记录</td>
+<td><code>List&lt;T&gt; select(T example);</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="-service">编写Service</h3>
+<h4 id="-service-">创建 Service 接口类</h4>
+<ul>
+<li>Service 接口类定义了业务操作的一系列接口，并不提供实现，具体实现需要通过服务实现层提供，所以属于供应方的服务接口层。创建在 <code>项目模块</code> 的 <code>xxx.&lt;module&gt;.service</code> 包下。</li>
+<li>接口（interface）统一以大写字母 <code>I</code> 做为命名前缀</li>
+<li>每一个 Service 对应一个 DTO 类，所以命名为<code>I</code> + DTO 类名 + <code>Service</code>。如：<code>IUserRoleService</code> 对应表为 <code>UserRole</code> 类。</li>
+<li>Service 里的每一个方法需要加上IRequest对象作为参数。</li>
+<li>Service 接口，如无特殊例外，需要继承 <code>ProxySelf&lt; T &gt;</code> 接口<ul>
+<li>T 为 Service 本身</li>
+</ul>
+</li>
+</ul>
+<h4 id="-service-">创建 Service 实现类</h4>
+<ul>
+<li>Service 接口的具体实现通过服务实现层提供，所以属于供应方的服务实现层。创建在 <code>项目模块</code> 的 <code>xxx.&lt;module&gt;.service.impl</code> 包下。</li>
+<li>每一个 Service 实现类对应一个 Service 接口类，所以命名为 Service 接口类名(去掉<code>I</code>前缀) + <code>Impl</code>。如：<code>UserRoleServiceImpl</code> 对应 <code>IUserRoleService</code> 类。</li>
+<li>实现类，如无特殊情况，需要用<code>@Service</code>标注，以自动扫描注册</li>
+<li>实现类可以通过继承<code>BaseServiceImpl&lt; T &gt;</code> 来获得标准的 CRUD 操作支持<blockquote>
+<p>需要 Service 接口类 继承 <code>IBaseService&lt; T &gt;</code></p>
+</blockquote>
+</li>
+<li>ServiceImpl 中对于 Mapper 的 CRUD 操作参照 <a href="#基础 CRUD 操作]">基础 CRUD 操作</a>。</li>
+</ul>
+<h3 id="-controller">编写Controller</h3>
+<h4 id="-controller-">创建 Controller 类</h4>
+<ul>
+<li>Controller 负责对 Model 和 View 的处理，创建在 <code>项目模块</code> 的 <code>xxx.&lt;module&gt;.controllers</code> 包下。</li>
+<li>每一个 Controller 是对一个具体的 DTO 资源进行处理的，所以命名为 DTO 类名 + <code>Controller</code>。如： <code>UserRoleController</code> 对应 <code>UserRole</code> 类。</li>
+<li>需要通过 <code>@Controller</code> 指定该类为一个 Controller 类。</li>
+<li>需要在每一个 Controller 中通过 <code>@Autowired</code> 注入 Service。</li>
+<li>Controller 的每一个方法只在最后调用一次该 Controller 所注入的 Service ，因此当有调用多个Service的需求应该放在注入的 Service 中。 </li>
+</ul>
+<h2 id="-">前端开发</h2>
+<h3 id="-">界面设计</h3>

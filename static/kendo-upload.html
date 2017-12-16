@@ -1,0 +1,101 @@
+<p>附件上传的相关说明</p>
+<p>附件上传是一个结合kendoUI的upload组件和freemarker的标签化实现。可以在任何页面的主体内引用生成的标签，该标签会生成一个上传文件的信息以及一个上传按钮，该标签集文件的上传，下载和删除为一体。</p>
+<h2 id="-"><strong>附件上传实现的功能：</strong></h2>
+<ul>
+<li><code>文件上传</code></li>
+<li><code>文件删除</code></li>
+<li><code>文件下载</code></li>
+</ul>
+<p><strong>1.文件上传</strong></p>
+<p>文件上传包含文件大小和文件类型验证，只有验证通过才能进行上传，文件上传可以是单文件，也可以是多文件，文件的大小和文件的类型是从后台中动态获取的。</p>
+<p><strong>2.文件删除</strong></p>
+<p>该标签只支持单文件删除，文件每一次删除都需要验证token的值，必须fileId和token同时满足的情况下才能删除。每一次删除都会提示“确认删除吗”若删除成功则提示“删除成功”。</p>
+<p><strong>3.文件下载</strong></p>
+<p>点击文件名进行下载，文件下载也是需要验证token的值</p>
+<h2 id="-"><strong>附件上传的标签参数说明</strong></h2>
+<p><strong>标签：</strong></p>
+<pre><code class="lang-java">${attachmentProvider.getAttachHtml(<span class="hljs-string">"IMG2"</span>,<span class="hljs-string">"1"</span>,<span class="hljs-keyword">base</span>.locale,<span class="hljs-keyword">base</span>.contextPath,<span class="hljs-literal">true</span>,<span class="hljs-literal">false</span>)}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sourceType</td>
+<td>附件所属业务类型，category的唯一索引，即IMG2</td>
+</tr>
+<tr>
+<td>sourceKey</td>
+<td>附件所属业务id,即1</td>
+</tr>
+<tr>
+<td>base.locale</td>
+<td>语言环境</td>
+</tr>
+<tr>
+<td>base.contextPath</td>
+<td>项目的根路径</td>
+</tr>
+<tr>
+<td>enableRemove</td>
+<td>是否允许删除</td>
+</tr>
+<tr>
+<td>enableUpload</td>
+<td>是否允许上传</td>
+</tr>
+</tbody>
+</table>
+<p>enableRemove和enableUpload，都是boolean类型的。<br>souceType可以唯一确定一个文件分类目录
+souceType和souceKey可以唯一确定文件分类下的附件的目录。</p>
+<h2 id="-"><strong>如何调用生成的标签</strong></h2>
+<p><strong>1.允许上传和删除</strong></p>
+<p>在html的页面的body中调用标签1</p>
+<pre><code class="lang-html">&lt;body&gt;
+&lt;<span class="hljs-selector-tag">div</span> style=<span class="hljs-string">""</span>&gt;
+${attachmentProvider.getAttachListHtml(<span class="hljs-string">"IMG2"</span>,<span class="hljs-string">"1"</span>,base<span class="hljs-selector-class">.locale</span>, base.contextPath)}
+&lt;/div&gt;
+&lt;/body&gt;
+</code></pre>
+<p>结果如下：</p>
+<p><img src="/assets/res.png" alt="结果显示"></p>
+<p><strong>2.不允许上传</strong></p>
+<p>在html页面中调用标签2，并将参数enableUpload设为false</p>
+<pre><code class="lang-html">&lt;body&gt;
+&lt;<span class="hljs-selector-tag">div</span> style=<span class="hljs-string">""</span>&gt;
+${attachmentProvider.getAttachHtml(<span class="hljs-string">"IMG2"</span>,<span class="hljs-string">"1"</span>,base<span class="hljs-selector-class">.locale</span>,base<span class="hljs-selector-class">.contextPath</span>,true,false)}
+&lt;/div&gt;
+&lt;/body&gt;
+</code></pre>
+<p>结果如下</p>
+<p><img src="/assets/upload.png" alt="不允许上传"></p>
+<p><strong>3.不允许删除</strong></p>
+<p>在html页面中调用标签2，并将参数enableRemove设为false</p>
+<pre><code class="lang-html">&lt;body&gt;
+ &lt;<span class="hljs-selector-tag">div</span> style=<span class="hljs-string">""</span>&gt;
+ ${attachmentProvider.getAttachHtml(<span class="hljs-string">"IMG2"</span>,<span class="hljs-string">"1"</span>,base<span class="hljs-selector-class">.locale</span>, base<span class="hljs-selector-class">.contextPath</span>,false,true)}
+&lt;/div&gt;
+&lt;/body&gt;
+</code></pre>
+<p>结果如下</p>
+<p><img src="/assets/res3.png" alt="结果3"></p>
+<p><strong>4.不允许删除和下载</strong></p>
+<p>在html页面中调用标签2，并将参数enableRemove和enableUpload都设为false</p>
+<pre><code class="lang-html">&lt;body&gt;
+ &lt;<span class="hljs-selector-tag">div</span> style=<span class="hljs-string">""</span>&gt;
+ ${attachmentProvider.getAttachHtml(<span class="hljs-string">"IMG2"</span>,<span class="hljs-string">"1"</span>,base<span class="hljs-selector-class">.locale</span>, base<span class="hljs-selector-class">.contextPath</span>,false,false)}
+&lt;/div&gt;
+&lt;/body&gt;
+</code></pre>
+<p>结果如下</p>
+<p><img src="/assets/res1.png" alt="结果1"></p>
+<p>由于页面中table和上传按钮的id都是采用uuid或uuid拼接完成的，所以同一个页面中可以调用同一个标签，只要传入的参数不同即可。</p>
+<h2 id="-">服务端提示信息</h2>
+<p><strong>1.附件目录未分配（sourceType或sourceKey为空）</strong></p>
+<p>文件的附件目录是由sourceType和sourceKey唯一确定的
+若在模板文件中传递的sourceType或者sourceKey为空则报错。</p>
+<p><img src="/assets/F~34G_GA2W_EHZPQ6M{7G~P.png" alt="附件目录"></p>

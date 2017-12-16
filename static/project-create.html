@@ -1,0 +1,125 @@
+<h1 id="-">新开项目</h1>
+<p>本章节将引导您从 零 开始，创建一个可以运行的 Demo 工程。此工程基于 hap 标准版，包含一个 demo 实例。</p>
+<h2 id="-">后端项目</h2>
+<h3 id="-">确定项目信息</h3>
+<ol>
+<li>groupId  本项目的代号，比如汉得的 BI 产品，代号为 hbi</li>
+<li>artifactId  本项目的顶层目录名称，使用项目代号(第一个字母大写) + Parent，如 HbiParent</li>
+<li>package 包名称，使用项目代号 + core ,如 hbi.core</li>
+<li>archetypeVersion 是指模板项目的版本，可以使用以下版本号<blockquote>
+<p> 1.0-SNAPSHOT 2.0-SNAPSHOT 3.0-SNAPSHOT 3.1-SNAPSHOT</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="-hap2-0-">新建项目  (HAP2.0)</h3>
+<p>确定上述信息后，可以使用如下命令新建项目：</p>
+<p><code>注意</code>  maven-archetype-plugin <code>2.4</code>及以下版本可以正常使用下面命令</p>
+<pre><code>
+mvn archetype:generate -D <span class="hljs-attribute">archetypeGroupId</span>=hap -D <span class="hljs-attribute">archetypeArtifactId</span>=hap-webapp-archetype -D <span class="hljs-attribute">archetypeVersion</span>=3.1-SNAPSHOT -D <span class="hljs-attribute">groupId</span>=hbi -D <span class="hljs-attribute">artifactId</span>=HbiParent -D <span class="hljs-attribute">package</span>=hbi.core  -D <span class="hljs-attribute">archetypeRepository</span>=http://nexus.saas.hand-china.com/content/repositories/rdcsnapshot
+</code></pre><p>在maven-archetype-plugin <code>3.0.0</code> 版本中，移除了对-D archetypeRepository参数的支持，会报以下错误
+<img src="/assets/mvn_archetype_plugin.png" alt=""></p>
+<p>解决方案：
+指定使用2.4版本的archetype-plugin插件：</p>
+<pre><code>mvn org.apache.maven.plugins:maven-archetype-plugin:2.4:generate  -D <span class="hljs-attribute">archetypeGroupId</span>=hap -D <span class="hljs-attribute">archetypeArtifactId</span>=hap-webapp-archetype -D <span class="hljs-attribute">archetypeVersion</span>=3.1-SNAPSHOT -D <span class="hljs-attribute">groupId</span>=hbi -D <span class="hljs-attribute">artifactId</span>=HbiParent -D <span class="hljs-attribute">package</span>=hbi.core -D <span class="hljs-attribute">archetypeRepository</span>=http://nexus.saas.hand-china.com/content/repositories/rdcsnapshot
+</code></pre><blockquote>
+<p>以下内容所指的 <code>HbiParent</code> 均指上面命令中的参数 <code>artifactId</code> 的值，请按实际情况替换</p>
+</blockquote>
+<p>新的项目目录结构如下：</p>
+<pre><code>.
+├── <span class="hljs-selector-tag">README</span><span class="hljs-selector-class">.md</span> (项目<span class="hljs-selector-tag">README</span>，请在此处写上项目开发的注意信息，方便团队协同)
+├── <span class="hljs-selector-tag">core</span>（功能实现项目）
+│   ├── <span class="hljs-selector-tag">pom</span><span class="hljs-selector-class">.xml</span> （子项目<span class="hljs-selector-tag">core</span>的<span class="hljs-selector-tag">pom</span><span class="hljs-selector-class">.xml</span>文件）
+│   └── <span class="hljs-selector-tag">src</span>
+│       └── <span class="hljs-selector-tag">main</span>
+│           ├── <span class="hljs-selector-tag">java</span>
+│           │   ├── <span class="hljs-selector-tag">hbi</span>
+│           │   │   └── <span class="hljs-selector-tag">core</span>（前面的包名称）
+│           │   │       │   
+│           │   │       ├── <span class="hljs-selector-tag">controllers</span>（<span class="hljs-selector-tag">Controller</span>包）
+│           │   │       │   └── <span class="hljs-selector-tag">DemoController</span><span class="hljs-selector-class">.java</span>（<span class="hljs-selector-tag">Controller</span>类）
+│           │   │       ├── <span class="hljs-selector-tag">db</span>（数据表结构，数据初始化入口文件）
+│           │   │       │   └── <span class="hljs-selector-tag">liquibase</span><span class="hljs-selector-class">.groovy</span>
+│           │   │       ├── <span class="hljs-selector-tag">dto</span>（<span class="hljs-selector-tag">Dto</span>包）
+│           │   │       │   └── <span class="hljs-selector-tag">Demo</span><span class="hljs-selector-class">.java</span>（<span class="hljs-selector-tag">Dto</span>实现类）
+│           │   │       ├── <span class="hljs-selector-tag">mapper</span>（<span class="hljs-selector-tag">Mapper</span>包）
+│           │   │       │   ├── <span class="hljs-selector-tag">DemoMapper</span><span class="hljs-selector-class">.java</span>（<span class="hljs-selector-tag">Mapper</span>接口）
+│           │   │       └── <span class="hljs-selector-tag">service</span>（<span class="hljs-selector-tag">Service</span>包）
+│           │   │           ├── <span class="hljs-selector-tag">IDemoService</span><span class="hljs-selector-class">.java</span>
+│           │   │           └── <span class="hljs-selector-tag">impl</span>（<span class="hljs-selector-tag">Service</span>实现）
+│           │   │               └── <span class="hljs-selector-tag">DemoServiceImpl</span><span class="hljs-selector-class">.java</span>
+│           │   └── <span class="hljs-selector-tag">resources</span>（项目配置文件目录）
+│           │       ├── <span class="hljs-selector-tag">mapper</span>
+│           │       │   └── <span class="hljs-selector-tag">DemoMapper</span><span class="hljs-selector-class">.xml</span>（<span class="hljs-selector-tag">Mapper</span> <span class="hljs-selector-tag">xml</span>文件）
+│           │       ├── <span class="hljs-selector-tag">spring</span> （<span class="hljs-selector-tag">spring</span>配置文件目录）
+│           │       ├── <span class="hljs-selector-tag">config</span><span class="hljs-selector-class">.properties</span>
+│           │       └── <span class="hljs-selector-tag">logback</span><span class="hljs-selector-class">.xml</span>（日志配置文件）
+│           └── <span class="hljs-selector-tag">webapp</span>（<span class="hljs-selector-tag">Webapp</span>目录）
+│               ├── <span class="hljs-selector-tag">lib</span>（<span class="hljs-selector-tag">UI</span> 资源库目录）
+│               └── <span class="hljs-selector-tag">WEB-INF</span>
+│                   ├── <span class="hljs-selector-tag">web</span><span class="hljs-selector-class">.xml</span>（<span class="hljs-selector-tag">Web</span><span class="hljs-selector-class">.xml</span>配置）
+│                   └── <span class="hljs-selector-tag">view</span>（页面文件目录）
+│                       └── <span class="hljs-selector-tag">demo</span>（<span class="hljs-selector-tag">DEMO</span>页面文件目录）
+├── <span class="hljs-selector-tag">core-db</span>（数据库脚本及初始化数据项目）
+│   ├── <span class="hljs-selector-tag">pom</span><span class="hljs-selector-class">.xml</span>
+│   └── <span class="hljs-selector-tag">src</span>
+│       └── <span class="hljs-selector-tag">main</span>
+│           └── <span class="hljs-selector-tag">java</span>
+│               └── <span class="hljs-selector-tag">hbi</span>
+│                   └── <span class="hljs-selector-tag">core</span>
+│                       └── <span class="hljs-selector-tag">db</span>
+│                           ├── <span class="hljs-selector-tag">data</span>（数据文件）
+│                           │   └── (<span class="hljs-selector-tag">init-data</span>)
+│                           └── <span class="hljs-selector-tag">table</span>（数据库表结构管理）
+│                               └── 2016<span class="hljs-selector-tag">-06-01-init-migration</span><span class="hljs-selector-class">.groovy</span>
+└── <span class="hljs-selector-tag">pom</span><span class="hljs-selector-class">.xml</span>
+</code></pre><h3 id="-">确定本项目使用的数据库</h3>
+<blockquote>
+<p>目前已经测试过支持的数据库有Mysql,Oracle,SqlServer<br>请修改 <code>HbiParent/core/src/main/java/hbi/core/db/liquibase.groovy</code> 以适配不同的数据库</p>
+</blockquote>
+<p>确定好数据库后，按照 <a href="database-config.md">Oracle,MySql,Sqlserver数据库配置</a> 修改项目配置文件。<br>修改配置文件后，按照<a href="database-init.md">创建数据库</a> 中的步骤创建数据库  </p>
+<h3 id="-">编译整个项目</h3>
+<p>在 HbiParent 目录下执行：</p>
+<pre><code>mvn clean install -D maven<span class="hljs-selector-class">.test</span><span class="hljs-selector-class">.skip</span>=true
+</code></pre><p><a name="liquibase"> </a></p>
+<h3 id="-">初始化数据库表结构及基础数据</h3>
+<p>在 HbiParent 项目录下执行：</p>
+<ul>
+<li>MySql<ul>
+<li><code>mvn process-resources -D skipLiquibaseRun=false -D db.driver=com.mysql.jdbc.Driver -D db.url=jdbc:mysql://127.0.0.1:3306/hap_dev -D db.user=hap_dev -D db.password=hap_dev</code></li>
+</ul>
+</li>
+<li>SqlServer<ul>
+<li><code>mvn process-resources -D skipLiquibaseRun=false  -Ddb.user=hap -Ddb.password=handhapdev -D db.driver=com.microsoft.sqlserver.jdbc.SQLServerDriver -D db.url=&quot;jdbc:sqlserver://10.211.55.6:1433; DatabaseName=hap_dev&quot;</code></li>
+</ul>
+</li>
+<li>Oracle<ul>
+<li><code>mvn process-resources -D skipLiquibaseRun=false -D db.driver=oracle.jdbc.driver.OracleDriver -D db.url=jdbc:oracle:thin:@192.168.115.136:1521:HAP -D db.user=hap_dev -D db.password=hap_dev</code></li>
+</ul>
+</li>
+<li>Hana<ul>
+<li><code>mvn process-resources -D skipLiquibaseRun=false -D db.driver=com.sap.db.jdbc.Driver -D db.url=jdbc:sap://192.168.11.28:35215/hap -Ddb.user=hap_dev -Ddb.password=hap_dev</code><ul>
+<li>以上命令中，需要按实际情况修改 url，user，password</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>注意<br>在1.0中上面生成的项目中已经包含了一个demo功能，请在正式开发前将demo功能的表结构，dto,mapper,service,controller删除。
+2.0 ,3.0中没有demo功能，提供了代码生成器方便开发和学习</p>
+</blockquote>
+<h3 id="-">测试</h3>
+<ol>
+<li><p>在 HbiParent 工程目录下执行命令(IntelliJ IDEA 用户可以跳过此步骤)</p>
+<pre><code><span class="hljs-keyword">mvn </span>eclipse:eclipse
+</code></pre></li>
+<li><p>将所有工程导入 IDE 工具（Eclipse，IntelliJ IDEA）中</p>
+</li>
+<li>配置 Server ，配置 JNDI 数据源，参照<a href="chapter1.1.md">多数据库配置</a><ul>
+<li>需要 Tomcat 7+， 不支持 Tomcat 6</li>
+</ul>
+</li>
+<li>将 hbi 工程发布到 tomcat，运行</li>
+</ol>
+<h3 id="-hap-">更新HAP依赖</h3>
+<p>  <a href="project-update.md">更新项目依赖的HAP版本</a></p>

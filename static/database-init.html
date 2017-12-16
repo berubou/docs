@@ -1,0 +1,93 @@
+<h1 id="-">新建数据库</h1>
+<h1 id="1-mysql">1. 创建数据库-Mysql</h1>
+<blockquote>
+<p>在开始之前最好修改一下 MySQL的配置文件 my.cnf (or my.ini)
+,在 [mysqld] 下添加</p>
+</blockquote>
+<pre><code><span class="hljs-attr">lower_case_table_names</span>=<span class="hljs-number">1</span>
+<span class="hljs-attr">character_set_server</span>=utf8
+<span class="hljs-attr">max_connections</span>=<span class="hljs-number">500</span>
+</code></pre><ul>
+<li>用管理员登陆mysql</li>
+<li><p>创建数据库hap_dev与hap_prod  </p>
+<pre><code class="lang-sql">create schema hap_dev<span class="hljs-built_in"> default </span>character <span class="hljs-builtin-name">set</span> utf8;
+create schema hap_prod<span class="hljs-built_in"> default </span>character <span class="hljs-builtin-name">set</span> utf8;
+</code></pre>
+</li>
+<li><p>创建用户hap_dev,并将密码设置为hap_dev  </p>
+<pre><code class="lang-sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">USER</span> hap_dev@<span class="hljs-string">'%'</span> <span class="hljs-keyword">IDENTIFIED</span> <span class="hljs-keyword">BY</span> <span class="hljs-string">'hap_dev'</span>;
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">USER</span> hap_dev@<span class="hljs-string">'localhost'</span> <span class="hljs-keyword">IDENTIFIED</span> <span class="hljs-keyword">BY</span> <span class="hljs-string">'hap_dev'</span>;
+</code></pre>
+</li>
+<li><p>将上面新建的hap_dev和hap_prod的权限全部赋予用户hap  </p>
+<pre><code class="lang-sql"><span class="hljs-keyword">GRANT</span> ALL <span class="hljs-keyword">PRIVILEGES</span> <span class="hljs-keyword">ON</span> hap_dev.* <span class="hljs-keyword">TO</span> hap_dev@<span class="hljs-string">'%'</span>;
+<span class="hljs-keyword">GRANT</span> ALL <span class="hljs-keyword">PRIVILEGES</span> <span class="hljs-keyword">ON</span> hap_dev.* <span class="hljs-keyword">TO</span> hap_dev@<span class="hljs-string">'localhost'</span>;
+<span class="hljs-keyword">GRANT</span> ALL <span class="hljs-keyword">PRIVILEGES</span> <span class="hljs-keyword">ON</span> hap_prod.* <span class="hljs-keyword">TO</span> hap_dev@<span class="hljs-string">'%'</span>;
+<span class="hljs-keyword">GRANT</span> ALL <span class="hljs-keyword">PRIVILEGES</span> <span class="hljs-keyword">ON</span> hap_prod.* <span class="hljs-keyword">TO</span> hap_dev@<span class="hljs-string">'localhost'</span>;
+
+<span class="hljs-keyword">flush</span> <span class="hljs-keyword">privileges</span>;
+</code></pre>
+<h1 id="2-oracle">2. 创建数据库-Oracle</h1>
+<ul>
+<li>使用管理员登陆</li>
+<li>创建表空间  </li>
+</ul>
+<pre><code class="lang-sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">BIGFILE</span> <span class="hljs-keyword">TABLESPACE</span> tbs_perm_hap
+<span class="hljs-keyword">DATAFILE</span> <span class="hljs-string">'tbs_perm_hap.dat'</span>
+ <span class="hljs-keyword">SIZE</span> <span class="hljs-number">200</span>M
+ <span class="hljs-keyword">AUTOEXTEND</span> <span class="hljs-keyword">ON</span> <span class="hljs-keyword">NEXT</span> <span class="hljs-number">20</span>M <span class="hljs-keyword">MAXSIZE</span> <span class="hljs-number">500</span>M;
+</code></pre>
+<pre><code class="lang-sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TEMPORARY</span> <span class="hljs-keyword">TABLESPACE</span> tbs_temp_hap
+TEMPFILE <span class="hljs-string">'tbs_temp_hap.dbf'</span>
+<span class="hljs-keyword">SIZE</span> <span class="hljs-number">200</span>M
+<span class="hljs-keyword">AUTOEXTEND</span> <span class="hljs-keyword">ON</span> <span class="hljs-keyword">NEXT</span> <span class="hljs-number">20</span>M <span class="hljs-keyword">MAXSIZE</span> <span class="hljs-number">500</span>M;
+</code></pre>
+<ul>
+<li>创建用户 schema   </li>
+</ul>
+<pre><code class="lang-sql">CREATE<span class="hljs-built_in"> USER </span>hap_dev
+IDENTIFIED BY hap_dev<span class="hljs-built_in">
+DEFAULT </span>TABLESPACE tbs_perm_hap
+TEMPORARY TABLESPACE tbs_temp_hap
+QUOTA 200M on tbs_perm_hap;
+</code></pre>
+<ul>
+<li>授权</li>
+</ul>
+<pre><code class="lang-sql"><span class="hljs-keyword">GRANT</span> <span class="hljs-keyword">create</span> <span class="hljs-keyword">session</span> <span class="hljs-keyword">TO</span> hap_dev;
+<span class="hljs-keyword">GRANT</span> <span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> <span class="hljs-keyword">TO</span> hap_dev;
+<span class="hljs-keyword">GRANT</span> <span class="hljs-keyword">create</span> <span class="hljs-keyword">view</span> <span class="hljs-keyword">TO</span> hap_dev;
+<span class="hljs-keyword">GRANT</span> <span class="hljs-keyword">create</span> <span class="hljs-keyword">any</span> <span class="hljs-keyword">trigger</span> <span class="hljs-keyword">TO</span> hap_dev;
+<span class="hljs-keyword">GRANT</span> <span class="hljs-keyword">create</span> <span class="hljs-keyword">any</span> <span class="hljs-keyword">procedure</span> <span class="hljs-keyword">TO</span> hap_dev;
+<span class="hljs-keyword">GRANT</span> <span class="hljs-keyword">create</span> <span class="hljs-keyword">sequence</span> <span class="hljs-keyword">TO</span> hap_dev;
+<span class="hljs-keyword">GRANT</span> <span class="hljs-keyword">create</span> <span class="hljs-keyword">synonym</span> <span class="hljs-keyword">TO</span> hap_dev;
+</code></pre>
+</li>
+</ul>
+<h1 id="3-sql-server">3. 创建数据库-sql server</h1>
+<ul>
+<li>使用管理员登陆</li>
+<li><p>创建数据库 </p>
+<pre><code class="lang-sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">DATABASE</span> hap_dev <span class="hljs-keyword">COLLATE</span> Chinese_PRC_CI_AS;
+</code></pre>
+<pre><code class="lang-sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">DATABASE</span> hap_prod <span class="hljs-keyword">COLLATE</span> Chinese_PRC_CI_AS
+</code></pre>
+</li>
+<li><p>创建用户 hap 并授权  </p>
+<pre><code class="lang-sql">sp_addlogin <span class="hljs-string">'hap'</span>,<span class="hljs-string">'handhapdev'</span>;
+use hap_dev
+<span class="hljs-keyword">go</span>
+sp_adduser <span class="hljs-string">'hap'</span>,<span class="hljs-string">'hap'</span>
+<span class="hljs-keyword">go</span>
+sp_addrolemember <span class="hljs-string">'db_owner'</span>,<span class="hljs-string">'hap'</span>
+<span class="hljs-keyword">go</span>
+</code></pre>
+<pre><code class="lang-sql"><span class="hljs-keyword">use</span> hap_prod
+<span class="hljs-keyword">go</span>
+sp_adduser <span class="hljs-string">'hap'</span>,<span class="hljs-string">'hap'</span>
+<span class="hljs-keyword">go</span>
+sp_addrolemember <span class="hljs-string">'db_owner'</span>,<span class="hljs-string">'hap'</span>
+<span class="hljs-keyword">go</span>
+</code></pre>
+</li>
+</ul>

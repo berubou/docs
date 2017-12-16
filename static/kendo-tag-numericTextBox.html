@@ -1,0 +1,109 @@
+<h2 id="numerictextbox">NumericTextBox</h2>
+<p>数字框</p>
+<h5 id="xml-">xml配置</h5>
+<pre><code class="lang-xml"> <span class="hljs-comment">&lt;!--h:为命名空间,必须要加的;numericTextBox为组件名;id可写可不写--&gt;</span>
+ <span class="hljs-tag">&lt;<span class="hljs-name">h:numericTextBox</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"numericTextBox"</span>/&gt;</span>
+</code></pre>
+<h4 id="-"><strong>一般属性</strong></h4>
+<blockquote>
+<p><strong>提示:</strong></p>
+<ul>
+<li>属性用法请参考kendoui API文档的numericTextBox:<a href="http://docs.telerik.com/kendo-ui/api/javascript/ui/numerictextbox">http://docs.telerik.com/kendo-ui/api/javascript/ui/numerictextbox</a></li>
+</ul>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>culture</td>
+<td>String</td>
+</tr>
+<tr>
+<td>decimals</td>
+<td>Number</td>
+</tr>
+<tr>
+<td>downArrowText</td>
+<td>String</td>
+</tr>
+<tr>
+<td>format</td>
+<td>String</td>
+</tr>
+<tr>
+<td>max</td>
+<td>Number</td>
+</tr>
+<tr>
+<td>min</td>
+<td>min</td>
+</tr>
+<tr>
+<td>restrictDecimals</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>round</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>spinners</td>
+<td>Boolean </td>
+</tr>
+<tr>
+<td>step</td>
+<td>Number</td>
+</tr>
+<tr>
+<td>upArrowText</td>
+<td>String</td>
+</tr>
+<tr>
+<td>spin</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>value</td>
+<td>Number</td>
+</tr>
+<tr>
+<td>change</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>clearButton</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>placeholder</td>
+<td>String</td>
+</tr>
+<tr>
+<td>bind</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>required</td>
+<td>Boolean</td>
+</tr>
+</tbody>
+</table>
+<p>用法示例：</p>
+<pre><code class="lang-javascript"><span class="hljs-comment">//注意是写在script标签里的内容</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">change</span><span class="hljs-params">()</span></span>{
+<span class="hljs-comment">//...</span>
+}
+</code></pre>
+<pre><code class="lang-xml">&lt;h:numericTextBox <span class="hljs-attribute">id</span>=<span class="hljs-string">"numericTextBox"</span> <span class="hljs-attribute">max</span>=<span class="hljs-string">"20"</span> <span class="hljs-attribute">min</span>=<span class="hljs-string">"10"</span> <span class="hljs-attribute">step</span>=<span class="hljs-string">"1"</span> <span class="hljs-attribute">value</span>=<span class="hljs-string">"12"</span> <span class="hljs-attribute">clearButton</span>=<span class="hljs-string">"true"</span> <span class="hljs-attribute">change</span>=<span class="hljs-string">"change"</span>/&gt;
+</code></pre>
+<blockquote>
+<p><strong>提示:</strong></p>
+<ul>
+<li>上述所有属性直接添加在标签内即可，（<strong>[属性名] = &quot;...&quot;</strong>）,对于类型是函数的属性，需要另外在script标签中具体定义函数，这里只是一个引用</li>
+</ul>
+</blockquote>

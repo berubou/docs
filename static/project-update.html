@@ -1,0 +1,29 @@
+<h1 id="-hap-">更新项目依赖的HAP版本</h1>
+<ol>
+<li>选择希望的版本号
+此地址<a href="https://rdc.hand-china.com/gitlab/HAP/hap/tags">查看 HAP Release 版本</a>  </li>
+<li><p>更改 项目Parent目录中的 pom.xml </p>
+<ul>
+<li><p><code>&lt;hap.version&gt;</code> <code>3.0.7-RELEASE</code> <code>&lt;/hap.version&gt;</code></p>
+<p>2.x 的版本号是2.x-Release,3.X的版本号是3.x-RELEASE,注意大小写区别 </p>
+</li>
+</ul>
+</li>
+<li>更新IDE中的maven依赖：<ul>
+<li><code>eclipse</code> 右键点击 HbiParent 工程，<code>Maven</code> → <code>Update Project...</code> </li>
+<li><code>IDEA</code> ：右键点击 HbiParent 工程，<code>Maven</code> → <code>Reimport</code>(等候下载)</li>
+</ul>
+</li>
+<li>在Parent目录下执行<code>mvn clean install</code></li>
+<li><p>执行初始化数据库的<a href="project-create.md#liquibase">liquibase 命令</a></p>
+<p>初始化数据库表结构及基础数据</p>
+</li>
+</ol>
+<blockquote>
+<p>注意 </p>
+<ul>
+<li>如果使用IDEA,请把<code>overlays</code>下面的其他HAP版本删除</li>
+<li>如果项目中过有覆盖过HAP的xml配置文件，更新以后请注意比对有没有变化</li>
+<li>新建项目默认依赖的是SNAPSHOT版本的HAP，会保持最新代码，系统表等可能会有变化，建议实际开发过程使用RELEASE版。</li>
+</ul>
+</blockquote>

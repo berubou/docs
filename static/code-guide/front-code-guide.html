@@ -1,0 +1,1135 @@
+<h1 id="-">前端开发规范</h1>
+<p>此开发规范主要实现的目标：<strong>代码一致性</strong>和<strong>最佳实践</strong>。通过代码风格的一致性，降低维护代码的成本以及提高多人协作开发的效率。同时遵守最佳实践，不但能确保页面性能得到最佳优化和高效的代码，而且降低bug发生的概率。</p>
+<p>此开发规范是通过长期的开发中过程中积累下来的经验和参考其它规范/指南制定的，它只是起指导作用，除个别条目强制之外，大多数为非强制约束，开发者可根据自己的实际情况自行决定是否需要遵守。</p>
+<h1 id="-span-id-basic-span-"><span id="basic">基本原则</span></h1>
+<hr>
+<h4 id="-">文件命名</h4>
+<ul>
+<li>文件名用英文单词，多个单词用驼峰命名法；</li>
+<li>避免特殊含义的字符出现，防止个别浏览器当做广告拦截。<blockquote>
+<p>例如：<code>ad</code>、<code>ads</code>、<code>adv</code>、<code>banner</code>、<code>sponsor</code>、<code>gg</code>、<code>guangg</code>、<code>guanggao</code>等</p>
+</blockquote>
+</li>
+</ul>
+<h4 id="-">文件编码</h4>
+<ul>
+<li><strong>使用不带 <code>BOM</code> 的 UTF-8 编码。</strong></li>
+<li>在 HTML中指定编码 <code>&lt;meta charset=&quot;utf-8&quot;&gt;</code> ；</li>
+<li>无需使用 <code>@charset</code> 指定样式表的编码，它默认为 <code>UTF-8</code> ；<pre><code><span class="hljs-comment"># 设定字符编码是通过 &lt;meta&gt; 标签进行</span>
+&lt;meta <span class="hljs-attribute">http-equiv</span>=<span class="hljs-string">"Content-Type"</span> <span class="hljs-attribute">content</span>=<span class="hljs-string">"text/html; charset=UTF-8"</span> /&gt;
+<span class="hljs-comment"># HTML5，我们只需要这样写</span>
+&lt;meta <span class="hljs-attribute">charset</span>=<span class="hljs-string">"utf-8"</span>&gt;
+</code></pre></li>
+</ul>
+<h4 id="-">结构、样式、行为分离</h4>
+<ul>
+<li>尽量确保文档和模板只包含 <code>HTML</code> 结构，样式都放到样式表里，行为都放到脚本里。</li>
+</ul>
+<h4 id="-">缩进</h4>
+<ul>
+<li>统一<strong>四个空格</strong>缩进（可将编辑器 tab 键为空格代替），不要使用 <code>Tab</code> 或者 <code>Tab</code>、空格混搭，以避免不同编辑器下代码格式错乱。</li>
+</ul>
+<h4 id="-">尾部空格</h4>
+<ul>
+<li>避免一行代码尾部出现空格，防止<strong><code>diff</code></strong></li>
+</ul>
+<h4 id="-">一律使用小写字母</h4>
+<pre><code class="lang-html"><span class="hljs-comment">&lt;!-- Recommended --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"google.png"</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">"Google"</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- Not recommended --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">A</span> <span class="hljs-attr">HREF</span>=<span class="hljs-string">"/"</span>&gt;</span>Home<span class="hljs-tag">&lt;/<span class="hljs-name">A</span>&gt;</span>
+</code></pre>
+<pre><code class="lang-css"><span class="hljs-comment">/* Recommended */</span>
+<span class="hljs-attribute">color</span>: <span class="hljs-number">#e5e5e5</span>;
+
+<span class="hljs-comment">/* Not recommended */</span>
+<span class="hljs-attribute">color</span>: <span class="hljs-number">#E5E5E5</span>;
+</code></pre>
+<h4 id="-url-">省略外链资源 URL 协议部分</h4>
+<p>省略外链资源（图片及其它媒体资源）URL 中的 <code>http</code> / <code>https</code> 协议，使 URL 成为相对地址，避免 <a href="https://developer.mozilla.org/en-US/docs/Security/MixedContent">Mixed Content</a> 问题，减小文件字节数。</p>
+<p><strong>其它协议（<code>ftp</code> 等）的 URL 不省略。</strong></p>
+<pre><code class="lang-html"><span class="hljs-comment">&lt;!-- Recommended --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"//www.google.com/js/gweb/analytics/autotrack.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- Not recommended --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"http://www.google.com/js/gweb/analytics/autotrack.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</code></pre>
+<pre><code class="lang-css"><span class="hljs-comment">/* Recommended */</span>
+<span class="hljs-selector-class">.example</span> {
+  <span class="hljs-attribute">background</span>: <span class="hljs-built_in">url</span>(//www.google.com/images/example);
+}
+
+<span class="hljs-comment">/* Not recommended */</span>
+<span class="hljs-selector-class">.example</span> {
+  <span class="hljs-attribute">background</span>: <span class="hljs-built_in">url</span>(http://www.google.com/images/example);
+}
+</code></pre>
+<h4 id="-">统一注释</h4>
+<p>通过配置编辑器，可以提供快捷键来输出一致认可的注释模式。</p>
+<p>#####HTML 注释</p>
+<ul>
+<li><p>模块注释</p>
+<pre><code class="lang-html"><span class="hljs-comment">&lt;!-- 文章列表列表模块 --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"article-list"</span>&gt;</span>
+...
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+</code></pre>
+</li>
+<li><p>区块注释</p>
+<pre><code class="lang-html"><span class="hljs-comment">&lt;!--
+@name: Drop Down Menu
+@description: Style of top bar drop down menu.
+@author: Ashu(Aaaaaashu@gmail.com)
+--&gt;</span>
+</code></pre>
+</li>
+</ul>
+<p>#####CSS 注释
+组件块和子组件块以及声明块之间使用一空行分隔，子组件块之间三空行分隔；</p>
+<pre><code class="lang-css"><span class="hljs-comment">/*!
+ * Bootstrap v3.3.5 (http://getbootstrap.com)
+ * Copyright 2011-2015 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ */</span>
+<span class="hljs-selector-class">.selector</span> {
+  <span class="hljs-attribute">padding</span>: <span class="hljs-number">15px</span>;
+  <span class="hljs-attribute">margin-bottom</span>: <span class="hljs-number">15px</span>;
+}
+
+<span class="hljs-comment">/* 注释块 */</span>
+<span class="hljs-selector-class">.selector-secondary</span> {
+  <span class="hljs-attribute">display</span>: block; <span class="hljs-comment">/* 注释*/</span>
+}
+
+<span class="hljs-selector-class">.selector-three</span> {
+  <span class="hljs-attribute">display</span>: span;
+}
+</code></pre>
+<p>#####JavaScript 注释</p>
+<ul>
+<li>单行注释</li>
+</ul>
+<p>必须独占一行。<code>//</code> 后跟一个空格，缩进与下一行被注释说明的代码一致。</p>
+<ul>
+<li>多行注释</li>
+</ul>
+<p>避免使用 <code>/*...*/</code> 这样的多行注释。有多行注释内容时，使用多个单行注释。</p>
+<ul>
+<li>函数/方法注释</li>
+</ul>
+<ol>
+<li>函数/方法注释必须包含函数说明，有参数和返回值时必须使用注释标识。；</li>
+<li>参数和返回值注释必须包含类型信息和说明；</li>
+<li>当函数是内部函数，外部不可访问时，可以使用 @inner 标识；</li>
+</ol>
+<pre><code class="lang-javascript">/**
+ * 函数描述
+ *
+ * @param {string} p1 参数1的说明
+ * @param {string} p2 参数2的说明，比较长
+ *     那就换行了.
+ * @param {number=} p3 参数3的说明（可选）
+ * @return {Object} 返回值描述
+ */
+function foo(p1, p2, p3) {
+    var p3 = p3 || 10;
+   <span class="hljs-built_in"> return </span>{
+        p1: p1,
+        p2: p2,
+        p3: p3
+    };
+}
+</code></pre>
+<ul>
+<li>文件注释</li>
+</ul>
+<p>文件注释用于告诉不熟悉这段代码的读者这个文件中包含哪些东西。 应该提供文件的大体内容, 它的作者, 依赖关系和兼容性信息。如下:</p>
+<pre><code class="lang-javascript">/**
+ * @fileoverview Description <span class="hljs-keyword">of</span> <span class="hljs-built_in">file</span>, <span class="hljs-keyword">its</span> uses <span class="hljs-keyword">and</span> information
+ * <span class="hljs-keyword">about</span> <span class="hljs-keyword">its</span> dependencies.
+ * @author xxx@xxxx.com
+ * Copyright <span class="hljs-number">2015</span> XXX Inc. All Rights Reserved.
+ */
+</code></pre>
+<h4 id="-">代码验证</h4>
+<ul>
+<li>使用 <a href="http://validator.w3.org/">W3C HTML Validator</a> 来验证你的HTML代码有效性；</li>
+<li>使用 <a href="http://jigsaw.w3.org/css-validator/validator.html.zh-cn">W3C CSS Validator</a> 来验证你的CSS代码有效性；</li>
+</ul>
+<h1 id="-span-id-html-html-span-"><span id="html">HTML </span></h1>
+<hr>
+<p>尽量遵循 HTML 标准和语义，使用最少的标签并保持最小的复杂度。</p>
+<h2 id="-span-id-html-general-span-"><span id="html-general">通用约定</span></h2>
+<h4 id="-">标签</h4>
+<ul>
+<li>自闭合（self-closing）标签，无需闭合 ( 例如： <code>img</code> <code>input</code> <code>br</code> <code>hr</code> 等 )；</li>
+<li>可选的闭合标签（closing tag），需闭合 ( 例如：<code>&lt;/li&gt;</code> 或 <code>&lt;/body&gt;</code> )；</li>
+<li>尽量减少标签数量；</li>
+</ul>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"images/google.png"</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">"Google"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"title"</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>Style<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>Guide<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- Not recommended --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"avatar"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"..."</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- Recommended --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"avatar"</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"..."</span>&gt;</span>
+</code></pre>
+<h4 id="class-id">Class 与 ID</h4>
+<ul>
+<li>class 应以功能或内容命名，不以表现形式命名；</li>
+<li>class 与 id 单词字母小写，多个单词组成时，采用中划线<code>-</code>分隔；</li>
+<li>使用唯一的 id 作为 Javascript hook, 同时避免创建无样式信息的 class；</li>
+</ul>
+<pre><code class="lang-html"><span class="hljs-comment">&lt;!-- Not recommended --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"j-hook left contentWrapper"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- Recommended --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"j-hook"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"sidebar content-wrapper"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+</code></pre>
+<h4 id="-">属性顺序</h4>
+<p>HTML 属性应该按照特定的顺序出现以保证易读性。</p>
+<ul>
+<li>id</li>
+<li>class</li>
+<li>name</li>
+<li>data-xxx</li>
+<li>src, for, type, href</li>
+<li>title, alt</li>
+<li>aria-xxx, role</li>
+</ul>
+<pre><code class="lang-html">&lt;a <span class="hljs-attribute">id</span>=<span class="hljs-string">"..."</span> <span class="hljs-attribute">class</span>=<span class="hljs-string">"..."</span> <span class="hljs-attribute">data-modal</span>=<span class="hljs-string">"toggle"</span> <span class="hljs-attribute">href</span>=<span class="hljs-string">"###"</span>&gt;&lt;/a&gt;
+
+&lt;input <span class="hljs-attribute">class</span>=<span class="hljs-string">"form-control"</span> <span class="hljs-attribute">type</span>=<span class="hljs-string">"text"</span>&gt;
+
+&lt;img <span class="hljs-attribute">src</span>=<span class="hljs-string">"..."</span> <span class="hljs-attribute">alt</span>=<span class="hljs-string">"..."</span>&gt;
+</code></pre>
+<h4 id="-">引号</h4>
+<p>属性的定义，统一使用双引号。</p>
+<pre><code class="lang-html"><span class="hljs-comment">&lt;!-- Not recommended --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">id</span>=<span class="hljs-string">'j-hook'</span> <span class="hljs-attr">class</span>=<span class="hljs-string">text</span>&gt;</span>Google<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- Recommended --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"j-hook"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"text"</span>&gt;</span>Google<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+</code></pre>
+<h4 id="-">嵌套</h4>
+<p><code>a 不允许嵌套 div</code>这种约束属于语义嵌套约束，与之区别的约束还有严格嵌套约束，比如<code>a 不允许嵌套 a</code>。</p>
+<p>严格嵌套约束在所有的浏览器下都不被允许；而语义嵌套约束，浏览器大多会容错处理，生成的文档树可能相互不太一样。</p>
+<p><strong>语义嵌套约束</strong></p>
+<ul>
+<li><code>&lt;li&gt;</code> 用于 <code>&lt;ul&gt;</code> 或 <code>&lt;ol&gt;</code> 下；</li>
+<li><code>&lt;dd&gt;</code>, <code>&lt;dt&gt;</code> 用于 <code>&lt;dl&gt;</code> 下；</li>
+<li><code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code>, <code>&lt;tfoot&gt;</code>, <code>&lt;tr&gt;</code>, <code>&lt;td&gt;</code> 用于 <code>&lt;table&gt;</code> 下；</li>
+</ul>
+<p><strong>严格嵌套约束</strong></p>
+<ul>
+<li>inline-Level 元素，仅可以包含文本或其它 inline-Level 元素;</li>
+<li><code>&lt;a&gt;</code>里不可以嵌套交互式元素<code>&lt;a&gt;</code>、<code>&lt;button&gt;</code>、<code>&lt;select&gt;</code>等;</li>
+<li><code>&lt;p&gt;</code>里不可以嵌套块级元素<code>&lt;div&gt;</code>、<code>&lt;h1&gt;~&lt;h6&gt;</code>、<code>&lt;p&gt;</code>、<code>&lt;ul&gt;/&lt;ol&gt;/&lt;li&gt;</code>、<code>&lt;dl&gt;/&lt;dt&gt;/&lt;dd&gt;</code>、<code>&lt;form&gt;</code>等。</li>
+</ul>
+<p>更多详情，参考<a href="http://www.smallni.com/element-nesting/">WEB标准系列-HTML元素嵌套</a></p>
+<h4 id="-">布尔值属性</h4>
+<p>HTML5 规范中 <code>disabled</code>、<code>checked</code>、<code>selected</code> 等属性不用设置值。</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">disabled</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"checkbox"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"1"</span> <span class="hljs-attr">checked</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">select</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"1"</span> <span class="hljs-attr">selected</span>&gt;</span>1<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span>
+</code></pre>
+<h2 id="-span-id-html-semantic-span-"><span id="html-semantic">语义化</span></h2>
+<p>没有 <code>CSS</code> 的 <code>HTML</code> 是一个语义系统而不是 UI 系统。</p>
+<p>通常情况下，每个标签都是有语义的，所谓语义就是你的衣服分为外套， 裤子，裙子，内裤等，各自有对应的功能和含义。所以你总不能把内裤套在脖子上吧。-- 一丝</p>
+<p>此外语义化的 <code>HTML</code> 结构，有助于机器（搜索引擎）理解，另一方面多人协作时，能迅速了解开发者意图。</p>
+<h4 id="-">常见标签语义</h4>
+<table>
+<thead>
+<tr>
+<th>标签</th>
+<th>语义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;p&gt;</code></td>
+<td>段落</td>
+</tr>
+<tr>
+<td><code>&lt;h1&gt; &lt;h2&gt; &lt;h3&gt; ...</code></td>
+<td>标题</td>
+</tr>
+<tr>
+<td><code>&lt;ul&gt;</code></td>
+<td>无序列表</td>
+</tr>
+<tr>
+<td><code>&lt;ol&gt;</code></td>
+<td>有序列表</td>
+</tr>
+<tr>
+<td><code>&lt;blockquote&gt;</code></td>
+<td>大段引用</td>
+</tr>
+<tr>
+<td><code>&lt;cite&gt;</code></td>
+<td>一般引用</td>
+</tr>
+<tr>
+<td><code>&lt;b&gt;</code></td>
+<td>为样式加粗而加粗</td>
+</tr>
+<tr>
+<td><code>&lt;strong&gt;</code></td>
+<td>为强调内容而加粗</td>
+</tr>
+<tr>
+<td><code>&lt;i&gt;</code></td>
+<td>为样式倾斜而倾斜</td>
+</tr>
+<tr>
+<td><code>&lt;em&gt;</code></td>
+<td>为强调内容而倾斜</td>
+</tr>
+<tr>
+<td><code>code</code></td>
+<td>代码标识</td>
+</tr>
+<tr>
+<td><code>abbr</code></td>
+<td>缩写</td>
+</tr>
+</tbody>
+</table>
+<h3 id="-">示例</h3>
+<p>将你构建的页面当作一本书，将标签的语义对应的其功能和含义；</p>
+<ul>
+<li>书的名称：<code>&lt;h1&gt;</code></li>
+<li>书的每个章节标题: <code>&lt;h2&gt;</code></li>
+<li>章节内的文章标题: <code>&lt;h3&gt;</code></li>
+<li>小标题/副标题: <code>&lt;h4&gt; &lt;h5&gt; &lt;h6&gt;</code></li>
+<li>章节的段落: <code>&lt;p&gt;</code></li>
+</ul>
+<h2 id="-span-id-html-head-head-span-"><span id="html-head">HEAD</span></h2>
+<h4 id="-">文档类型</h4>
+<p>为每个 HTML 页面的第一行添加标准模式（standard mode）的声明， 这样能够确保在每个浏览器中拥有一致的表现。</p>
+<pre><code class="lang-html"><span class="hljs-meta">&lt;!DOCTYPE html&gt;</span>
+</code></pre>
+<h4 id="-">语言属性</h4>
+<pre><code class="lang-html"><span class="hljs-comment">&lt;!-- 中文 --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"zh-Hans"</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- 简体中文 --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"zh-cmn-Hans"</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- 繁体中文 --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"zh-cmn-Hant"</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- English --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span>
+</code></pre>
+<h4 id="-">字符编码</h4>
+<ul>
+<li>以无 BOM 的 utf-8 编码作为文件格式;</li>
+<li>指定字符编码的 meta 必须是 head 的第一个直接子元素；</li>
+</ul>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"utf-8"</span>&gt;</span>
+    ......
+  <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    ......
+  <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
+</code></pre>
+<h4 id="ie-">IE 兼容模式</h4>
+<p>优先使用最新版本的IE 和 Chrome 内核</p>
+<pre><code class="lang-html">&lt;meta <span class="hljs-attribute">http-equiv</span>=<span class="hljs-string">"X-UA-Compatible"</span> <span class="hljs-attribute">content</span>=<span class="hljs-string">"IE=edge,chrome=1"</span>&gt;
+</code></pre>
+<h4 id="seo-">SEO 优化</h4>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"utf-8"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">http-equiv</span>=<span class="hljs-string">"X-UA-Compatible"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"IE=edge,chrome=1"</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- SEO --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Style Guide<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"keywords"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"your keywords"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"description"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"your description"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"author"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"author,email address"</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+</code></pre>
+<h4 id="viewport">viewport</h4>
+<ul>
+<li><code>viewport</code>: 一般指的是浏览器窗口内容区的大小，不包含工具条、选项卡等内容；</li>
+<li><code>width</code>: 浏览器宽度，输出设备中的页面可见区域宽度；</li>
+<li><code>device-width</code>: 设备分辨率宽度，输出设备的屏幕可见宽度；</li>
+<li><code>initial-scale</code>: 初始缩放比例；</li>
+<li><code>maximum-scale</code>: 最大缩放比例；</li>
+</ul>
+<p>为移动端设备优化，设置可见区域的宽度和初始缩放比例。</p>
+<pre><code class="lang-html">&lt;meta <span class="hljs-attribute">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attribute">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;
+</code></pre>
+<h4 id="favicon">favicon</h4>
+<p>在未指定 favicon 时，大多数浏览器会请求 Web Server 根目录下的 favicon.ico 。为了保证 favicon 可访问，避免404，必须遵循以下两种方法之一：</p>
+<ul>
+<li>在 Web Server 根目录放置 favicon.ico 文件；</li>
+<li>使用 link 指定 favicon；</li>
+</ul>
+<pre><code class="lang-html">&lt;link <span class="hljs-attribute">rel</span>=<span class="hljs-string">"shortcut icon"</span> <span class="hljs-attribute">href</span>=<span class="hljs-string">"path/to/favicon.ico"</span>&gt;
+</code></pre>
+<h4 id="head-">HEAD 模板</h4>
+<pre><code class="lang-html"><span class="hljs-meta">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"zh-cmn-Hans"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"utf-8"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">http-equiv</span>=<span class="hljs-string">"X-UA-Compatible"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"IE=edge,chrome=1"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Style Guide<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"description"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"不超过150个字符"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"keywords"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">""</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"author"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"name, email@gmail.com"</span>&gt;</span>
+
+    <span class="hljs-comment">&lt;!-- 为移动设备添加 viewport --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">"shortcut icon"</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"path/to/favicon.ico"</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+</code></pre>
+<h1 id="-span-id-css-css-span-"><span id="css">CSS规范</span></h1>
+<hr>
+<h2 id="-span-id-css-general-span-"><span id="css-general">通用约定</span></h2>
+<h4 id="-">代码组织</h4>
+<ul>
+<li>以组件为单位组织代码段；</li>
+<li>制定一致的注释规范；</li>
+<li><code>组件块和子组件块</code>以及<code>声明块</code>之间使用<strong>一空行</strong>分隔，<code>子组件块</code>之间<strong>三空行</strong>分隔；</li>
+<li>如果使用了多个 CSS 文件，将其按照组件而非页面的形式分拆，因为页面会被重组，而组件只会被移动；</li>
+</ul>
+<p>良好的注释是非常重要的。请留出时间来描述组件（component）的工作方式、局限性和构建它们的方法。不要让你的团队其它成员 来猜测一段不通用或不明显的代码的目的。</p>
+<p>提示：通过配置编辑器，可以提供快捷键来输出一致认可的注释模式。</p>
+<pre><code class="lang-css"><span class="hljs-comment">/*!
+ * Bootstrap v3.3.5 (http://getbootstrap.com)
+ * Copyright 2011-2015 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ */</span>
+<span class="hljs-selector-class">.selector</span> {
+  <span class="hljs-attribute">padding</span>: <span class="hljs-number">15px</span>;
+  <span class="hljs-attribute">margin-bottom</span>: <span class="hljs-number">15px</span>;
+}
+
+<span class="hljs-selector-class">.selector-secondary</span> {
+  <span class="hljs-attribute">display</span>: block; <span class="hljs-comment">/* 注释*/</span>
+}
+
+<span class="hljs-selector-class">.selector-three</span> {
+  <span class="hljs-attribute">display</span>: span;
+}
+</code></pre>
+<h4 id="class-id">Class 和 ID</h4>
+<ul>
+<li>使用语义化、通用的命名方式；</li>
+<li>使用连字符 - 作为 ID、Class 名称界定符，不要驼峰命名法和下划线；</li>
+<li>避免选择器嵌套层级过多，尽量少于 3 级；</li>
+<li>避免选择器和 Class、ID 叠加使用；</li>
+</ul>
+<p>出于<a href="http://www.stevesouders.com/blog/2009/06/18/simplifying-css-selectors/">性能考量</a>，在没有必要的情况下避免元素选择器叠加 Class、ID  使用。</p>
+<p>元素选择器和 ID、Class 混合使用也违反关注分离原则。如果HTML标签修改了，就要再去修改 CSS 代码，不利于后期维护。</p>
+<pre><code class="lang-css"><span class="hljs-comment">/* Not recommended */</span>
+<span class="hljs-selector-class">.red</span> {}
+<span class="hljs-selector-class">.box_green</span> {}
+<span class="hljs-selector-class">.page</span> <span class="hljs-selector-class">.header</span> <span class="hljs-selector-class">.login</span> <span class="hljs-selector-id">#username</span> <span class="hljs-selector-tag">input</span> {}
+ul<span class="hljs-selector-id">#example</span> {}
+
+<span class="hljs-comment">/* Recommended */</span>
+<span class="hljs-selector-id">#nav</span> {}
+<span class="hljs-selector-class">.box-video</span> {}
+<span class="hljs-selector-id">#username</span> <span class="hljs-selector-tag">input</span> {}
+<span class="hljs-selector-id">#example</span> {}
+</code></pre>
+<h4 id="css-">CSS 样式中尽可能压缩样式</h4>
+<pre><code class="lang-css"><span class="hljs-comment">/* Not recommended */</span>
+<span class="hljs-attribute">padding-bottom</span>: <span class="hljs-number">2em</span>;
+<span class="hljs-attribute">padding-left</span>: <span class="hljs-number">1em</span>;
+<span class="hljs-attribute">padding-right</span>: <span class="hljs-number">1em</span>;
+<span class="hljs-attribute">padding-top</span>: <span class="hljs-number">0</span>;
+<span class="hljs-attribute">border-top-style</span>: none;
+<span class="hljs-attribute">line-height</span>: <span class="hljs-number">1.6</span>;
+<span class="hljs-attribute">font-family</span>: palatino, georgia, serif;
+<span class="hljs-attribute">font-size</span>: <span class="hljs-number">100%</span>;
+
+<span class="hljs-comment">/* Recommended */</span>
+<span class="hljs-attribute">padding</span>: <span class="hljs-number">0</span> <span class="hljs-number">1em</span> <span class="hljs-number">2em</span>;
+<span class="hljs-attribute">border-top</span>: <span class="hljs-number">0</span>;
+<span class="hljs-attribute">font</span>: <span class="hljs-number">100%</span>/<span class="hljs-number">1.6</span> palatino, georgia, serif;
+</code></pre>
+<h4 id="0-">0 的时候去除单位</h4>
+<pre><code class="lang-css"><span class="hljs-attribute">margin</span>: <span class="hljs-number">0</span>;
+<span class="hljs-attribute">padding</span>: <span class="hljs-number">0</span>;
+</code></pre>
+<h4 id="-">声明块格式</h4>
+<ul>
+<li>选择器分组时，保持独立的选择器占用一行；</li>
+<li>声明块的左括号 <code>{</code> 前添加一个空格；</li>
+<li>声明块的右括号 <code>}</code> 应单独成行；</li>
+<li>声明语句中的 <code>:</code> 后应添加一个空格；</li>
+<li>声明语句应以分号 <code>;</code> 结尾；</li>
+<li>一般以逗号分隔的属性值，每个逗号后应添加一个空格；</li>
+<li><code>rgb()</code>、<code>rgba()</code>、<code>hsl()</code>、<code>hsla()</code> 或 <code>rect()</code>  括号内的值，逗号分隔，但逗号后不添加一个空格；</li>
+<li>对于属性值或颜色参数，省略小于 1 的小数前面的 0 （例如，<code>.5</code> 代替 <code>0.5</code>；<code>-.5px</code> 代替 <code>-0.5px</code>）；</li>
+<li>十六进制值应该全部小写和尽量简写，例如，<code>#fff</code> 代替 <code>#ffffff</code>；</li>
+<li>避免为 0 值指定单位，例如，用 <code>margin: 0;</code> 代替 <code>margin: 0px;</code>；</li>
+</ul>
+<pre><code class="lang-css"><span class="hljs-comment">/*  Not recommended  */</span>
+<span class="hljs-selector-class">.selector</span>, <span class="hljs-selector-class">.selector-secondary</span>, <span class="hljs-selector-class">.selector</span><span class="hljs-selector-attr">[type=text]</span> {
+  <span class="hljs-attribute">padding</span>:<span class="hljs-number">15px</span>;
+  <span class="hljs-attribute">margin</span>:<span class="hljs-number">0px</span> <span class="hljs-number">0px</span> <span class="hljs-number">15px</span>;
+  <span class="hljs-attribute">background-color</span>:<span class="hljs-built_in">rgba</span>(0, 0, 0, 0.5);
+  <span class="hljs-attribute">box-shadow</span>:<span class="hljs-number">0px</span> <span class="hljs-number">1px</span> <span class="hljs-number">2px</span> <span class="hljs-number">#CCC</span>,inset <span class="hljs-number">0</span> <span class="hljs-number">1px</span> <span class="hljs-number">0</span> <span class="hljs-number">#FFFFFF</span>
+}
+
+<span class="hljs-comment">/* Recommended */</span>
+<span class="hljs-selector-class">.selector</span>,
+<span class="hljs-selector-class">.selector-secondary</span>,
+<span class="hljs-selector-class">.selector</span><span class="hljs-selector-attr">[type="text"]</span> {
+  <span class="hljs-attribute">padding</span>: <span class="hljs-number">15px</span>;
+  <span class="hljs-attribute">margin-bottom</span>: <span class="hljs-number">15px</span>;
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-built_in">rgba</span>(0,0,0,.5);
+  <span class="hljs-attribute">box-shadow</span>: <span class="hljs-number">0</span> <span class="hljs-number">1px</span> <span class="hljs-number">2px</span> <span class="hljs-number">#ccc</span>, inset <span class="hljs-number">0</span> <span class="hljs-number">1px</span> <span class="hljs-number">0</span> <span class="hljs-number">#fff</span>;
+}
+</code></pre>
+<h4 id="-">声明顺序</h4>
+<p>相关属性应为一组，推荐的样式编写顺序</p>
+<ol>
+<li>Positioning</li>
+<li>Box model</li>
+<li>Typographic</li>
+<li>Visual</li>
+</ol>
+<p>由于定位（positioning）可以从正常的文档流中移除元素，并且还能覆盖盒模型（box model）相关的样式，因此排在首位。盒模型决定了组件的尺寸和位置，因此排在第二位。</p>
+<p>其他属性只是影响组件的内部（inside）或者是不影响前两组属性，因此排在后面。</p>
+<pre><code class="lang-css"><span class="hljs-selector-class">.declaration-order</span> {
+  <span class="hljs-comment">/* Positioning */</span>
+  <span class="hljs-attribute">position</span>: absolute;
+  <span class="hljs-attribute">top</span>: <span class="hljs-number">0</span>;
+  <span class="hljs-attribute">right</span>: <span class="hljs-number">0</span>;
+  <span class="hljs-attribute">bottom</span>: <span class="hljs-number">0</span>;
+  <span class="hljs-attribute">left</span>: <span class="hljs-number">0</span>;
+  <span class="hljs-attribute">z-index</span>: <span class="hljs-number">100</span>;
+
+  <span class="hljs-comment">/* Box model */</span>
+  <span class="hljs-attribute">display</span>: block;
+  <span class="hljs-attribute">box-sizing</span>: border-box;
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">100px</span>;
+  <span class="hljs-attribute">height</span>: <span class="hljs-number">100px</span>;
+  <span class="hljs-attribute">padding</span>: <span class="hljs-number">10px</span>;
+  <span class="hljs-attribute">border</span>: <span class="hljs-number">1px</span> solid <span class="hljs-number">#e5e5e5</span>;
+  <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">3px</span>;
+  <span class="hljs-attribute">margin</span>: <span class="hljs-number">10px</span>;
+  <span class="hljs-attribute">float</span>: right;
+  <span class="hljs-attribute">overflow</span>: hidden;
+
+  <span class="hljs-comment">/* Typographic */</span>
+  <span class="hljs-attribute">font</span>: normal <span class="hljs-number">13px</span> <span class="hljs-string">"Helvetica Neue"</span>, sans-serif;
+  <span class="hljs-attribute">line-height</span>: <span class="hljs-number">1.5</span>;
+  <span class="hljs-attribute">text-align</span>: center;
+
+  <span class="hljs-comment">/* Visual */</span>
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#f5f5f5</span>;
+  <span class="hljs-attribute">color</span>: <span class="hljs-number">#fff</span>;
+  <span class="hljs-attribute">opacity</span>: .<span class="hljs-number">8</span>;
+
+  <span class="hljs-comment">/* Other */</span>
+  <span class="hljs-attribute">cursor</span>: pointer;
+}
+</code></pre>
+<h4 id="-">引号使用</h4>
+<p><code>url()</code> 、属性选择符、属性值使用双引号。
+参考 <a href="http://stackoverflow.com/questions/2168855/is-quoting-the-value-of-url-really-necessary">Is quoting the value of url() really necessary?</a></p>
+<pre><code class="lang-css"><span class="hljs-comment">/* Not recommended */</span>
+@<span class="hljs-keyword">import</span> url(//www.google.com/css/maia.css);
+
+<span class="hljs-selector-tag">html</span> {
+  <span class="hljs-attribute">font-family</span>: <span class="hljs-string">'open sans'</span>, arial, sans-serif;
+}
+
+<span class="hljs-comment">/* Recommended */</span>
+@<span class="hljs-keyword">import</span> url(<span class="hljs-string">"//www.google.com/css/maia.css"</span>);
+
+<span class="hljs-selector-tag">html</span> {
+  <span class="hljs-attribute">font-family</span>: <span class="hljs-string">"open sans"</span>, arial, sans-serif;
+}
+
+<span class="hljs-selector-class">.selector</span><span class="hljs-selector-attr">[type="text"]</span> {
+
+}
+</code></pre>
+<h4 id="-media-query-">媒体查询（Media query）的位置</h4>
+<p>将媒体查询放在尽可能相关规则的附近。不要将他们打包放在一个单一样式文件中或者放在文档底部。如果你把他们分开了，将来只会被大家遗忘。</p>
+<pre><code class="lang-css"><span class="hljs-selector-class">.element</span> { ... }
+<span class="hljs-selector-class">.element-avatar</span> { ... }
+<span class="hljs-selector-class">.element-selected</span> { ... }
+
+@media (<span class="hljs-attribute">max-width</span>: <span class="hljs-number">768px</span>) {
+  <span class="hljs-selector-class">.element</span> { ...}
+  <span class="hljs-selector-class">.element-avatar</span> { ... }
+  <span class="hljs-selector-class">.element-selected</span> { ... }
+}
+</code></pre>
+<h4 id="-import-">尽量不要使用 <code>@import</code></h4>
+<p>与 <code>&lt;link&gt;</code> 相比，<code>@import</code> 要慢很多，不光增加额外的请求数，还会导致不可预料的问题。</p>
+<p>替代办法：</p>
+<ul>
+<li>使用多个 <link> 元素；</li>
+<li>通过 Sass 或 Less 类似的 CSS 预处理器将多个 CSS 文件编译为一个文件；</li>
+<li>其他 CSS 文件合并工具；</li>
+</ul>
+<h4 id="-">链接的样式顺序：</h4>
+<p><code>a:link -&gt; a:visited -&gt; a:hover -&gt; a:active（LoVeHAte）</code></p>
+<h1 id="-span-id-javascript-javascript-span-"><span id="javascript">JavaScript</span></h1>
+<hr>
+<h2 id="-span-id-javascript-general-span-"><span id="javascript-general">通用约定</span></h2>
+<h4 id="-">注释</h4>
+<p><strong>原则</strong></p>
+<ul>
+<li>As short as possible（如无必要，勿增注释）：尽量提高代码本身的清晰性、可读性。</li>
+<li>As long as necessary（如有必要，尽量详尽）：合理的注释、空行排版等，可以让代码更易阅读、更具美感。</li>
+</ul>
+<p><strong>单行注释</strong></p>
+<p>必须独占一行。<code>//</code> 后跟一个空格，缩进与下一行被注释说明的代码一致。</p>
+<p><strong>多行注释</strong></p>
+<p>避免使用 <code>/*...*/</code> 这样的多行注释。有多行注释内容时，使用多个单行注释。</p>
+<p><strong>函数/方法注释</strong></p>
+<ol>
+<li>函数/方法注释必须包含函数说明，有参数和返回值时必须使用注释标识。；</li>
+<li>参数和返回值注释必须包含类型信息和说明；</li>
+<li>当函数是内部函数，外部不可访问时，可以使用 @inner 标识；</li>
+</ol>
+<pre><code class="lang-javascript">/**
+ * 函数描述
+ *
+ * @param {string} p1 参数1的说明
+ * @param {string} p2 参数2的说明
+ * @param {number=} p3 参数3的说明（可选）
+ * @return {Object} 返回值描述
+ */
+function foo(p1, p2, p3) {
+    var p3 = p3 || 10;
+   <span class="hljs-built_in"> return </span>{
+        p1: p1,
+        p2: p2,
+        p3: p3
+    };
+}
+</code></pre>
+<p><strong>文件注释</strong></p>
+<p>文件注释用于告诉不熟悉这段代码的读者这个文件中包含哪些东西。 应该提供文件的大体内容, 它的作者, 依赖关系和兼容性信息。如下:</p>
+<pre><code class="lang-javascript">/**
+ * @fileoverview Description <span class="hljs-keyword">of</span> <span class="hljs-built_in">file</span>, <span class="hljs-keyword">its</span> uses <span class="hljs-keyword">and</span> information
+ * <span class="hljs-keyword">about</span> <span class="hljs-keyword">its</span> dependencies.
+ * @author xxx@hand-china.com
+ * Copyright <span class="hljs-number">2015</span> xxx Inc. All Rights Reserved.
+ */
+</code></pre>
+<h4 id="-">命名</h4>
+<p><strong>变量</strong>, 使用 Camel 命名法。</p>
+<pre><code class="lang-javascript"><span class="hljs-attribute">var loadingModules</span> = {};
+</code></pre>
+<p><strong>私有属性、变量和方法</strong>以下划线 _ 开头。</p>
+<pre><code class="lang-javascript">var _privateMethod = {}<span class="hljs-comment">;</span>
+</code></pre>
+<p><strong>常量</strong>, 使用全部字母大写，单词间下划线分隔的命名方式。</p>
+<pre><code class="lang-javascript">var HTML_ENTITY = {}<span class="hljs-comment">;</span>
+</code></pre>
+<ol>
+<li><strong>函数</strong>, 使用 Camel 命名法。</li>
+<li>函数的<strong>参数</strong>, 使用 Camel 命名法。</li>
+</ol>
+<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">stringFormat</span><span class="hljs-params">(source)</span> </span>{}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">hear</span><span class="hljs-params">(theBells)</span> </span>{}
+</code></pre>
+<ol>
+<li><strong>类</strong>, 使用 Pascal 命名法</li>
+<li>类的 <strong>方法 / 属性</strong>, 使用 Camel 命名法</li>
+</ol>
+<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">TextNode</span><span class="hljs-params">(value, engine)</span> </span>{
+    <span class="hljs-keyword">this</span>.value = value;
+    <span class="hljs-keyword">this</span>.engine = engine;
+}
+
+TextNode.prototype.clone = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};
+</code></pre>
+<ol>
+<li><strong>枚举变量</strong> 使用 Pascal 命名法。</li>
+<li><strong>枚举的属性</strong>， 使用全部字母大写，单词间下划线分隔的命名方式。</li>
+</ol>
+<pre><code class="lang-javascript">var TargetState = {
+<span class="hljs-symbol">    READING:</span> <span class="hljs-number">1</span>,
+<span class="hljs-symbol">    READED:</span> <span class="hljs-number">2</span>,
+<span class="hljs-symbol">    APPLIED:</span> <span class="hljs-number">3</span>,
+<span class="hljs-symbol">    READY:</span> <span class="hljs-number">4</span>
+};
+</code></pre>
+<p>由多个单词组成的 <strong>缩写词</strong>，在命名中，根据当前命名法和出现的位置，所有字母的大小写与首字母的大小写保持一致。</p>
+<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">XMLParser</span><span class="hljs-params">()</span> </span>{}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">insertHTML</span><span class="hljs-params">(element, html)</span> </span>{}
+
+<span class="hljs-keyword">var</span> httpRequest = <span class="hljs-keyword">new</span> HTTPRequest();
+</code></pre>
+<h4 id="-">命名语法</h4>
+<p><strong>类名</strong>，使用名词。</p>
+<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Engine</span><span class="hljs-params">(options)</span> </span>{}
+</code></pre>
+<p><strong>函数名</strong>，使用动宾短语。</p>
+<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getStyle</span><span class="hljs-params">(element)</span> </span>{}
+</code></pre>
+<p><strong>boolean</strong> 类型的变量使用 is 或 has 开头。</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> isReady = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">var</span> hasMoreCommands = <span class="hljs-literal">false</span>;
+</code></pre>
+<p><strong>Promise 对象</strong>用动宾短语的进行时表达。</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> loadingData = ajax.get(<span class="hljs-string">'url'</span>);
+loadingData.<span class="hljs-keyword">then</span>(callback);
+</code></pre>
+<h4 id="-">接口命名规范</h4>
+<ol>
+<li>可读性强，见名晓义；</li>
+<li>尽量不与 jQuery 社区已有的习惯冲突；</li>
+<li>尽量写全。不用缩写，除非是下面列表中约定的；（变量以表达清楚为目标，uglify 会完成压缩体积工作）</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>常用词</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>options</td>
+<td>表示选项，与 jQuery 社区保持一致，不要用 config, opts 等</td>
+</tr>
+<tr>
+<td>active</td>
+<td>表示当前，不要用 current 等</td>
+</tr>
+<tr>
+<td>index</td>
+<td>表示索引，不要用 idx 等</td>
+</tr>
+<tr>
+<td>trigger</td>
+<td>触点元素</td>
+</tr>
+<tr>
+<td>triggerType</td>
+<td>触发类型、方式</td>
+</tr>
+<tr>
+<td>context</td>
+<td>表示传入的 this 对象</td>
+</tr>
+<tr>
+<td>object</td>
+<td>推荐写全，不推荐简写为 o, obj 等</td>
+</tr>
+<tr>
+<td>element</td>
+<td>推荐写全，不推荐简写为 el, elem 等</td>
+</tr>
+<tr>
+<td>length</td>
+<td>不要写成 len, l</td>
+</tr>
+<tr>
+<td>prev</td>
+<td>previous 的缩写</td>
+</tr>
+<tr>
+<td>next</td>
+<td>next 下一个</td>
+</tr>
+<tr>
+<td>constructor</td>
+<td>不能写成 ctor</td>
+</tr>
+<tr>
+<td>easing</td>
+<td>示动画平滑函数</td>
+</tr>
+<tr>
+<td>min</td>
+<td>minimize 的缩写</td>
+</tr>
+<tr>
+<td>max</td>
+<td>maximize 的缩写</td>
+</tr>
+<tr>
+<td>DOM</td>
+<td>不要写成 dom, Dom</td>
+</tr>
+<tr>
+<td>.hbs</td>
+<td>使用 hbs 后缀表示模版</td>
+</tr>
+<tr>
+<td>btn</td>
+<td>button 的缩写</td>
+</tr>
+<tr>
+<td>link</td>
+<td>超链接</td>
+</tr>
+<tr>
+<td>title</td>
+<td>主要文本</td>
+</tr>
+<tr>
+<td>img</td>
+<td>图片路径（img标签src属性）</td>
+</tr>
+<tr>
+<td>dataset</td>
+<td>html5 data-xxx 数据接口</td>
+</tr>
+<tr>
+<td>theme</td>
+<td>主题</td>
+</tr>
+<tr>
+<td>className</td>
+<td>类名</td>
+</tr>
+<tr>
+<td>classNameSpace</td>
+<td>class 命名空间</td>
+</tr>
+</tbody>
+</table>
+<h4 id="true-false-">True 和 False 布尔表达式</h4>
+<p>类型检测优先使用 typeof。对象类型检测使用 instanceof。null 或 undefined 的检测使用 == null。</p>
+<p>下面的布尔表达式都返回 false:</p>
+<ul>
+<li>null</li>
+<li>undefined</li>
+<li>&#39;&#39; 空字符串</li>
+<li>0 数字0</li>
+</ul>
+<p>但小心下面的, 可都返回 true:</p>
+<ul>
+<li>&#39;0&#39; 字符串0</li>
+<li>[] 空数组</li>
+<li>{} 空对象</li>
+</ul>
+<h4 id="-array-for-in-">不要在 Array 上使用 for-in 循环</h4>
+<p>for-in 循环只用于 <code>object/map/hash</code> 的遍历, 对 <code>Array</code> 用 for-in 循环有时会出错. 因为它并不是从 0 到 length - 1 进行遍历, 而是所有出现在对象及其原型链的键值。</p>
+<pre><code class="lang-javascript"><span class="hljs-comment">// Not recommended</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">printArray</span>(<span class="hljs-params">arr</span>) </span>{
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> arr) {
+    print(arr[key]);
+  }
+}
+
+printArray([<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>]);  <span class="hljs-comment">// This works.</span>
+
+<span class="hljs-keyword">var</span> a = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>(<span class="hljs-number">10</span>);
+printArray(a);  <span class="hljs-comment">// This is wrong.</span>
+
+a = <span class="hljs-built_in">document</span>.getElementsByTagName(<span class="hljs-string">'*'</span>);
+printArray(a);  <span class="hljs-comment">// This is wrong.</span>
+
+a = [<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>];
+a.buhu = <span class="hljs-string">'wine'</span>;
+printArray(a);  <span class="hljs-comment">// This is wrong again.</span>
+
+a = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>;
+a[<span class="hljs-number">3</span>] = <span class="hljs-number">3</span>;
+printArray(a);  <span class="hljs-comment">// This is wrong again.</span>
+
+<span class="hljs-comment">// Recommended</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">printArray</span>(<span class="hljs-params">arr</span>) </span>{
+  <span class="hljs-keyword">var</span> l = arr.length;
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; l; i++) {
+    print(arr[i]);
+  }
+}
+</code></pre>
+<h4 id="-">二元和三元操作符</h4>
+<p>操作符始终写在前一行, 以免<strong>分号的隐式插入</strong>产生预想不到的问题。</p>
+<pre><code class="lang-javascript"><span class="hljs-attribute">var x</span> = a ? b : c;
+
+<span class="hljs-attribute">var y</span> = a ?
+    longButSimpleOperandB : longButSimpleOperandC;
+
+<span class="hljs-attribute">var z</span> = a ?
+        moreComplicatedB :
+        moreComplicatedC;
+</code></pre>
+<p><code>.</code> 操作符也是如此：</p>
+<pre><code class="lang-javascript"><span class="hljs-attribute">var x</span> = foo.bar().
+    doSomething().
+    doSomethingElse();
+</code></pre>
+<h4 id="-">条件(三元)操作符 (?:)</h4>
+<p>三元操作符用于替代 if 条件判断语句。</p>
+<pre><code class="lang-javascript"><span class="hljs-comment">// Not recommended</span>
+<span class="hljs-keyword">if</span> (<span class="hljs-keyword">val</span> != <span class="hljs-number">0</span>) {
+  <span class="hljs-keyword">return</span> foo();
+} <span class="hljs-keyword">else</span> {
+  <span class="hljs-keyword">return</span> bar();
+}
+
+<span class="hljs-comment">// Recommended</span>
+<span class="hljs-keyword">return</span> <span class="hljs-keyword">val</span> ? foo() : bar();
+</code></pre>
+<h4 id="-">&amp;&amp; 和 ||</h4>
+<p>二元布尔操作符是可短路的, 只有在必要时才会计算到最后一项。</p>
+<pre><code class="lang-javascript">// Not recommended
+function foo(opt_win) {
+  var win;
+  if (opt_win) {
+    win = opt_win;
+  } else {
+    win = window;
+  }
+  // ...
+}
+
+if (<span class="hljs-keyword">node</span><span class="hljs-title">) {
+  if</span> (<span class="hljs-keyword">node</span>.<span class="hljs-title">kids</span>) {
+    if (<span class="hljs-keyword">node</span>.<span class="hljs-title">kids</span>[index]) {
+      foo(<span class="hljs-keyword">node</span>.<span class="hljs-title">kids</span>[index]);
+    }
+  }
+}
+
+// Recommended
+function foo(opt_win) {
+  var win = opt_win || window;
+  // ...
+}
+
+var kid = <span class="hljs-keyword">node</span> <span class="hljs-title">&amp;&amp; node</span>.kids &amp;&amp; <span class="hljs-keyword">node</span>.<span class="hljs-title">kids</span>[index];
+if (kid) {
+  foo(kid);
+}
+</code></pre>
+<p>##<span id="jquery">jQuery </span></p>
+<h4 id="-jquery">使用最新版本的 jQuery</h4>
+<p>最新版本的 jQuery 会改进性能和增加新功能，若不是为了兼容旧浏览器，建议使用最新版本的 jQuery。以下是三条常见的 jQuery 语句，版本越新，性能越好：</p>
+<pre><code class="lang-javascript"><span class="hljs-meta">$</span><span class="bash">(<span class="hljs-string">'.elem'</span>)</span>
+<span class="hljs-meta">$</span><span class="bash">(<span class="hljs-string">'.elem'</span>, context)</span>
+context.find('.elem')
+</code></pre>
+<h4 id="jquery-">jQuery 变量</h4>
+<ol>
+<li>存放 jQuery 对象的变量以 <code>$</code> 开头；</li>
+<li>将 jQuery 选择器返回的对象缓存到本地变量中复用；</li>
+<li>使用驼峰命名变量；</li>
+</ol>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> $myDiv = $(<span class="hljs-string">"#myDiv"</span>);
+$myDiv.click(function()<span class="hljs-meta">{...}</span>);
+</code></pre>
+<h4 id="-">选择器</h4>
+<ol>
+<li>尽可能的使用 ID 选择器，因为它会调用浏览器原生方法 <code>document.getElementById</code> 查找元素。当然直接使用原生 <code>document.getElementById</code> 方法性能会更好；</li>
+<li>在父元素中选择子元素使用 <code>.find()</code> 方法性能会更好, 因为 ID 选择器没有使用到 Sizzle 选择器引擎来查找元素；</li>
+</ol>
+<pre><code class="lang-javascript"><span class="hljs-comment">// Not recommended</span>
+var <span class="hljs-symbol">$</span>productIds = <span class="hljs-symbol">$</span>(<span class="hljs-string">"#products .class"</span>);
+
+<span class="hljs-comment">// Recommended</span>
+var <span class="hljs-symbol">$</span>productIds = <span class="hljs-symbol">$</span>(<span class="hljs-string">"#products"</span>).find(<span class="hljs-string">".class"</span>);
+</code></pre>
+<h4 id="dom-">DOM 操作</h4>
+<ol>
+<li>当要操作 DOM 元素的时候，尽量将其分离节点，操作结束后，再插入节点；</li>
+<li>使用字符串连接或 <code>array.join</code> 要比 <code>.append()</code>性能更好；</li>
+</ol>
+<pre><code class="lang-javascript">var <span class="hljs-variable">$myList</span> = <span class="hljs-variable">$(</span><span class="hljs-string">"#list-container &gt; ul"</span>).detach();
+<span class="hljs-regexp">//</span>...a lot of complicated things on <span class="hljs-variable">$myList</span>
+<span class="hljs-variable">$myList</span>.appendTo(<span class="hljs-string">"#list-container"</span>);
+</code></pre>
+<pre><code class="lang-javascript"><span class="hljs-comment">// Not recommended</span>
+<span class="hljs-keyword">var</span> $myList = $(<span class="hljs-string">"#list"</span>);
+<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10000</span>; i++){
+    $myList.append(<span class="hljs-string">"&lt;li&gt;"</span>+i+<span class="hljs-string">"&lt;/li&gt;"</span>);
+}
+
+<span class="hljs-comment">// Recommended</span>
+<span class="hljs-keyword">var</span> $myList = $(<span class="hljs-string">"#list"</span>);
+<span class="hljs-keyword">var</span> <span class="hljs-keyword">list</span> = <span class="hljs-string">""</span>;
+<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10000</span>; i++){
+    <span class="hljs-keyword">list</span> += <span class="hljs-string">"&lt;li&gt;"</span>+i+<span class="hljs-string">"&lt;/li&gt;"</span>;
+}
+$myList.html(<span class="hljs-keyword">list</span>);
+
+<span class="hljs-comment">// Much to recommended</span>
+<span class="hljs-keyword">var</span> <span class="hljs-keyword">array</span> = [];
+<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10000</span>; i++){
+    <span class="hljs-keyword">array</span>[i] = <span class="hljs-string">"&lt;li&gt;"</span>+i+<span class="hljs-string">"&lt;/li&gt;"</span>;
+}
+$myList.html(<span class="hljs-keyword">array</span>.join(<span class="hljs-string">''</span>));
+</code></pre>
+<h4 id="-">事件</h4>
+<ol>
+<li>如果需要，对事件使用自定义的 <code>namespace</code>，这样容易解绑特定的事件，而不会影响到此 DOM 元素的其他事件监听；</li>
+<li>对 Ajax 加载的 DOM 元素绑定事件时尽量使用事件委托。事件委托允许在父元素绑定事件，子代元素可以响应事件，也包括 Ajax 加载后添加的子代元素；</li>
+</ol>
+<pre><code class="lang-javascript"><span class="hljs-meta">$</span><span class="bash">(<span class="hljs-string">"#myLink"</span>).on(<span class="hljs-string">"click.mySpecialClick"</span>, myEventHandler);</span>
+<span class="hljs-meta">$</span><span class="bash">(<span class="hljs-string">"#myLink"</span>).unbind(<span class="hljs-string">"click.mySpecialClick"</span>);</span>
+</code></pre>
+<pre><code class="lang-javascript"><span class="hljs-comment">// Not recommended</span>
+$(<span class="hljs-string">"#list a"</span>).<span class="hljs-keyword">on</span>(<span class="hljs-string">"click"</span>, myClickHandler);
+
+<span class="hljs-comment">// Recommended</span>
+$(<span class="hljs-string">"#list"</span>).<span class="hljs-keyword">on</span>(<span class="hljs-string">"click"</span>, <span class="hljs-string">"a"</span>, myClickHandler);
+</code></pre>
+<h4 id="-">链式写法</h4>
+<ol>
+<li>尽量使用链式写法而不是用变量缓存或者多次调用选择器方法；</li>
+<li>当链式写法超过三次或者因为事件绑定变得复杂后，使用换行和缩进保持代码可读性；</li>
+</ol>
+<pre><code class="lang-javascript"><span class="hljs-meta">$</span><span class="bash">(<span class="hljs-string">"#myDiv"</span>).addClass(<span class="hljs-string">"error"</span>).show();</span>
+</code></pre>
+<pre><code class="lang-javascript">$(<span class="hljs-string">"#myLink"</span>)
+<span class="hljs-meta">  .addClass</span>(<span class="hljs-string">"bold"</span>)
+<span class="hljs-meta">  .on</span>(<span class="hljs-string">"click"</span>, myClickHandler)
+<span class="hljs-meta">  .on</span>(<span class="hljs-string">"mouseover"</span>, myMouseOverHandler)
+<span class="hljs-meta">  .show</span>()<span class="hljs-comment">;</span>
+</code></pre>
+<h4 id="-">其他</h4>
+<ol>
+<li>多个参数使用对象字面量存储；</li>
+<li>不要将 CSS 写在 jQuery 里面；</li>
+<li>正则表达式仅准用 .test() 和 .exec() 。不准用 &quot;string&quot;.match() ；</li>
+</ol>
+<h3 id="-">性能优化</h3>
+<p>####避免不必要的 DOM 操作
+浏览器遍历 DOM 元素的代价是昂贵的。最简单优化 DOM 树查询的方案是，当一个元素出现多次时，将它保存在一个变量中，就避免多次查询 DOM 树了。</p>
+<pre><code class="lang-javascript"><span class="hljs-comment">// Recommended</span>
+<span class="hljs-keyword">var</span> myList = <span class="hljs-string">""</span>;
+<span class="hljs-keyword">var</span> myListHTML = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"myList"</span>).innerHTML;
+
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">100</span>; i++) {
+  myList += <span class="hljs-string">"&lt;span&gt;"</span> + i + <span class="hljs-string">"&lt;/span&gt;"</span>;
+}
+
+myListHTML = myList;
+
+<span class="hljs-comment">// Not recommended</span>
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">100</span>; i++) {
+  <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"myList"</span>).innerHTML += <span class="hljs-string">"&lt;span&gt;"</span> + i + <span class="hljs-string">"&lt;/span&gt;"</span>;
+}
+</code></pre>
+<p>####缓存数组长度
+循环无疑是和 JavaScript 性能非常相关的一部分。通过存储数组的长度，可以有效避免每次循环重新计算。</p>
+<p>注: 虽然现代浏览器引擎会自动优化这个过程，但是不要忘记还有旧的浏览器。</p>
+<pre><code class="lang-javascript"><span class="hljs-built_in">var</span> arr = <span class="hljs-built_in">new</span> Array(<span class="hljs-number">1000</span>),
+    len, i;
+// Recommended - size <span class="hljs-built_in">is</span> calculated only <span class="hljs-number">1</span> <span class="hljs-built_in">time</span> <span class="hljs-keyword">and</span> <span class="hljs-keyword">then</span> stored
+<span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, len = arr.<span class="hljs-built_in">length</span>; i &lt; len; i++) {
+
+}
+
+// Not recommended - size needs to be recalculated <span class="hljs-number">1000</span> times
+<span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; arr.<span class="hljs-built_in">length</span>; i++) {
+
+}
+</code></pre>
+<p>####异步加载第三方内容
+当你无法保证嵌入第三方内容比如 Youtube 视频或者一个 like/tweet 按钮可以正常工作的时候，你需要考虑用异步加载这些代码，避免阻塞整个页面加载。</p>
+<pre><code class="lang-javascript">(<span class="hljs-name">function</span>() {
+
+    var script,
+        scripts = document.getElementsByTagName(<span class="hljs-symbol">'script</span>')[<span class="hljs-name">0</span>]<span class="hljs-comment">;</span>
+
+    function load(<span class="hljs-name">url</span>) {
+      script = document.createElement(<span class="hljs-symbol">'script</span>')<span class="hljs-comment">;</span>
+      script.async = true<span class="hljs-comment">;</span>
+      script.src = url<span class="hljs-comment">;</span>
+      scripts.parentNode.insertBefore(<span class="hljs-name">script</span>, scripts)<span class="hljs-comment">;</span>
+    }
+
+    load(<span class="hljs-symbol">'//apis.google.com/js/plusone.js</span>')<span class="hljs-comment">;</span>
+    load(<span class="hljs-symbol">'//platform.twitter.com/widgets.js</span>')<span class="hljs-comment">;</span>
+    load(<span class="hljs-symbol">'//s.widgetsite.com/widget.js</span>')<span class="hljs-comment">;</span>
+
+}())<span class="hljs-comment">;</span>
+</code></pre>
+<h4 id="-jquery-">避免使用 jQuery 实现动画</h4>
+<ol>
+<li>禁止使用 slideUp/Down() fadeIn/fadeOut() 等方法；</li>
+<li>尽量不使用 animate() 方法；</li>
+</ol>
+<h2 id="-span-id-bootstrap-bootstrap-span-">#<span id="bootstrap">Bootstrap</span></h2>
+<p>####移动设备优先
+为了确保正确的渲染和触摸缩放，需要在<code>head</code>之中添加<code>viewport meta</code>标签</p>
+<pre><code class="lang-html">&lt;meta <span class="hljs-attribute">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attribute">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1"</span>&gt;
+</code></pre>
+<p>在<code>viewport</code>标签上添加user-scalable=no来禁用移动设备上的缩放功能</p>
+<pre><code class="lang-html">&lt;meta <span class="hljs-attr">name="viewport"</span> <span class="hljs-attr">content="width=device-width,</span> <span class="hljs-attr">initial-scale=1,</span> <span class="hljs-attr">maximum-scale=1,</span> <span class="hljs-attr">user-scalable=no"&gt;</span>
+</code></pre>
+<p>####栅格系统
+Bootstrap包括了一套响应式、移动设备优先的流式栅格系统，随着屏幕设备或视口（viewport）尺寸的增加，系统会自动扩展到最多12列。</p>
+<blockquote>
+<ul>
+<li>行（row）必须包含在 .container（固定宽度）或 .container-fluid（全屏宽度）中，以便自身调整或填充。</li>
+<li>用行（row）来创建一组水平的列（column）。</li>
+<li>内容应放在列（column）中， 只有列（column）可以是行（row）的直接子元素。</li>
+<li>预定义的栅格类，像 .rowand .col-xs-4可用于快速创建栅格布局。Less mixins 也可以用来创建更具语义化的布局。</li>
+<li>列通过设置 padding来创建列之间的间隔。然后通过在 .row上设置负值的 margin来抵消为第一和最后一列的 padding。</li>
+<li>负值的 margin就是下面的示例为什么是向外突出的原因。在栅格列中的内容排成一行。</li>
+<li>栅格系统中的列是通过指定1到12的值来表示其跨越的范围。例如，三个等宽的列可以使用三个 .col-xs-4来创建。</li>
+<li>如果一行中超过12列， 各组额外列，将作为一个单元， 换到新的一行。</li>
+<li>栅格类适用于与屏幕宽度大于或等于分界点大小的设备 ， 并且针对小型设备覆盖栅格类。 因此，在元素上应用任何 .col-md-类不仅会影响媒体设备，同时如果 .col-lg-不存在， 也影响大型设备。</li>
+</ul>
+</blockquote>
+<h4 id="button">Button</h4>
+<p>在<code>a</code>, <code>button</code>, 或<code>input</code>元素上使用button样式类</p>
+<pre><code class="lang-html">&lt;a <span class="hljs-attribute">class</span>=<span class="hljs-string">"btn btn-default"</span> <span class="hljs-attribute">href</span>=<span class="hljs-string">"#"</span> <span class="hljs-attribute">role</span>=<span class="hljs-string">"button"</span>&gt;Link&lt;/a&gt;
+&lt;button <span class="hljs-attribute">class</span>=<span class="hljs-string">"btn btn-default"</span> <span class="hljs-attribute">type</span>=<span class="hljs-string">"submit"</span>&gt;Button&lt;/button&gt;
+&lt;input <span class="hljs-attribute">class</span>=<span class="hljs-string">"btn btn-default"</span> <span class="hljs-attribute">type</span>=<span class="hljs-string">"button"</span> <span class="hljs-attribute">value</span>=<span class="hljs-string">"Input"</span>&gt;
+&lt;input <span class="hljs-attribute">class</span>=<span class="hljs-string">"btn btn-default"</span> <span class="hljs-attribute">type</span>=<span class="hljs-string">"submit"</span> <span class="hljs-attribute">value</span>=<span class="hljs-string">"Submit"</span>&gt;
+</code></pre>
+<blockquote>
+<p>建议使用 <strong><code>button</code></strong> 元素 ，以确保跨浏览器的渲染。</p>
+<p>####响应式的图片
+通过图片上添加<code>.img-responsive</code>样式类能友好的支持响应式自适应。 它应用max-width: 100%; 和 height: auto;到图片上，使其很好地根据父元素缩放。</p>
+<pre><code class="lang-html">&lt;img <span class="hljs-attribute">src</span>=<span class="hljs-string">"..."</span> <span class="hljs-attribute">class</span>=<span class="hljs-string">"img-responsive"</span> <span class="hljs-attribute">alt</span>=<span class="hljs-string">"Responsive image"</span>&gt;
+</code></pre>
+<p>Internet Explorer 8是不支持圆角的。</p>
+</blockquote>
+<h2 id="-span-id-project-span-">#<span id="project">项目规范</span></h2>
+<p>##项目结构</p>
+<pre><code>webapp                                  <span class="hljs-comment"># webapp                               </span>
+|<span class="hljs-string">-- lib                                 # 第三方lib                                         
+</span>|<span class="hljs-string">-- resources                              
+</span>|<span class="hljs-string">   </span>|<span class="hljs-string">-- css                             # css目录
+</span>|<span class="hljs-string">   </span>|<span class="hljs-string">   </span>|<span class="hljs-string">-- bootstrap.min.css
+</span>|<span class="hljs-string">   </span>|<span class="hljs-string">   </span>|<span class="hljs-string">-- font-awesome.min.css
+</span>|<span class="hljs-string">   </span>|<span class="hljs-string">   </span>|<span class="hljs-string">-- ...
+</span>|<span class="hljs-string">   </span>|<span class="hljs-string">-- fonts                           # 字体目录
+</span>|<span class="hljs-string">   </span>|<span class="hljs-string">   </span>|<span class="hljs-string">-- fontawesome-webfont.ttf
+</span>|<span class="hljs-string">   </span>|<span class="hljs-string">   </span>|<span class="hljs-string">-- fontawesome-webfont.svg
+</span>|<span class="hljs-string">   </span>|<span class="hljs-string">   </span>|<span class="hljs-string">-- ...
+</span>|<span class="hljs-string">   </span>|<span class="hljs-string">-- js                              # javascript目录
+</span>|<span class="hljs-string">   </span>|<span class="hljs-string">   </span>|<span class="hljs-string">-- bootstrap.min.js
+</span>|<span class="hljs-string">   </span>|<span class="hljs-string">   </span>|<span class="hljs-string">-- jquery.min.js
+</span>|<span class="hljs-string">   </span>|<span class="hljs-string">   </span>|<span class="hljs-string">-- ...
+</span>|<span class="hljs-string">   </span>|<span class="hljs-string">-- images                          # image目录
+</span>|<span class="hljs-string">   </span>|<span class="hljs-string">   </span>|<span class="hljs-string">-- logo.png
+</span>|<span class="hljs-string">   </span>|<span class="hljs-string">   </span>|<span class="hljs-string">-- ...
+</span>|<span class="hljs-string">   </span>|<span class="hljs-string">-- WEB-INF                         # web-inf
+</span>|<span class="hljs-string">   </span>|<span class="hljs-string">   </span>|<span class="hljs-string">-- web.xml</span>
+</code></pre>

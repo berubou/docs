@@ -1,0 +1,90 @@
+<h1 id="faq">FAQ</h1>
+<h3 id="lov-">lov 如何映射多个字段？</h3>
+<pre><code class="lang-javascript"><span class="hljs-comment">// form</span>
+{
+    <span class="hljs-built_in">type</span>:<span class="hljs-string">'popup'</span>,
+    options:{    
+        onSelected:<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(args)</span>{</span>
+            <span class="hljs-comment">// for form</span>
+            xx_form.setData({xxx:args.data[<span class="hljs-number">0</span>].xxx});
+        }
+    }
+}
+
+<span class="hljs-comment">// grid</span>
+{
+    editor:{
+        <span class="hljs-built_in">type</span>:<span class="hljs-string">'popup'</span>,
+        onSelected:<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(args)</span>{</span>
+            this.options.host_grid_row.xxx = args.data[<span class="hljs-number">0</span>].xxx;  
+        }
+    }
+}
+</code></pre>
+<h3 id="select-">select 如何映射多个字段？</h3>
+<pre><code class="lang-javascript"><span class="hljs-comment">// form</span>
+{
+    <span class="hljs-built_in">type</span>:<span class="hljs-string">'select'</span>,
+    options:{
+        onSelected:<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value,name,item)</span>{</span>
+            xx_form.setData({xxx:item.xxx});
+        }
+    }
+}
+
+<span class="hljs-comment">// grid</span>
+{
+    editor:{
+        <span class="hljs-built_in">type</span>:<span class="hljs-string">'select'</span>,
+        onSelected:<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value,name,item)</span>{</span>
+            this.options.host_grid_row.xxx = item.xxx;
+        }
+    }
+}
+</code></pre>
+<h3 id="grid-">grid 更改内容不会马上显示效果?</h3>
+<pre><code class="lang-javascript">  <span class="hljs-comment">//更改指定单元格的内容(推荐)</span>
+  <span class="hljs-selector-tag">xx_grid</span><span class="hljs-selector-class">.updateCell</span>(<span class="hljs-string">'xxx'</span>,<span class="hljs-string">'value'</span>,rowid);<span class="hljs-comment">//xxx 为列名</span>
+  <span class="hljs-comment">//更改整行内容</span>
+  <span class="hljs-selector-tag">xx_grid</span><span class="hljs-selector-class">.updateRow</span>(rowdata,newdata);
+  <span class="hljs-comment">//直接刷新整个 grid</span>
+  <span class="hljs-selector-tag">xx_grid</span><span class="hljs-selector-class">.reRender</span>();
+  <span class="hljs-comment">//刷新指定行</span>
+  <span class="hljs-selector-tag">xx_grid</span><span class="hljs-selector-class">.reRender</span>({<span class="hljs-attribute">rowdata</span>:rowdata});
+</code></pre>
+<h3 id="grid-">grid 如何控制单元格 或 列的可编辑性</h3>
+<pre><code class="lang-javascript">  onBeforeEdit:<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(item)</span></span>{
+      <span class="hljs-keyword">if</span>(item.column.columnname==<span class="hljs-string">'lang'</span>){
+          <span class="hljs-comment">// 控制整列</span>
+          <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+      }
+      <span class="hljs-keyword">if</span>(item.column.columnname==<span class="hljs-string">'name'</span>&amp;&amp;item.record.name==<span class="hljs-string">'AAA'</span>){
+          <span class="hljs-comment">// 控制单元格</span>
+          <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+      }
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+  }
+</code></pre>
+<h3 id="grid-date-">grid date 编辑器格式化？</h3>
+<pre><code class="lang-javascript">  {
+      <span class="hljs-attribute">type</span>:<span class="hljs-string">'date'</span>,
+      <span class="hljs-attribute">format</span>:<span class="hljs-string">'yyyy-MM-dd'</span>,
+      <span class="hljs-attribute">editor</span>:{
+          <span class="hljs-attribute">type</span>:<span class="hljs-string">'date'</span>
+      }
+  }
+  <span class="hljs-comment">// 注意有两个 type:'date'</span>
+</code></pre>
+<h3 id="grid-checkbox-">grid 里面怎么实现 checkbox?</h3>
+<pre><code class="lang-javascript">{
+    <span class="hljs-attribute">render</span>:Hap.createGridCheckBoxRender()
+}
+<span class="hljs-comment">// 默认使用 Y,N 表示 checkValue,uncheckValue</span>
+<span class="hljs-comment">//也可以通过参数指定其他值</span>
+{
+    <span class="hljs-attribute">render</span>:Hap.createGridCheckBoxRender({
+        <span class="hljs-attribute">checkValue</span>:<span class="hljs-string">'TRUE'</span>,
+        <span class="hljs-attribute">uncheckValue</span>:<span class="hljs-string">'FALSE'</span>
+    })
+}
+</code></pre>

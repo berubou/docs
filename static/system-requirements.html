@@ -1,0 +1,86 @@
+<h1 id="-">框架开环境搭建</h1>
+<p>此章节将说明 运行 HAP 框架所需的基本步骤。仅用于框架的开发、测试。</p>
+<h2 id="-">后端开发环境搭建</h2>
+<h3 id="-">开发工具</h3>
+<ul>
+<li>JDK 1.8 及以上</li>
+<li>IntelliJ IDEA 或 Eclipse</li>
+<li>redis 3.0 及以上</li>
+<li>maven 3.3 及以上</li>
+<li>Tomcat 7+  (<strong>不支持 Tomcat 6</strong>)</li>
+<li>数据库（任选）<ul>
+<li>Mysql server 5.6 及以上</li>
+<li>SqlServer 2012 及以上</li>
+<li>Oracle 9 以上</li>
+</ul>
+</li>
+<li>Navicat Premium（或其他）</li>
+<li>Git</li>
+</ul>
+<p><strong>注：开发人员所需工具请向管理员获取</strong></p>
+<h3 id="-">软件安装</h3>
+<h4 id="java-">Java 安装</h4>
+<ol>
+<li>在 <a href="https://nodejs.orghttp://www.oracle.com/technetwork/cn/java/javase/downloads/index.html">Oracle 官网 </a>下载对应平台的 JDK 1.8 以上的环境。</li>
+<li>本地执行安装文件，安装 JDK 环境。</li>
+<li>Win 在环境变量系统变量中 path 配置 JDK 的环境变量指向 JDK 安装目录下 <code>JDK/bin</code>。</li>
+<li>配置完成后打开 cmd 执行 <code>javac</code>，有提示则说明环境安装成功。</li>
+</ol>
+<blockquote>
+<p>eclipse 中 JRE 的配置需要指定 JDK 目录，不能是 JRE。(maven 需要 JDK)</p>
+</blockquote>
+<h4 id="git-">Git 安装</h4>
+<ol>
+<li>在 <a href="https://git-scm.com/download/">Git 官网 </a>下载对应平台的 Git。</li>
+<li>本地执行安装文件， 安装 Git 环境。</li>
+<li>Win 在环境变量中系统变量的 path 配置 Git 的环境变量指向 Git 安装目录下的 <code>/bin</code>。</li>
+<li>配置完成后打开 cmd 执行 <code>git</code>，有提示则说明环境安装成功。</li>
+</ol>
+<p><a href="git_guide.md">Git 简明教程</a></p>
+<blockquote>
+<p>对于 Windows，安装 Git 以后，你可以在任意目录 右键，<code>Git Bash Here</code></p>
+<p>打开的 MINGW 命令窗口可以执行 <strong>兼容 linux 系统</strong> 的命令，如<code>rm</code>，<code>ls</code> 等</p>
+</blockquote>
+<h4 id="maven-">Maven 安装</h4>
+<ol>
+<li>在 <a href="http://mirror.bit.edu.cn/apache/maven/">Maven 官网 </a>下载对应平台的合适的 maven 版本的压缩包。</li>
+<li>本地解压压缩包。</li>
+<li>Win 在环境变量中系统变量的 path 配置 maven 的环境变量指向 maven 解压目录下的 <code>/bin</code>。</li>
+<li>配置完成后打开 cmd 执行 <code>mvn -v</code>，有提示则说明环境安装成功。</li>
+</ol>
+<h4 id="redis-">Redis 安装</h4>
+<ol>
+<li>在 <a href="https://github.com/MSOpenTech/redis/releases">Redis win 官网 </a>下载最新的 redis 版本的压缩包。</li>
+<li>本地解压压缩包。</li>
+<li>Win 在解压目录下打开 cmd 执行 <code>redis-server.exe redis.windows.conf</code>，有提示则说明 Redis 已经启动。  </li>
+<li>Win 平台下如果启动失败，修改 redis.windows.conf 文件中的 maxheap 为 <code>maxheap 1024000000</code>。</li>
+</ol>
+<p><strong>注：</strong> <em>开发需要依赖 Redis 环境，所以在启动后台程序时，请确保 Redis 已经启动。</em></p>
+<ul>
+<li>redis GUI 客户端下载 ：<a href="http://redisdesktop.com/">http://redisdesktop.com/</a></li>
+<li>redis 命令手册：<a href="http://doc.redisfans.com/">http://doc.redisfans.com/</a><ul>
+<li>redis 清空缓存命令：flushall</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>Mac, Linux 用户, 请到 <a href="http://redis.io">http://redis.io</a> 下载源码，编译安装</p>
+</blockquote>
+<h3 id="-">开发准备</h3>
+<p><a href="project-create.md">新建项目</a></p>
+<h3 id="-">常见问题</h3>
+<ul>
+<li><p>Window 环境下，Git Bash 乱码？</p>
+<ul>
+<li>右键标题栏 → Options → Text：</li>
+<li>Local : zh_CN</li>
+<li>Character Set: GBK</li>
+</ul>
+</li>
+<li><p>Eclipse 中 pom.xml 报错?</p>
+<ul>
+<li>设置 eclipse → maven</li>
+</ul>
+</li>
+</ul>
+<p><img src="assets/ignore_pom_error.png" width="50%"/></p>

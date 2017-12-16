@@ -1,0 +1,51 @@
+<h3 id="radio-">radio标签</h3>
+<p><strong>单选框</strong></p>
+<pre><code class="lang-xml"> &lt;h:radio bind=<span class="hljs-string">"value:name"</span> id=<span class="hljs-string">"radio"</span> layout=<span class="hljs-string">"vertical"</span>&gt;
+ &lt;h:<span class="hljs-keyword">items</span>&gt;
+ &lt;h:<span class="hljs-keyword">item</span> label=<span class="hljs-string">"A"</span> <span class="hljs-built_in">value</span>=<span class="hljs-string">"1"</span>/&gt;
+ &lt;h:<span class="hljs-keyword">item</span> label=<span class="hljs-string">"B"</span> <span class="hljs-built_in">value</span>=<span class="hljs-string">"2"</span>/&gt;
+ &lt;h:<span class="hljs-keyword">item</span> label=<span class="hljs-string">"C"</span> <span class="hljs-built_in">value</span>=<span class="hljs-string">"3"</span>/&gt;
+ &lt;/h:<span class="hljs-keyword">items</span>&gt;
+ &lt;/h:radio&gt;
+</code></pre>
+<h3 id="-"><strong>主要属性</strong></h3>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>layout</td>
+<td>String</td>
+<td>单选框布局，vertical表示竖直排列，hrizental表示水平排列</td>
+</tr>
+<tr>
+<td>items</td>
+<td>Array</td>
+<td>单选框数据</td>
+</tr>
+<tr>
+<td>item</td>
+<td>Object</td>
+<td>单选框数据选项，两个属性。label表示标题，value表示值</td>
+</tr>
+<tr>
+<td>enable</td>
+<td>Boolean</td>
+<td>是否是可点击的</td>
+</tr>
+</tbody>
+</table>
+<h3 id="-"><strong>用法示例</strong></h3>
+<pre><code class="lang-xml"> &lt;h:radio id=<span class="hljs-string">"radio"</span> layout=<span class="hljs-string">"vertical"</span> enable=<span class="hljs-string">"false"</span>&gt;
+ &lt;h:<span class="hljs-keyword">items</span>&gt;
+ &lt;h:<span class="hljs-keyword">item</span> label=<span class="hljs-string">"A"</span> <span class="hljs-built_in">value</span>=<span class="hljs-string">"1"</span>/&gt;
+ &lt;h:<span class="hljs-keyword">item</span> label=<span class="hljs-string">"B"</span> <span class="hljs-built_in">value</span>=<span class="hljs-string">"2"</span>/&gt;
+ &lt;h:<span class="hljs-keyword">item</span> label=<span class="hljs-string">"C"</span> <span class="hljs-built_in">value</span>=<span class="hljs-string">"3"</span>/&gt;
+ &lt;/h:<span class="hljs-keyword">items</span>&gt;
+ &lt;/h:radio&gt;
+</code></pre>

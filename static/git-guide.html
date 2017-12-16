@@ -1,0 +1,279 @@
+<h1 id="git-">Git简明教程</h1>
+<hr>
+<h1 id="1-git-">1. git四大域</h1>
+<hr>
+<p>git四大域：工作目录，暂存区，仓库，远程仓库。<br>git对文件的操作都是在四大域上进行的，文件可以在四大域内与四大域间进行各种操作。（有一个例外，进行“git stash”系列操作时，文件可能被保存到四大域外的堆栈中）
+<img src="http://i.imgur.com/UB94Upo.png" alt="">  </p>
+<h1 id="2-git-">2. git常用命令</h1>
+<hr>
+<p><img src="http://i.imgur.com/jqW1Odo.png" alt="">  </p>
+<h2 id="1-">1. 设置</h2>
+<hr>
+<h3 id="1-config-">1. <code>config</code>命令</h3>
+<hr>
+<ul>
+<li><code>git config --global user.name lavor</code>：配置全局用户名，若不要“--global”或者将“global”改为“local”则表示配置局部用户名  </li>
+<li><code>git config --global user.email lavor@qq.com</code>：配置全局电子邮箱</li>
+<li><code>git config --global alias.cm commit</code>:配置别名，为git命令配置别名，还可以配置复合操作，比如 <code>git config --global alias.pom &#39;push origin master&#39;</code>注意复合操作中不可以带<code>-</code>与<code>&quot;&quot;</code>  </li>
+<li><code>git config --list</code>：显示所有配置信息 </li>
+</ul>
+<h3 id="2-help-">2. <code>help</code>命令</h3>
+<hr>
+<ul>
+<li><code>git help</code>：显示帮助信息，会显示一些常见git命令及其意义  </li>
+</ul>
+<h2 id="2-">2. 创建项目</h2>
+<hr>
+<h3 id="1-init-">1. <code>init</code>命令</h3>
+<hr>
+<ul>
+<li><code>git init</code>：在本地初始化一个git仓库  </li>
+</ul>
+<h3 id="2-clone-">2. <code>clone</code>命令</h3>
+<hr>
+<ul>
+<li><code>git clone git@github.com:lavor-zl/Github-Git.git</code>：从远程服务器克隆一个仓库到本地  </li>
+</ul>
+<h2 id="3-">3. 基本操作</h2>
+<hr>
+<h3 id="1-add-">1. <code>add</code>命令</h3>
+<hr>
+<ul>
+<li><code>git add README</code>：添加工作目录的文件到暂存区  </li>
+</ul>
+<h3 id="2-status-">2. <code>status</code>命令</h3>
+<hr>
+<ul>
+<li><code>git status</code>：显示工作树的状态，一般有三种状态  <ul>
+<li><code>Untracked files</code>：未被跟踪的文件，表示是工作目录新增加的文件  </li>
+<li><code>Changes not staged for commit</code>：工作目录中修改了文件，但是没有被添加到暂存区  </li>
+<li><code>Changes to be committed</code>:添加到暂存区的文件，等待提交  </li>
+</ul>
+</li>
+</ul>
+<h3 id="3-commit-">3. <code>commit</code>命令</h3>
+<hr>
+<ul>
+<li><code>git commit -m &quot;提交消息&quot;</code>：提交暂存区的文件，带有提交消息  </li>
+<li><code>git commit -a -m &quot;提交消息&quot;</code>：跳过暂存区，直接提交工作目录中所有改变的文件，但是不能提交工作目录中新增的文件</li>
+<li><code>git commit --author=lavor -m &quot;提交消息&quot;</code>：提交暂存区的文件，并重写提交作者  </li>
+<li><code>git commit --date=06.13.2016T09:00:00 -m &quot;提交消息&quot;</code>：提交暂存区的文件，并重写提交日期  </li>
+<li><code>git commit --amend -m &quot;提交消息&quot;</code>：通过创建一个新的提交，以替换当前分支的前端。所代表的含义就是在最新一次提交的基础上进行提交。比如我们完成了最新一次提交，并且这次提交完成后我们对工作目录进行了一些修改，但是我们发现某个文件忘了添加到暂存区并提交，我们可以先添加该文件到暂存区，然后利用该命令进行提交。  </li>
+</ul>
+<h3 id="4-reset-">4. <code>reset</code>命令</h3>
+<hr>
+<ul>
+<li><code>git reset</code>：将暂存区的所有文件重置到当前分支的HEAD  </li>
+<li><code>git reset &lt;commit&gt; files</code>：将暂存区的指定文件重置到指定的<code>&lt;commit&gt;</code>,<code>&lt;commit&gt;</code>既可以是commit的hash（或者hash前7位）也可以是<code>HEAD</code>及其祖先，<code>HEAD~1</code>表示<code>HEAD</code>的父亲，是<code>HEAD</code>的前一次提交，没有<code>&lt;commit&gt;</code>时默认是<code>HEAD</code>。  </li>
+<li><code>git reset [--hard|soft|mixed|merge|keep] [&lt;commit&gt;]</code>：将当前的分支重设到指定的<code>&lt;commit&gt;</code>，并且根据<code>mode</code>有可能更新暂存区和工作目录。<code>mode</code>的取值可以是hard、soft、mixed、merged、keep。  <ul>
+<li><code>hard</code>：重置暂存区与工作目录到指定提交，删除<code>&lt;commit&gt;</code>之后的所有提交并将<code>HEAD</code>指向该提交，此操作危险指数较大（应慎用）  </li>
+<li><code>soft</code>：暂存区与工作目录不会变化，仅仅删除<code>&lt;commit&gt;</code>之后的所有提交并将<code>HEAD</code>指向该提交  </li>
+<li><code>mixed</code>：默认的，重置暂存区到指定提交，删除<code>&lt;commit&gt;</code>之后的所有提交并将<code>HEAD</code>指向该提交  </li>
+<li><code>merge</code>与<code>keep</code>用的比较少，暂时不讨论  </li>
+</ul>
+</li>
+</ul>
+<p><strong><code>HEAD</code>是指向当前分支引用的指针，该指针指向在该分支上的最后一个提交的指针。这意味着<code>HEAD</code>将是下一个创建的提交的父亲。一般来说，把你的<code>HEAD</code>作为你最后一次提交的快照，是最简单的。<code>HEAD~1</code>表示<code>HEAD</code>的前一次提交，<code>HEAD~2</code>表示<code>HEAD</code>的前两次提交，以此类推</strong>  </p>
+<h3 id="5-rm-">5. <code>rm</code>命令</h3>
+<hr>
+<ul>
+<li><code>git rm files</code>：删除工作目录的文件  </li>
+<li><code>git rm -f files</code>：强制删除工作目录的文件，不做更新检查</li>
+<li><code>git rm --cached files</code>：删除暂存区的文件  </li>
+</ul>
+<h3 id="6-mv-">6. <code>mv</code>命令</h3>
+<hr>
+<ul>
+<li><code>git mv oldfile newfile</code>：为文件重命名</li>
+<li><code>git mv files dir</code>：移动文件到指定目录  </li>
+<li><code>git mv -f oldfile newfile</code>：强制为文件重命名，即使目标文件已存在  </li>
+<li><code>git mv -f files dir</code>：强制移动文件到指定目录名，即使目标文件已存在</li>
+</ul>
+<h2 id="4-">4. 分支与合并</h2>
+<hr>
+<h3 id="1-branch-">1. <code>branch</code>命令</h3>
+<hr>
+<ul>
+<li><code>git branch</code>：查看所有分支  </li>
+<li><code>git branch branchname</code>：创建分支  </li>
+<li><code>git branch branchname &lt;commit&gt;</code>：以特定提交为基创建分支</li>
+<li><code>git branch -d branchname</code>：删除分支  </li>
+<li><code>git branch -D branchname</code>：强制删除分支  </li>
+<li><code>git branch -m [oldbranchname] newbranchname</code>：移动或者删除分支  </li>
+<li><code>git branch -M [oldbranchname] newbranchname</code>：强制移动或者删除分支 </li>
+<li><code>git branch -r</code>：列出所有被跟踪的远程分支  </li>
+<li><code>git branch -r -d branchname</code>：删除被跟踪的远程分支  </li>
+<li><code>git branch -a</code>：列出所有本地分支与被跟踪的远程分支  </li>
+</ul>
+<h3 id="2-checkout-">2. <code>checkout</code>命令</h3>
+<hr>
+<ul>
+<li><code>git checkout</code>:检查本地仓库分支与远程仓库分支的差异  </li>
+<li><code>git checkout branchname|tagname</code>：切换分支或切换到指定<code>tag</code>，同名时优先切换分支   </li>
+<li><code>git checkout tags/tagname</code>：切换到指定<code>tag</code>  </li>
+<li><code>git checkout -b branchname</code>：新建分支并切换到该分支上    </li>
+<li><code>git checkout -B branchname</code>：强制新建分支并切换到该分支上  </li>
+</ul>
+<h3 id="3-merge-">3. <code>merge</code>命令</h3>
+<hr>
+<ul>
+<li><code>git merge branchname</code>：将指定分支合并到当前分支上(默认附带提交操作)，在<code>merge</code>后面使用<code>-m &lt;message&gt;</code>表示提交消息</li>
+<li><code>git merge &lt;commit&gt;</code>：将指定提交合并到当前分支上  </li>
+<li><code>git merge oldbranchname newbranchname</code>：将<code>oldbranchname</code>分支合并到<code>newbranchname</code>分支上  </li>
+<li><code>git merge --squash branchname</code>：将指定分支上所有修改放入当前分支工作目录与暂存区，不提交  </li>
+<li><code>git merge no--squash branchname</code>：将指定分支上所有修改放入当前分支工作目录与暂存区，并提交  </li>
+</ul>
+<h3 id="4-mergetool-">4. <code>mergetool</code>命令</h3>
+<hr>
+<ul>
+<li><code>git mergetool</code>：在“merge”命令执行之后出现冲突时执行该命令，用来解决合并的冲突，冲突解决完了不要忘了提交  </li>
+</ul>
+<h3 id="5-stash-">5. <code>stash</code>命令</h3>
+<hr>
+<ul>
+<li><code>git stash</code>：储藏工作目录与暂存区的状态到堆栈中  </li>
+<li><code>git stash pop [stash@{id}]</code>：恢复到指定储藏的状态（默认是最近一次储藏的状态），并从堆栈中移除该储藏  </li>
+<li><code>git stash apply [stash@{id}]</code>：恢复到指定储藏的状态（默认是最近一次储藏的状态）  </li>
+<li><code>git stash drop [stash@{id}]</code>:并从堆栈中移除指定储藏（默认是最近一次储藏）</li>
+<li><code>git stash list</code>：显示所有储藏信息  </li>
+</ul>
+<h3 id="6-tag-">6. <code>tag</code>命令</h3>
+<hr>
+<p>同大多数 VCS 一样，Git 也可以对某一时间点上的版本打上标签。  </p>
+<ul>
+<li><code>git tag</code>：列出所有标签  </li>
+<li><code>git tag -l &#39;v1.*&#39;</code>：列出符合一定条件的标签  </li>
+<li><code>git tag tagname</code>：新建标签  </li>
+</ul>
+<h2 id="5-">5. 分享与更新项目</h2>
+<hr>
+<h3 id="1-fetch-">1. <code>fetch</code>命令</h3>
+<hr>
+<ul>
+<li><code>git fetch</code>：下载远程仓库“origin”到本地  </li>
+<li><code>git fetch remoterepository</code>：下载指定远程仓库到本地  </li>
+<li><code>git fetch remoterepository branchname</code>：下载指定远程仓库指定分支到本地  </li>
+</ul>
+<h3 id="2-pull-">2. <code>pull</code>命令</h3>
+<hr>
+<ul>
+<li><code>git pull remoterepository branchname[:localbranch]</code>：拉取指定远程仓库指定分支到本地仓库指定分支（默认是当前分支）   </li>
+</ul>
+<h3 id="3-push-">3. <code>push</code>命令</h3>
+<hr>
+<ul>
+<li><code>git push remoterepository localbranch[:remotebranch] [--tags]</code>：推送本地仓库指定分支到远程仓库指定分支（默认是与本地分支同名的远程分支），默认是不推送标签到远程仓库的，加上<code>--tags</code>就会推送标签  </li>
+</ul>
+<h3 id="4-remote-">4. <code>remote</code>命令</h3>
+<hr>
+<ul>
+<li><code>git remote</code>：查看所有与本地仓库关联的远程仓库  </li>
+<li><code>git remote -v</code>：查看所有与本地仓库关联的远程仓库，并显示<code>url</code>  </li>
+<li><code>git remote add remote-name remote-url</code>：添加与本地仓库关联的远程仓库  </li>
+<li><code>git remote rename oldname newname</code>：为远程仓库重命名  </li>
+<li><code>git remote remove remote-name</code>：移除远程仓库  </li>
+</ul>
+<h3 id="5-submodule-">5. <code>submodule</code>命令</h3>
+<hr>
+<ul>
+<li><code>git submodule add repository-url dir</code>：添加仓库到指定目录，使之成为本仓库的子模块  </li>
+<li><code>git submodule init</code>：初始化子模块  </li>
+<li><code>git submodule update</code>：更新子模块  </li>
+</ul>
+<p><strong>子模块是本仓库依赖的另一个仓库，但是我们不会对所依赖的仓库（子模块）进行修改，只会在必要的时候进行更新操作。</strong>  </p>
+<h2 id="6-">6. 考察与比较</h2>
+<hr>
+<h3 id="1-show-">1. <code>show</code>命令</h3>
+<hr>
+<ul>
+<li><code>git show [-times]</code>：显示最近<code>times</code>次（默认是一次）提交的所有对象信息  </li>
+</ul>
+<h3 id="2-log-">2. <code>log</code>命令</h3>
+<hr>
+<ul>
+<li><code>git log</code>：查看提交记录  </li>
+<li><code>git log --all</code>：查看所有提交记录   </li>
+<li><code>git log  --oneline</code>：查看提交记录，以<code>oneline</code>形式显示，只显示一行，显示的内容时提交hash的前7位与提交消息  </li>
+<li><code>git log -p -times</code>：表示查看最近<code>times</code>次提交改变的内容  </li>
+<li><code>git log -stat [-times]</code>：查看最近<code>times</code>次（默认是所有）提交记录，并显示文件的差异分析  </li>
+</ul>
+<h3 id="3-diff-">3. <code>diff</code>命令</h3>
+<hr>
+<ul>
+<li><code>git diff</code>：查看工作目录与暂存区的差异  </li>
+<li><code>git diff --cached [&lt;commit&gt;]</code>：查看暂存区与指定提交（默认是HEAD）的差异  </li>
+<li><code>git diff &lt;commit&gt;</code>：查看工作目录与指定提交的差异  </li>
+<li><code>git diff &lt;commit&gt;</code>：查看工作目录与指定提交的差异  </li>
+<li><code>git diff &lt;commit&gt; &lt;commit&gt;</code>：查看两次指定提交的差异</li>
+<li><code>git diff branchname</code>：查看工作目录与指定分支的差异  </li>
+<li><code>git diff branchname branchname</code>：查看两个指定分支间的差异  </li>
+</ul>
+<p>上面的所有操作后面都可以加上<code>-- dir</code>表示查看该目录下面的差异，在后面加上<code>&gt;patchname.patch</code>表示将差异生成补丁，<code>patchname</code>是补丁的名字。  </p>
+<h3 id="4-shortlog-">4. <code>shortlog</code>命令</h3>
+<hr>
+<ul>
+<li><code>git shortlog</code>：显示总提交次数与每次提交的提交消息  </li>
+</ul>
+<h3 id="5-describe-">5. <code>describe</code>命令</h3>
+<hr>
+<ul>
+<li><code>git describe [&lt;commit&gt;|&lt;tag&gt;]</code>：查看指定提交或者指定标签（默认是最近一次提交）的注解标签信息  </li>
+<li><code>git desribe --tags [&lt;commit&gt;|&lt;tag&gt;]</code>：查看指定提交或者指定标签（默认是最近一次提交）的标签信息</li>
+<li><code>git desribe --all [&lt;commit&gt;|&lt;tag&gt;]</code>：查看指定提交或者指定标签（默认是最近一次提交）的引用信息</li>
+</ul>
+<h3 id="6-reflog-">6. <code>reflog</code>命令</h3>
+<hr>
+<ul>
+<li><code>git reflog</code>：显示所有提交，下拉，推送，与切换分支操作  </li>
+<li><code>git reflog --all</code>：显示所有提交，下拉，推送操作  </li>
+</ul>
+<h2 id="7-">7. 修补</h2>
+<p><em>*</em>　</p>
+<h3 id="1-apply-">1. <code>apply</code>命令</h3>
+<hr>
+<ul>
+<li><code>git apply  [--index|--cached] patchname.patch</code>：在暂存区与工作目录或者暂存区（默认是工作目录）打补丁  </li>
+<li><code>git apply  --reverse|-R  patchname.patch</code>：反向打补丁   </li>
+<li><code>git apply --reject patchname.patch</code>：打补丁，将没有冲突的文件合并，将有冲突的文件标记出来，并生成对应的<code>.rej</code>文件</li>
+</ul>
+<h3 id="2-cherry-pick-">2. <code>cherry-pick</code>命令</h3>
+<hr>
+<ul>
+<li><code>git cherry-pick &lt;commit&gt;</code>：将另一个分支上面的指定提交应用到当前分支上  </li>
+<li><code>git cherry-pick banchname</code>：将指定分支上面的最后一次提交应用到当前分支上  </li>
+</ul>
+<h3 id="3-rebase-">3. <code>rebase</code>命令</h3>
+<hr>
+<ul>
+<li><code>git rebase branchname</code>：将指定分支上所有修改应用到当前分支上  </li>
+<li><code>git rebase branchname branchname</code>：将第一个指定分支上所有修改应用到第二个分支上  </li>
+</ul>
+<p>在<code>rebase</code>加上<code>-i</code>会提供交互式的变基操作，在交互式操作中常用命令：<br><img src="http://i.imgur.com/zD7PgjP.png" alt="">  </p>
+<h3 id="4-revert-">4. <code>revert</code>命令</h3>
+<hr>
+<ul>
+<li><code>git revert &lt;commit&gt;</code>：恢复一个指定提交  </li>
+</ul>
+<h2 id="8-">8. 调试</h2>
+<hr>
+<h3 id="1-bisect-">1. <code>bisect</code>命令</h3>
+<hr>
+<p>使用二分查找，找到引入bug的提交  </p>
+<ul>
+<li><code>git bisect start</code>：开始二分查找  </li>
+<li><code>git bisect bad [&lt;commit&gt;]</code>：设置指定提交（默认是当前分支）为bad  </li>
+<li><code>git bisect good [&lt;commit&gt;]</code>：设置指定提交（默认是当前分支）为good  </li>
+</ul>
+<p>输入了上面三个命令后就会自动开始二分查找，我们之后只需要标记当前提交时bad还是good就行了，如果当前找的的提交时bad就输入<code>git bisect bad</code>，否则输入<code>git bisect good</code>直到找到有bug的提交。  </p>
+<h3 id="2-blame-">2. <code>blame</code>命令</h3>
+<hr>
+<p>显示修改和作者最后修改的文件的每一行，这就是一个“问责”的命令，如果哪里有问题，我们可以很快地找到该问题是谁导致的。   </p>
+<ul>
+<li><code>git blame filename</code>：查看指定文件所有的操作者，看看是谁错误地修改了该文件  </li>
+</ul>
+<h3 id="3-grep-">3. <code>grep</code>命令</h3>
+<hr>
+<ul>
+<li><code>git grep keys</code>：在工作目录中所有文件中搜索<code>keys</code>  </li>
+<li><code>git grep --cached keys</code>：在暂存区中所有文件中搜索<code>keys</code>  </li>
+</ul>

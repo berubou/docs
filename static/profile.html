@@ -1,0 +1,88 @@
+<h1 id="-">配置维护</h1>
+<p>配置：PROFILE。类似 EBS 中的系统参数。可以有三个维度</p>
+<ol>
+<li>系统（GLOBAL）</li>
+<li>角色（Role）</li>
+<li>用户（User）</li>
+</ol>
+<p>我们可以定义一个 <em>配置</em> ，他可以在不同维度有不同的值。</p>
+<h4 id="-">举个例子：币种</h4>
+<p>假设系统支持多种币种：CNY,EUR,HKD,GBP</p>
+<p>用户可以根据自的偏好，选择不同币种作为货币展示单位。</p>
+<p>那么，就可以定义一个配置：<code>CURRENCY</code></p>
+<ul>
+<li>可以设置 CURRENCY 在 <em>GLOBAL级别</em> 的值是：CNY</li>
+</ul>
+<p>表示，系统默认使用 CNY 作为币种。</p>
+<ul>
+<li><p>设置 CURRENCY 在 <em>角色级别</em> 有不同的值：</p>
+<ul>
+<li>角色1，对应的值是 EUR，表示 角色1 使用 EUR 作为默认币种</li>
+<li>角色2，对应的值是 USD，表示 角色2 使用 USD 作为默认币种</li>
+<li>以此类推，每个角色都可以有不同的值，也可以不设置</li>
+</ul>
+</li>
+<li><p>设置 CURRENCY 在 <em>用户级别</em> 有不同的值：</p>
+<ul>
+<li>用户1，对应的值是 GBP，表示 用户1 使用 GBP 作为默认币种</li>
+</ul>
+<p>和角色类似，每个用户，都可以设置不同的值，也可以不设置。</p>
+</li>
+</ul>
+<blockquote>
+<p>好了，现在，任意一个用户（不管设置在哪个级别，最终都要落到用户上），都会有一个 CURRENCY 值和他对应。</p>
+</blockquote>
+<ol>
+<li>用户1 对应 GBP，这是设置好的</li>
+<li>用户2 没有设置 <em>用户级别</em> 的值，那就取 用户2 当前角色（假设为 角色2） 的值：USD</li>
+<li>用户3 没有设置 <em>用户级别</em> 的中，他的角色（假设为 角色3）也没有设置 <em>角色级别</em> 的值，那就取<em>GLOBAL级别</em>的值：CNY</li>
+</ol>
+<p>以上3条规则，就可以看到，所有的用户，最终都会有一个具体值和他对应。</p>
+<p>在实际使用场景中，可以通过 ProfileService 的 API，取到某个用户在 CURRENCY 上对应的值，然后做不同的处理。</p>
+<h2 id="-">系统级配置特殊用途</h2>
+<hr>
+<p>HAP 框架可以利用 <em>系统级</em>的配置文件，做一些参数的实时同步。</p>
+<blockquote>
+<p>举个例子：密钥参数</p>
+</blockquote>
+<p>假设我们调用外部系统的 API，这些 API 需要用到 一些密钥对数据进行加解密。</p>
+<p>这些参数 一般是由对方提供，并且有可能经常更新。</p>
+<ul>
+<li>若我们把这些参数写死到 config.properties 中，一方面不安全，另一方面不方便更新（需要重启系统）。</li>
+<li>建表，保存到数据库中，需要避免每次读取数据库，还要保证每次都使用最新值，比较麻烦。</li>
+</ul>
+<p>这时候可以利用系统级别的配置，定义一个配置：XXX_SECRET</p>
+<ul>
+<li>他只有一个 GLOBAL 级别的值：123fjkah123sf21</li>
+</ul>
+<p>然后在 java 代码中</p>
+<pre><code class="lang-java">
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">XXXEncryptor</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">GlobalProfileListener</span> </span>{
+  <span class="hljs-keyword">private</span> String secret;
+
+  <span class="hljs-meta">@Override</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> List&lt;String&gt; <span class="hljs-title">getAcceptedProfiles</span><span class="hljs-params">()</span></span>{
+    <span class="hljs-keyword">return</span> Arrays.asList(<span class="hljs-string">"XXX_SECRET"</span>); <span class="hljs-comment">// 可以监听多个 PROFILE</span>
+  }
+  <span class="hljs-meta">@Override</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">updateProfile</span><span class="hljs-params">(String profileName, String profileValue)</span></span>{
+    <span class="hljs-keyword">this</span>.secret = profileValue; <span class="hljs-comment">// 监听多个 PROFILE 时，注意 profileName 会不同</span>
+  }
+
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">byte</span>[] encrypt(<span class="hljs-keyword">byte</span>[] data) {
+    <span class="hljs-comment">// use secret ,do something</span>
+    <span class="hljs-keyword">return</span> data;
+  }
+}
+</code></pre>
+<p>把这个XXXEncryptor 通过 spring 配置文件，定义一个 bean(也可以通过注解自动扫描注册)。</p>
+<p>GlobalProfileListener 起到的作用：</p>
+<ol>
+<li>在系统启动时，加载指定的配置，设置到类中</li>
+<li>在更新指定的配置文件时，会自动通知所有相关监听者（listener），进行更新<ul>
+<li>适用于集群环境 </li>
+</ul>
+</li>
+</ol>
+<p>也就是说，java 代码中，我们每次使用的都是最新的值，且不需要读取数据库。</p>
+<p>关于这个机制的原理，可以参考 <a href="message.md">消息机制</a></p>

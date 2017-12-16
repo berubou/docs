@@ -1,0 +1,247 @@
+<h2 id="kendo-ui-grid">Kendo UI Grid</h2>
+<h4 id="-kendoui-"><strong>简介</strong>：kendoui表格的基本格式</h4>
+<p>Kendo UI Grid为开发者提供了丰富的功能，从基本的筛选、排序，到高级的编页、分层数据分组等。
+如下所示，一个简单的demo，columns相当于表格的tr ，每一个{...}就相当于每一行，由于kendoGrid是动态生成的，所以拥有一个dataSource属性，用来读取数据源，</p>
+<pre><code class="lang-javascript">$(<span class="hljs-string">"#grid"</span>).kendoGrid({
+<span class="hljs-symbol">  columns:</span> [{
+<span class="hljs-symbol">    field:</span> <span class="hljs-string">"name"</span>,
+<span class="hljs-symbol">    title:</span> <span class="hljs-string">"Name"</span> 
+  }, {
+<span class="hljs-symbol">    field:</span> <span class="hljs-string">"age"</span>,
+<span class="hljs-symbol">    title:</span> <span class="hljs-string">"Age"</span> 
+  }],
+<span class="hljs-symbol">  dataSource:</span> [ { name: <span class="hljs-string">"Jane"</span>, age: <span class="hljs-number">30</span> }, { name: <span class="hljs-string">"John"</span>, age: <span class="hljs-number">33</span> }]
+});
+</code></pre>
+<h4 id="-"><strong>具体介绍</strong></h4>
+<ol>
+<li><p>columns </p>
+<blockquote>
+<p><strong>columns中我们常用的属性有:field,title,width,template等，当然还有更多属性，在这里不一一介绍，详情请查询官方API</strong></p>
+<ul>
+<li>field:字段名，必须与请求的数据里的key保持一致，这样才能直接读取key里面的value值。并且同时便于数据的保存</li>
+<li>title:等同于表格的th,没有特殊限制</li>
+<li>width:表格列的宽度</li>
+<li>template:表格模板，Kendo UI Grid使开发者可以自己定义表格列的样式</li>
+</ul>
+</blockquote>
+</li>
+</ol>
+<pre><code> <span class="hljs-comment">//自定义一个checkbox宽度为20的列</span>
+ <span class="hljs-attribute">columns</span>: [
+      {
+         <span class="hljs-attribute">template</span>: <span class="hljs-string">'&lt;input type="checkbox"/&gt;'</span>,
+         <span class="hljs-attribute">width</span>: <span class="hljs-number">20</span>
+      },
+</code></pre><p>2.dataSource
+dataSource本来就是一个单独的组件，所以它可以有两种表达，一种是定义在kendoGrid方法体内的，另一种是抽象出去，形成一个独立的dataSource</p>
+<pre><code>$(<span class="hljs-string">"#grid"</span>).kendoGrid({
+<span class="hljs-symbol">  columns:</span> [
+    { <span class="hljs-string">field:</span> <span class="hljs-string">"name"</span> },
+    { <span class="hljs-string">field:</span> <span class="hljs-string">"age"</span> }
+  ],
+<span class="hljs-symbol">  dataSource:</span> [
+    { <span class="hljs-string">name:</span> <span class="hljs-string">"Jane Doe"</span>, <span class="hljs-string">age:</span> <span class="hljs-number">30</span> },
+    { <span class="hljs-string">name:</span> <span class="hljs-string">"John Doe"</span>, <span class="hljs-string">age:</span> <span class="hljs-number">33</span> }
+  ]
+});
+</code></pre><pre><code class="lang-javascipt">var dataSource = new kendo.data.DataSource({
+  transport: {
+    read: { //从url路径请求数据  也就是查询数据
+      url: <span class="hljs-string">"http://demos.telerik.com/kendo-ui/service/products"</span>,
+      dataType: <span class="hljs-string">"jsonp"</span>
+    },
+    create: {//新建
+       url: <span class="hljs-string">"..."</span>,
+       contentType: <span class="hljs-string">"application/json"</span>,//定义数据类型
+       type: <span class="hljs-string">"<span class="hljs-keyword">POST</span>"</span>//定义请求方式
+    },
+    update: {//修改
+       url: <span class="hljs-string">"..."</span>,
+       contentType: <span class="hljs-string">"application/json"</span>,
+       type: <span class="hljs-string">"<span class="hljs-keyword">POST</span>"</span>
+    },
+    destroy: {//删除
+       url: <span class="hljs-string">"..."</span>,
+       contentType: <span class="hljs-string">"application/json"</span>,
+       type: <span class="hljs-string">"<span class="hljs-keyword">POST</span>"</span>
+    },
+  },
+  pageSize: <span class="hljs-number">10</span> //每一页<span class="hljs-number">10</span>条数据
+});
+$(<span class="hljs-string">"#grid"</span>).kendoGrid({
+  dataSource: dataSource,
+  pageable: true //是否分页
+});
+</code></pre>
+<blockquote>
+<p><strong>dataSource的用法:</strong></p>
+<ul>
+<li>kendoUI提供可以向服务端发送请求的方法 </li>
+<li>kendoUI中dataSource具体用法请参考: <a href="http://docs.telerik.com/kendo-ui/api/javascript/data/datasource">http://docs.telerik.com/kendo-ui/api/javascript/data/datasource</a></li>
+</ul>
+</blockquote>
+<p>3.分页
+针对于大量数据，kendoUIGrid提供分页查询，使用起来非常便捷</p>
+<pre><code><span class="hljs-comment">//重点还是在服务器端的分页，即dataSource内决定</span>
+<span class="hljs-comment">//dataSource</span>
+<span class="hljs-attribute">serverPaging</span>: true,<span class="hljs-comment">//是否在服务器端分页</span>
+<span class="hljs-attribute">pageSize    </span>: <span class="hljs-number">10</span><span class="hljs-comment">//初始是一页多少条数据</span>
+<span class="hljs-comment">//Grid</span>
+<span class="hljs-attribute">pageable</span>: {
+     <span class="hljs-attribute">pageSizes</span>:[<span class="hljs-number">5</span>, <span class="hljs-number">10</span>, <span class="hljs-number">20</span>, <span class="hljs-number">50</span>],<span class="hljs-comment">//每页可以有多少数据</span>
+     <span class="hljs-attribute">refresh</span>:true,<span class="hljs-comment">//是否可以刷新</span>
+     <span class="hljs-attribute">buttonCount</span>:<span class="hljs-number">5</span> <span class="hljs-comment">//超过几页以上出现折叠</span>
+  },
+</code></pre><p>如需其他需要，请参考:<a href="http://docs.telerik.com/kendo-ui/api/javascript/ui/grid#configuration-pageable">http://docs.telerik.com/kendo-ui/api/javascript/ui/grid#configuration-pageable</a></p>
+<h4 id="-"><strong>使用实例</strong></h4>
+<p>1.全选
+参考demo:
+<a href="http://docs.telerik.com/kendo-ui/controls/data-management/grid/how-to/Templates/grid-with-checkbox-column">http://docs.telerik.com/kendo-ui/controls/data-management/grid/how-to/Templates/grid-with-checkbox-column</a>
+<a href="http://docs.telerik.com/kendo-ui/controls/data-management/grid/how-to/Editing/delete-multiple-rows-with-checkboxes">http://docs.telerik.com/kendo-ui/controls/data-management/grid/how-to/Editing/delete-multiple-rows-with-checkboxes</a></p>
+<pre><code><span class="hljs-comment">//1 columns中添加一行checkbox复选框</span>
+{
+<span class="hljs-comment">//头模板 相当于title的位置 放置一个用来全选的复选框 </span>
+ headerTemplate: <span class="hljs-string">"&lt;input id='headCheckbox' type='checkbox' onclick='toggleAll(event)' tabindex='-1'/&gt;"</span>,
+ <span class="hljs-comment">//绑定checked事件</span>
+ template: '&lt;<span class="hljs-keyword">input</span> <span class="hljs-keyword">class</span>=<span class="hljs-string">"checkbox hCheckbox"</span> <span class="hljs-keyword">type</span>=<span class="hljs-string">"checkbox"</span> data-bind=<span class="hljs-string">"checked: checked"</span> tabindex=<span class="hljs-string">"-1"</span>/&gt;',
+ width: 20
+},
+
+<span class="hljs-comment">//2 为Grid添加dataBound事件</span>
+dataBound: function () {
+    <span class="hljs-comment">//当前分页里的所有内容</span>
+   <span class="hljs-keyword">var</span> <span class="hljs-keyword">view</span> = this.dataSource.<span class="hljs-keyword">view</span>();
+   this.items().each(function (index, row) {
+    <span class="hljs-comment">//将一行数据都绑定在view上，这样选中的就是一行数据了</span>
+     kendo.bind(row, <span class="hljs-keyword">view</span>[index]);
+   });
+}
+
+<span class="hljs-comment">//3 定义全选按钮</span>
+function toggleAll(<span class="hljs-keyword">e</span>) {
+        <span class="hljs-keyword">var</span> <span class="hljs-keyword">view</span> = dataSource.<span class="hljs-keyword">view</span>();
+        <span class="hljs-comment">//在步骤一中绑定了checked事件的复选框 在这里会被选到</span>
+        <span class="hljs-keyword">var</span> checked = <span class="hljs-keyword">e</span>.target.checked;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = 0; i &lt; <span class="hljs-keyword">view</span>.length; i++) {
+            <span class="hljs-comment">//让所有的复选框checked属性变成选中状态</span>
+            <span class="hljs-keyword">view</span>[i].<span class="hljs-keyword">set</span>(<span class="hljs-string">"checked"</span>, checked);
+        }
+}
+</code></pre><p>2.编辑器的实现
+当表格编辑时，想要从下拉框中选择内容，或者想要从lov中选中内容，或者定义复选框，其实都是在模板中定义样式
+combobox</p>
+<pre><code><span class="hljs-comment">//参考sys_lov_edit.html</span>
+{
+    <span class="hljs-attr">field</span>: <span class="hljs-string">"gridFieldAlign"</span>,
+    <span class="hljs-attr">title</span>: <span class="hljs-string">'...'</span>,
+    <span class="hljs-attr">width</span>: <span class="hljs-number">80</span>,
+    <span class="hljs-attr">headerAttributes</span>: {<span class="hljs-comment">//定义表头样式 html样式</span>
+         <span class="hljs-string">"class"</span>: <span class="hljs-string">"table-header-cell"</span>,
+         <span class="hljs-attr">style</span>: <span class="hljs-string">"text-align: center"</span>
+    },
+    <span class="hljs-attr">template</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">dataItem</span>) </span>{<span class="hljs-comment">//模板函数</span>
+       <span class="hljs-comment">//将field的数据和下拉框内的数据进行绑定</span>
+        <span class="hljs-keyword">var</span> v = dataItem.gridFieldAlign;
+        <span class="hljs-comment">//alignType定义好的一个数据源，想当于dataSource</span>
+        $.each(alignType, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">i, n</span>) </span>{
+             <span class="hljs-keyword">if</span> ((n.value || <span class="hljs-string">''</span>).toLowerCase() == (v || <span class="hljs-string">''</span>).toLowerCase())
+             {
+                 v = n.meaning;
+                 <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+              }
+         })
+       <span class="hljs-keyword">return</span> v || <span class="hljs-string">''</span>;
+    },
+    <span class="hljs-attr">editor</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">container, options</span>) </span>{
+    <span class="hljs-comment">//编辑时出现下拉框,options.field就是当前选中的field</span>
+        $(<span class="hljs-string">'&lt;input name="'</span> + options.field + <span class="hljs-string">'"/&gt;'</span>).appendTo(container).kendoDropDownList(
+         {
+         <span class="hljs-comment">//下拉框alignType其实也是json字符串，同样是key-value</span>
+         dataTextField放置显示的value，dataValueField放置key
+             dataTextField: <span class="hljs-string">"meaning"</span>,
+             <span class="hljs-attr">dataValueField</span>: <span class="hljs-string">"value"</span>,
+             <span class="hljs-attr">valuePrimitive</span>: <span class="hljs-literal">true</span>,<span class="hljs-comment">//如果不是true的话，选中内容会是一个object 并不是一个简单的json字符串</span>
+             dataSource: alignType
+         });
+     }
+ },
+</code></pre><p>lov</p>
+<pre><code><span class="hljs-comment">//参考sys_function.html</span>
+{
+    field: <span class="hljs-string">"resourceId"</span>,
+    title: <span class="hljs-string">'&lt;@spring.message "</span><span class="hljs-function"><span class="hljs-keyword">function</span>.<span class="hljs-title">mainpage</span>"/&gt;',</span>
+    width: <span class="hljs-number">120</span>,
+    template: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(dataItem)</span> {</span>
+      <span class="hljs-keyword">return</span> dataItem[<span class="hljs-string">'resourceName'</span>] || <span class="hljs-string">''</span><span class="hljs-comment">//如果不加，此行会根据field添写字段</span>
+    },
+    editor : <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(container, options)</span> {</span>
+    <span class="hljs-comment">//LOV_RESOURCE为在lov定义中自定义的lov</span>
+      $(<span class="hljs-string">'&lt;input name="</span><span class="hljs-string">' + options.field + '</span><span class="hljs-string">"/&gt;'</span>).appendTo(container).kendoLov($.extend(&lt;@lov <span class="hljs-string">"LOV_RESOURCE"</span>/&gt;, 
+      {
+          textField: <span class="hljs-string">'resourceName'</span>,<span class="hljs-comment">//显示的字段</span>
+          model    : options.model<span class="hljs-comment">//将lov选中数据放在model中</span>
+       }));
+     }
+}
+</code></pre><p>2.按钮
+对于表格的增加，保存，取消，kendoUIGrid提供了自己定义好的按钮，详情可参考：
+<a href="http://docs.telerik.com/kendo-ui/api/javascript/ui/grid#configuration-toolbar">http://docs.telerik.com/kendo-ui/api/javascript/ui/grid#configuration-toolbar</a>
+kendoUIGrid也允许自定义按钮，下面的例子实现了重新定义的增删保存取消按钮</p>
+<p>增加保存取消</p>
+<pre><code class="lang-javascript">  <span class="hljs-comment">//viewModel</span>
+  createFunction: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+      <span class="hljs-comment">//调用增加一行的方法，在表格内增加一行</span>
+      $(<span class="hljs-string">'#grid'</span>).data(<span class="hljs-string">'kendoGrid'</span>).addRow();
+  },
+  <span class="hljs-attr">saveFunction</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+      <span class="hljs-comment">//调用保存方法，使用grid绑定的dataSource中的保存方法</span>
+      $(<span class="hljs-string">'#grid'</span>).data(<span class="hljs-string">'kendoGrid'</span>).saveChanges();
+  },
+  <span class="hljs-attr">cancelFunction</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">e</span>)</span>{
+      <span class="hljs-comment">//取消更改，调用kendoUI自带的cancelChanges()方法</span>
+      $(<span class="hljs-string">'#grid'</span>).data(<span class="hljs-string">'kendoGrid'</span>).cancelChanges();
+  }
+</code></pre>
+<pre><code class="lang-html"><span class="hljs-comment">//在html中添加标签</span>
+<span class="hljs-comment">//新增按钮</span>
+&lt;<span class="hljs-selector-tag">div</span> id=<span class="hljs-string">"tool-bar"</span>&gt;
+&lt;<span class="hljs-selector-tag">span</span> class=<span class="hljs-string">"btn btn-primary k-grid-add"</span> data-bind=<span class="hljs-string">"click:createFunction"</span>&gt;&lt;@spring<span class="hljs-selector-class">.message</span> <span class="hljs-string">"hap.new"</span>/&gt;&lt;/span&gt;
+ <span class="hljs-comment">//保存按钮</span>
+&lt;<span class="hljs-selector-tag">span</span> class=<span class="hljs-string">"btn btn-success k-grid-save-changes"</span>   data-bind=<span class="hljs-string">"click:saveFunction"</span> &gt;&lt;@spring<span class="hljs-selector-class">.message</span> <span class="hljs-string">"hap.save"</span>/&gt;&lt;/span&gt;
+ <span class="hljs-comment">//取消按钮   </span>
+&lt;<span class="hljs-selector-tag">span</span>  class=<span class="hljs-string">"btn btn-default k-grid-cancel-changes"</span> data-bind=<span class="hljs-string">"click:cancelFunction"</span>&gt;&lt;@spring<span class="hljs-selector-class">.message</span> <span class="hljs-string">"hap.cancel"</span>/&gt;&lt;/span&gt;
+&lt;/div&gt;
+<span class="hljs-comment">//绑定viewModel kendo.bind("#tool-bar",viewModel)</span>
+</code></pre>
+<p>删除</p>
+<pre><code class="lang-html">&lt;span  onclick=<span class="hljs-string">"deleteData()"</span> <span class="hljs-class"><span class="hljs-keyword">class</span></span>=<span class="hljs-string">"btn btn-danger"</span>&gt;<span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span>
+</code></pre>
+<pre><code class="lang-javascript"><span class="hljs-comment">//参考sys_function.html 根据复选框选中内容进行批量删除</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">deleteData</span>(<span class="hljs-params"></span>) </span>{
+        <span class="hljs-comment">//得到选中内容</span>
+        <span class="hljs-keyword">var</span> checked = $(<span class="hljs-string">"#grid"</span>).find(<span class="hljs-string">".hCheckbox:checked"</span>)        <span class="hljs-keyword">if</span> (checked.length) {<span class="hljs-comment">//如果选中</span>
+          <span class="hljs-comment">// kendo.ui.showConfirmDialog  kendoUI自带提示框</span>
+           kendo.ui.showConfirmDialog({
+              <span class="hljs-attr">title</span>:$l(<span class="hljs-string">'hap.tip.info'</span>),
+              <span class="hljs-attr">message</span>: $l(<span class="hljs-string">'hap.tip.delete_confirm'</span>)
+           }).done(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">event</span>) </span>{
+           <span class="hljs-comment">//当点击确认时会返回OK 取消时关闭提示框</span>
+            <span class="hljs-keyword">if</span> (event.button == <span class="hljs-string">'OK'</span>) {
+                <span class="hljs-keyword">var</span> data = [];
+                <span class="hljs-comment">//将选中内容放入data中</span>
+                checked.each(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{                                                   data.push(grid.dataItem($(<span class="hljs-keyword">this</span>.closest(<span class="hljs-string">"tr"</span>))));
+                })
+                <span class="hljs-comment">//删除每一条数据</span>
+                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; data.length; i++) {
+                <span class="hljs-comment">//remove调用dataSource中的destroy方法</span>
+                    grid.dataSource.remove(data[i])
+                }
+                <span class="hljs-comment">//同步grid</span>
+                grid.dataSource.sync();
+            }
+        })
+       }
+    }
+</code></pre>
+<p>对于kendoGrid的更多用法属性，具体请参考<a href="http://docs.telerik.com/kendo-ui/api/javascript/ui/grid">http://docs.telerik.com/kendo-ui/api/javascript/ui/grid</a></p>

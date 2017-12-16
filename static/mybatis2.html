@@ -1,0 +1,412 @@
+<h1 id="-">开发手册</h1>
+<h2 id="1-mybatis-">1.MyBatis开发注意事项**</h2>
+<h3 id="-crud">自动化 CRUD</h3>
+<p>Mapper 接口继承 通用 Mapper&lt; T &gt;，可以自动完成基本的增删改查操作</p>
+<pre><code class="lang-java">public<span class="hljs-built_in"> interface </span>RoleMapper extends Mapper&lt;Role&gt; {
+}
+</code></pre>
+<blockquote>
+<p>动态 SQL</p>
+</blockquote>
+<p>MyBatis 可以用 一些内置的标签来动态的组织 SQL 语句，常用的标签有：</p>
+<ul>
+<li>if
+当 test 语句通过时，if 内包含的 SQL 会起作用</li>
+</ul>
+<pre><code class="lang-xml">&lt;<span class="hljs-keyword">if</span> <span class="hljs-built_in">test</span>=<span class="hljs-string">"userId != null"</span>&gt;
+user_id = <span class="hljs-comment">#{userId,jdbcType=INTEGER}</span>
+&lt;/<span class="hljs-keyword">if</span>&gt;
+</code></pre>
+<ul>
+<li>where
+以 where 开头，将一组标签的返回值拼接起来，自动去除首尾多余的<code>AND</code> <code>OR</code>
+专门用于生成动态 WHERE 条件</li>
+</ul>
+<pre><code class="lang-xml">&lt;<span class="hljs-built_in">where</span>&gt;
+&lt;<span class="hljs-keyword">if</span> <span class="hljs-built_in">test</span>=<span class="hljs-string">"codeId != null"</span>&gt;
+code_id = <span class="hljs-comment">#{codeId,jdbcType=INTEGER}</span>
+&lt;/<span class="hljs-keyword">if</span>&gt;
+&lt;<span class="hljs-keyword">if</span> <span class="hljs-built_in">test</span>=<span class="hljs-string">"code != null"</span>&gt;
+AND code = <span class="hljs-comment">#{code,jdbcType=VARCHAR}</span>
+&lt;/<span class="hljs-keyword">if</span>&gt;
+&lt;/<span class="hljs-built_in">where</span>&gt;
+</code></pre>
+<ul>
+<li>set
+以 set 开头，将一组标签的返回值拼接起来，自动去除首尾多余的逗号 <code>,</code>
+专门用于生成动态的 set 语句</li>
+</ul>
+<pre><code class="lang-xml">&lt;<span class="hljs-built_in">set</span>&gt;
+&lt;<span class="hljs-keyword">if</span> <span class="hljs-built_in">test</span>=<span class="hljs-string">"userName != null"</span>&gt;
+user_name = <span class="hljs-comment">#{userName,jdbcType=VARCHAR},</span>
+&lt;/<span class="hljs-keyword">if</span>&gt;
+&lt;<span class="hljs-keyword">if</span> <span class="hljs-built_in">test</span>=<span class="hljs-string">"userAge != null"</span>&gt;
+user_age = <span class="hljs-comment">#{userAge,jdbcType=INTEGER},</span>
+&lt;/<span class="hljs-keyword">if</span>&gt;
+&lt;/<span class="hljs-built_in">set</span>&gt;
+</code></pre>
+<ul>
+<li>trim
+功能强大的标签，包含 where 和 set 的功能
+将一组标签的结果拼接起来，支持指定移除首部或尾部指定的内容，支持自动在首部或者尾部添加指定的内容</li>
+</ul>
+<pre><code class="lang-xml">&lt;trim suffix=<span class="hljs-string">"WHERE"</span> suffixOverrides=<span class="hljs-string">"AND | OR"</span>&gt;  
+&lt;<span class="hljs-keyword">if</span> test=<span class="hljs-string">"id != null and id !='' "</span>&gt;  
+        AND <span class="hljs-selector-tag">b</span><span class="hljs-selector-class">.id</span> =#{id}   
+&lt;/<span class="hljs-keyword">if</span>&gt;  
+&lt;<span class="hljs-keyword">if</span> test=<span class="hljs-string">"name != null"</span>&gt;  
+        AND <span class="hljs-selector-tag">b</span><span class="hljs-selector-class">.menu_name</span> like #{name}  
+    &lt;/<span class="hljs-keyword">if</span>&gt;  
+&lt;/trim&gt;
+</code></pre>
+<p>where 的 trim 写法</p>
+<pre><code class="lang-xml">&lt;trim prefix=<span class="hljs-string">"WHERE"</span> suffixOverrides=<span class="hljs-string">"AND | OR"</span>&gt;
+&lt;<span class="hljs-keyword">if</span> <span class="hljs-built_in">test</span>=<span class="hljs-string">"codeId != null"</span>&gt;
+code_id = <span class="hljs-comment">#{codeId,jdbcType=INTEGER}</span>
+&lt;/<span class="hljs-keyword">if</span>&gt;
+&lt;<span class="hljs-keyword">if</span> <span class="hljs-built_in">test</span>=<span class="hljs-string">"code != null"</span>&gt;
+AND code = <span class="hljs-comment">#{code,jdbcType=VARCHAR}</span>
+&lt;/<span class="hljs-keyword">if</span>&gt;
+&lt;trim&gt;
+</code></pre>
+<p>set 的 trim 写法</p>
+<pre><code class="lang-xml">&lt;trim prefix=<span class="hljs-string">"SET"</span> suffixOverrides=<span class="hljs-string">","</span>&gt;
+&lt;<span class="hljs-keyword">if</span> <span class="hljs-built_in">test</span>=<span class="hljs-string">"userName != null"</span>&gt;
+user_name = <span class="hljs-comment">#{userName,jdbcType=VARCHAR},</span>
+&lt;/<span class="hljs-keyword">if</span>&gt;
+&lt;<span class="hljs-keyword">if</span> <span class="hljs-built_in">test</span>=<span class="hljs-string">"userAge != null"</span>&gt;
+user_age = <span class="hljs-comment">#{userAge,jdbcType=INTEGER},</span>
+&lt;/<span class="hljs-keyword">if</span>&gt;
+&lt;/<span class="hljs-built_in">set</span>&gt;
+</code></pre>
+<ul>
+<li>foreach
+用于遍历访问集合内的元素</li>
+</ul>
+<pre><code class="lang-xml">&lt;foreach collection=<span class="hljs-string">"_parameter"</span> <span class="hljs-keyword">item</span>=<span class="hljs-string">"item"</span> <span class="hljs-built_in">open</span>=<span class="hljs-string">"("</span> separator=<span class="hljs-string">","</span> <span class="hljs-built_in">close</span>=<span class="hljs-string">")"</span>&gt;
+<span class="hljs-comment">#{item}</span>
+&lt;/<span class="hljs-built_in">set</span>&gt;
+</code></pre>
+<h3 id="2-spring">2.Spring</h3>
+<h4 id="2-1dto-">2.1DTO定义</h4>
+<h4 id="2-1-1-">2.1.1继承关系</h4>
+<blockquote>
+<p>BaseDTO类 包含了常规 DTO 类的所有公共特性</p>
+</blockquote>
+<ul>
+<li>_token 防篡改验证</li>
+<li>标准 WHO 字段</li>
+<li>扩展属性字段</li>
+</ul>
+<p>如果没有特殊情况，当新建一个 DTO 类时，应当继承 BaseDTO 类，不要把重复的内容写到每一个类中。</p>
+<pre><code class="lang-java">public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">XXX</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseDTO</span> </span>{
+...
+}
+</code></pre>
+<p>除了避免代码重复以外，BaseDTO 类在系统的各种地方都发挥着重要的作用</p>
+<ul>
+<li>插入数据时自动完成 WHO 字段的赋值</li>
+<li>数据多语言 <strong>增删改</strong>（没有查）时，自动对相应的 TL 表操作</li>
+<li>防篡改 TOKEN 验证</li>
+</ul>
+<blockquote>
+<p>数据多语言</p>
+</blockquote>
+<p>当一个 DTO 需要支持数据多语言时，需要通过 Annotation 进行注解说明</p>
+<pre><code class="lang-java"><span class="hljs-meta">@MultiLanguage</span>
+<span class="hljs-meta">@Table</span>(name = <span class="hljs-string">"sys_role_b"</span>)
+public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Role</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseDTO</span> </span>{
+    <span class="hljs-meta">@Id</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-type">Integer</span> roleId;
+
+    <span class="hljs-meta">@MultiLanguageField</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-type">String</span> roleName;
+
+    <span class="hljs-meta">@MultiLanguageField</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-type">String</span> roleDescription;
+}
+</code></pre>
+<ul>
+<li><code>@MultiLanguage</code>
+用于说明改 DTO 类需要支持数据多语言</li>
+<li><code>@Table</code>
+用于说明改 DTO 对应的数据库中的表的名字</li>
+<li><code>@Id</code>
+用于说明该表中的主键，如果是联合主键，需要都加上<code>@Id</code></li>
+<li><code>@Column</code>(可选)
+用于说明该字段在数据库中的列名</li>
+<li><code>@MultiLanguageField</code>
+用于说明该字段为多语言字段</li>
+</ul>
+<p>数据多语言的增删改由拦截器自动完成</p>
+<h4 id="2-1-2-">2.1.2头行</h4>
+<blockquote>
+<p>@Children 注解</p>
+</blockquote>
+<p>这个注解在头行自动化处理中起到十分关键的作用</p>
+<pre><code class="lang-java">public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Code</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseDTO</span> </span>{
+...
+<span class="hljs-meta">@Children</span>
+<span class="hljs-keyword">private</span> <span class="hljs-type">List</span>&lt;<span class="hljs-type">CodeValue</span>&gt; codeValues;
+...
+}
+</code></pre>
+<ul>
+<li>自动属性蔓延
+前面说了 BaseDTO 的<code>标准 who</code>属性，当<code>系统</code>对<code>头</code>设置这些属性时，会自动蔓延至@Children 标注的属性。
+这些属性的类型可以是 List&lt; BaseDTO&gt;类型，也可以是一个普通 BaseDTO 对象。</li>
+<li>自动校验行数据
+当调用 validator 进行数据校验时，行数据也会自动进行校验，不需要手动循环校验。</li>
+</ul>
+<blockquote>
+<p>使用 validator</p>
+</blockquote>
+<p>在 Controller中使用 validator 进行自动的校验</p>
+<pre><code class="lang-java"><span class="hljs-meta">@RequestMapping</span>(value = <span class="hljs-string">"/sys/role/submit"</span>, method = RequestMethod.POST)
+    <span class="hljs-meta">@ResponseBody</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-function">ResponseData <span class="hljs-title">submitRole</span><span class="hljs-params">(@RequestBody List&lt;Role&gt; roles, BindingResult result, HttpServletRequest request)</span>
+            <span class="hljs-keyword">throws</span> BaseException </span>{
+        getValidator().validate(roles, result);
+        <span class="hljs-keyword">if</span> (result.hasErrors()) {
+            ResponseData rd = <span class="hljs-keyword">new</span> ResponseData(<span class="hljs-keyword">false</span>);
+            rd.setMessage(getErrorMessage(result, request));
+            <span class="hljs-keyword">return</span> rd;
+        }
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ResponseData(roleService.batchUpdate(roles));
+    }
+</code></pre>
+<p>需要按照规范声明参数，然后进需要调用一行语句既可。
+自动检验可以判断需要检验对象的类型，List或者单个 DTO 对象都支持。并可以可以递归的校验对象中使用<code>@Children</code>标注的子属性。</p>
+<h4 id="2-1-3-">2.1.3校验注解</h4>
+<pre><code class="lang-java">public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Code</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseDTO</span> </span>{
+<span class="hljs-meta">@NotEmpty</span>
+<span class="hljs-keyword">private</span> <span class="hljs-type">String</span> code;
+...
+}
+</code></pre>
+<p>通过使用注解<code>@NotEmpty</code>可以声明一个约束校验，在校验的过程中，系统自动判定属性值是个符合注解的含义。校验失败时错误能被框架翻译为友好多语言的提示信息。</p>
+<p>类似的注解还有很多
+@NotNull
+@Email
+@Length(min=6, max = 12)
+@Range(min = 1, max = 12)
+@Min(value=4)
+@Max(value=10)
+@Null
+@NotNull
+@Digits
+@Pattern</p>
+<p>使用这些注解可以完成一些简单的校验，并且不需要写过多的繁琐的内容。</p>
+<p>需要注意的是：
+需要为数据库中的所有表的列定义 prompts 信息</p>
+<p>例如 DTO: <code>com.hand.hap.account.dto.Role</code>，有一些属性，以 roleCode 为例。
+需要定义多语言 prompt：
+role.rolecode</p>
+<ul>
+<li>Role Code
+en_GB</li>
+<li>角色代码
+zh_CN</li>
+</ul>
+<p>用的到的字段都需要定义，界面显示也会用的到，自动校验提示消息也会用的到。</p>
+<h3 id="2-2-service-">2.2 Service层</h3>
+<h4 id="2-2-1-">2.2.1 基本原则</h4>
+<p>非查询类接口需要声明抛出 BaseException 的子类，<strong>不推荐</strong>直接抛出 BaseException。</p>
+<blockquote>
+<p>IRequest 参数</p>
+</blockquote>
+<p>IRequest 参数为 Service 请求的标准参数，每一个在 Controller 中调用的 service 方法都需要这个参数。他用来获取 <code>locale</code>，<code>userId</code>，<code>roleId</code> 等 session 中的信息。也可以传递额外的属性。</p>
+<blockquote>
+<p>查询</p>
+</blockquote>
+<p>标准的参数格式，以及数据返回</p>
+<pre><code class="lang-java">@Transactional(propagation = Propagation.SUPPORTS)
+public List&lt;<span class="hljs-built_in">Code</span>&gt; selectCodes(IRequest requestContext, <span class="hljs-built_in">Code</span> <span class="hljs-built_in">code</span>, <span class="hljs-built_in">int</span> page, <span class="hljs-built_in">int</span> pagesize) {
+    PageHelper.startPage(page, pagesize);
+    List&lt;<span class="hljs-built_in">Code</span>&gt; codes = codeMapper.selectCodes(<span class="hljs-built_in">code</span>);
+    return codes;
+}
+</code></pre>
+<ul>
+<li>声明 SUPPORTS 级别的事务</li>
+<li>接收 page，pagesize的分页参数</li>
+<li>标准分页代码</li>
+<li>返回类型 List</li>
+</ul>
+<p>这仅是一个常用范例，至于分页和返回类型还是要看具体的需求。</p>
+<blockquote>
+<p>提交</p>
+</blockquote>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">List</span>&lt;Role&gt; batchUpdate(IRequest requestContext, <span class="hljs-keyword">List</span>&lt;Role&gt; roles) {
+    <span class="hljs-keyword">for</span> (Role role : roles) {
+        <span class="hljs-keyword">if</span> (role.getRoleId() == <span class="hljs-keyword">null</span>) {
+            <span class="hljs-keyword">self</span>().createRole(role);
+        } <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">self</span>().updateRole(role);
+        }
+    }
+    <span class="hljs-keyword">return</span> roles;
+}
+</code></pre>
+<ul>
+<li>支持批量更新，自动判断</li>
+<li>返回 List（分布式调用 Service 时，如果不返回数据，会导致插入时生成的主键调用方取不到）</li>
+</ul>
+<p>对于单条记录的更新，插入操作，也需要返回接收到的参数。</p>
+<blockquote>
+<p>删除</p>
+</blockquote>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">batchDelete</span><span class="hljs-params">(IRequest requestContext, List&lt;Role&gt; roles)</span> </span>{
+    <span class="hljs-keyword">for</span> (Role role : roles) {
+        <span class="hljs-keyword">if</span> (role.getRoleId() != <span class="hljs-keyword">null</span>)
+            self().deleteRole(role);
+    }
+}
+</code></pre>
+<ul>
+<li>支持批量删除</li>
+<li>一般不需要返回数据</li>
+</ul>
+<p>删除单条记录时，如果需要自动删除相应的数据多语言，则<strong>需要用 DTO 作为参数，不能仅仅使用主键</strong>。</p>
+<blockquote>
+<p>Service 自调用</p>
+</blockquote>
+<p>当出现一个 service 调用自己的另外一个方法（在接口中声明过）时，需要按照约定，使用 <code>self().</code>作为调用引用。</p>
+<pre><code class="lang-java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">method1</span><span class="hljs-params">(IRequest request)</span> </span>{
+  self().method2(request);
+}
+</code></pre>
+<h3 id="2-2-2-">2.2.2事务控制</h3>
+<h4 id="-">事务声明</h4>
+<p>HAP采用 Spring 声明式的事务管理。原则上不应该在代码的任何地方出现 commit 和 rollback 操作，而应在现行框架内自动完成。</p>
+<p>使用<code>@Transactional</code>注解来为指定的方法指明事务类型。关于 Spring事务类型的详细内容，请参考 Spring官方文档。
+在一般情况下，遵循以下原则：</p>
+<ul>
+<li>仅在Service 层做事务控制</li>
+<li>Service 提供给各种 API 调用，可以保证各种方式调用 Service 都能达到同样的事务效果。Controller仅仅是做 URL 映射</li>
+<li>需要调用多个方法，又需要同一个事务的操作，需要在 Service 中提供聚合方法来完成操作。</li>
+<li>查询类方法的事务传播级别默认为：<code>SUPPORTS</code>。</li>
+<li>确定不需要事务支持的方法，事务传播级别为：<code>NOT_SUPPORTED</code></li>
+<li>其他需要事务支持的方法，传播级别为默认：<code>REQUIRED</code></li>
+</ul>
+<h3 id="2-3controller-">2.3Controller层</h3>
+<p>如无例外，一个普通的 Controller 需要继承 BaseController</p>
+<pre><code class="lang-java"><span class="hljs-meta">@Controller</span>
+public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RoleController</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseController</span> </span>{
+...
+}
+</code></pre>
+<p>BaseController 提供一些通用的用途</p>
+<ul>
+<li>initBinder</li>
+<li>exceptionHandler</li>
+<li>获取校验产生的错误信息</li>
+<li>validator</li>
+<li>messageSource</li>
+<li>默认分页参数值</li>
+<li>createRequestContext(HttpServletRequest) 方法</li>
+<li>校验 _token</li>
+</ul>
+<blockquote>
+<p>查询</p>
+</blockquote>
+<p>标准查询写法</p>
+<pre><code class="lang-java"><span class="hljs-meta">@RequestMapping(value = <span class="hljs-meta-string">"/sys/role/query"</span>)</span>
+<span class="hljs-meta">@ResponseBody</span>
+<span class="hljs-keyword">public</span> ResponseData getRoles(Role example,
+                             HttpServletRequest request,
+                             <span class="hljs-meta">@RequestParam(defaultValue = DEFAULT_PAGE)</span> int page,
+                             <span class="hljs-meta">@RequestParam(defaultValue = DEFAULT_PAGE_SIZE)</span> int pagesize) {
+    IRequest requestContext = createRequestContext(request);
+    <span class="hljs-keyword">return</span> new ResponseData(roleService.selectRoles(requestContext, example, page, pagesize));
+}
+</code></pre>
+<ul>
+<li>IRequest 参数的创建</li>
+<li>默认分页参数支持</li>
+<li>返回 ResponseData</li>
+<li>使用返回的 List 数据直接构造 ResponseData
+ResponseData用于Grid 的数据,有固定结构:</li>
+</ul>
+<pre><code class="lang-json">{
+<span class="hljs-attr">"success"</span>: <span class="hljs-literal">true</span>,
+<span class="hljs-attr">"total"</span>: <span class="hljs-number">20</span>,
+<span class="hljs-attr">"rows"</span>: [
+{<span class="hljs-attr">"name"</span>:<span class="hljs-string">"aa"</span>},
+{<span class="hljs-attr">"name"</span>:<span class="hljs-string">"bb"</span>}
+]
+}
+</code></pre>
+<blockquote>
+<p>提交数据</p>
+</blockquote>
+<pre><code class="lang-java"><span class="hljs-meta">@RequestMapping</span>(value = <span class="hljs-string">"/sys/role/submit"</span>, method = RequestMethod.POST)
+<span class="hljs-meta">@ResponseBody</span>
+<span class="hljs-keyword">public</span> <span class="hljs-function">ResponseData <span class="hljs-title">submitRole</span><span class="hljs-params">(@RequestBody List&lt;Role&gt; roles, BindingResult result, HttpServletRequest request)</span>
+        <span class="hljs-keyword">throws</span> BaseException </span>{
+    getValidator().validate(roles, result);
+    <span class="hljs-keyword">if</span> (result.hasErrors()) {
+        ResponseData rd = <span class="hljs-keyword">new</span> ResponseData(<span class="hljs-keyword">false</span>);
+        rd.setMessage(getErrorMessage(result, request));
+        <span class="hljs-keyword">return</span> rd;
+    }
+    IRequest requestContext = createRequestContext(request);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ResponseData(roleService.batchUpdate(requestContext, roles));
+}
+</code></pre>
+<ul>
+<li>@ResponseBody 声明的 List 传参</li>
+<li>List 参数后面紧跟的 BindingResult 参数</li>
+<li>request 用于获取Locale（取多语言错误消息）</li>
+<li>调用 validator 对数据进行校验</li>
+<li>IRequest 参数</li>
+<li>有错误时，返回包含错误的 ResponseData</li>
+<li>正常返回包含数据的 ResponseData</li>
+</ul>
+<h3 id="2-4-">2.4异常记录</h3>
+<p>框架有自动异常处理功能，可能以自动、统一的记录日志，保证不会重复、遗漏。</p>
+<p>当手动 try-catch捕获到异常时，有以下几种情况：</p>
+<ul>
+<li>吞没该异常。视情况记录日志。</li>
+<li>转换类型后继续抛出异常（或直接抛出）。此时可以只记录错误消息，而不必记录错误堆栈，详细错误将由后续异常捕获者处理。如果后续代码已经脱离框架控制范围，则应当记录堆栈明细。</li>
+<li>处理异常，并继续抛出一个新异常（空堆栈）。视情况记录原始异常堆栈。</li>
+</ul>
+<blockquote>
+<p><strong>应当避免将一个异常在不同的地方重复记录</strong>。</p>
+</blockquote>
+<p>并非所有异常都需要记录详细的堆栈信息，当一个异常将处理或被忽略时，需要具体场景具体分析，但千万要小心，不能将重要信息遗漏！</p>
+<h3 id="2-5-">2.5日志使用规范</h3>
+<p>HAP使用SLF4J作为日志输出接口，在底层可以根据需要使用 JDK 的日志实现或者 LOG4J等，可根据实际使用场景切换日志实现。默认采用 Logback作为日志实现。</p>
+<p>关于日志的组织分类，各种场景配置等问题，可以在日志配置文件层面实现。详细内容可以参考框架详细设计，日志系统部分。</p>
+<h4 id="2-5-1-logger-">2.5.1获取 logger 实例</h4>
+<p>在实际代码编写中，不应该直接使用 Log4j的 Logger 来输出日志。而应该统一调用SLF4J的 API方法。</p>
+<pre><code class="lang-java"><span class="hljs-attribute">Logger logger</span> = LoggerFactory.getLogger(XXX.class);
+</code></pre>
+<p>其中 Logger 和LoggerFactory 均来自Package <code>org.slf4j</code>。</p>
+<h4 id="2-5-2-">2.5.2日志输出基本原则</h4>
+<p>在输出日志方面，应遵循以下原则：</p>
+<ol>
+<li>准确区分应该使用的日志级别。系统的日志输出级别会根据需要动态调整。非关键信息应该采用低级别输出，避免输出太多无用信息。关键信息应该高级别输出，确保不会遗漏。建议的级别如下：<ol>
+<li>info级别，输出普通方法执行细节，接收的参数，返回的数据。</li>
+<li>warn级别，输出潜在的问题，但不包括致命错误。例如缺少指定参数，使用了默认参数。</li>
+<li>debug级别，输出系统、复杂模块初始化的步骤细节等，关键代码执行明细，也可以输出与业务相关的逻辑执行明细，相关数据等。 debug 级别日志是排查错误的重要依据，应尽可能输出有效的信息。</li>
+<li>error级别，只用于输出系统发生的错误。</li>
+</ol>
+</li>
+<li>记录异常时，不应该只记录 message，还应该记录堆栈详细内容，需要调用合适的方法，传入异常。</li>
+<li>不能在代码中使用 <code>System.out.println()</code> 输出内容替代日志的功能。</li>
+<li>避免无意义的输出，避免遗漏必要的信息。输出日志应考虑实际情况，输出一些有助于帮助系统排查错误，或者分析系统行为的内容。</li>
+<li>禁止在日志中输出敏感信息，如密码，信用卡信息等。</li>
+</ol>
+<h4 id="2-5-3-">2.5.3常规业务逻辑记录日志</h4>
+<p>常规业务逻辑通常在Service中完成，Service中的方法将由框架自动拦截，并记录执行概要。但具体的背部细节还需要开发者手动编码指定输出内容。
+目前自动完成的内容有：</p>
+<ul>
+<li>Service方法接收到的参数</li>
+<li>Service方法的返回值</li>
+<li>Service方法执行时间
+这些内容不需要开发者再手动输出，以免重复。</li>
+</ul>
+<p>当在 Service 中去调用其他不能被框架拦截的方法时，如果有必要，可以手动记录类似的执行概要。</p>
+<p>具体到方法内部的细节，可以自行划分步骤、关键点等，在这样的临界位置输出必要的信息，可以采用<code>INFO</code>或 <code>DEBUG</code> 级别输出。</p>
+<p>对于循环操作，需要特别注意，避免输出大量的日志内容。</p>

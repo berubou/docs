@@ -1,0 +1,63 @@
+<p>本文讲述 HAP 2.0 相对于  1.0 的表结构变化.</p>
+<h2 id="sys_user">SYS_USER</h2>
+<ol>
+<li><p>增加 LAST_LOGIN_DATE</p>
+<ul>
+<li>该字段用来记录用户最后一次登录成功的时间</li>
+</ul>
+</li>
+<li><p>增加 LAST_PASSWORD_UPDATE_DATE</p>
+<ul>
+<li>该字段用于记录用户最后一次修改密码的时间</li>
+<li>与 <code>密码过期机制</code> 相对应</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>其他变化<ul>
+<li>USER_NAME  字段现在不要求必须大写</li>
+</ul>
+</li>
+</ul>
+<h2 id="sys_role_b">SYS_ROLE_B</h2>
+<ol>
+<li><p>增加字段 START_ACTIVE_DATE</p>
+<ul>
+<li>角色开始有效的日期, 为空 表示没有限制    </li>
+<li>在该日期之前, 角色不可用</li>
+</ul>
+</li>
+<li><p>增加字段 END_ACTIVE_DATE</p>
+<ul>
+<li>角色截止有效的日期, 为空 表示没有限制</li>
+<li>超过该日期后, 角色不可用</li>
+</ul>
+</li>
+<li><p>增加字段 ENABLE_FLAG (Y/N)</p>
+<ul>
+<li>是否启用该角色</li>
+<li>默认 Y, 为 N 时, 角色不可用</li>
+</ul>
+</li>
+</ol>
+<h2 id="sys_preference">SYS_PREFERENCE</h2>
+<ol>
+<li>删除字段 <del>PREFERENCE_LEVEL</del></li>
+</ol>
+<h2 id="-sys_config-">新增 SYS_CONFIG 表</h2>
+<p>用于保存系统级的配置信息. 页面请参见 <code>系统管理 - 系统设置</code></p>
+<p>目前保存的信息有:</p>
+<ol>
+<li>系统 Title</li>
+<li>验证码策略</li>
+<li>新用户默认密码</li>
+<li>密码失效时间</li>
+<li>密码最小长度</li>
+<li>密码复杂度(验证规则)</li>
+</ol>
+<h2 id="-sys_user_login-">新增 SYS_USER_LOGIN 表</h2>
+<p>用于记录用户的登录</p>
+<h2 id="-sys_dashboard_b-tl-">新增 SYS_DASHBOARD_B(TL)</h2>
+<p>用于保存用户自定义的 bashboard 配置</p>
+<h2 id="-hr_xx-">新增 HR_XX 相关表</h2>
+<p>基础的组织架构表, 工作流会用到</p>

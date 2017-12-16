@@ -1,0 +1,822 @@
+<h2 id="grid">Grid</h2>
+<h4 id="-">表格</h4>
+<p>对于API文档中的所有属性，考虑实际需要，有些属性没必要实现，本文档若未列出，就代表并未实现</p>
+<h4 id="xml-">xml配置</h4>
+<pre><code class="lang-xml"> <span class="hljs-comment">&lt;!--h:为命名空间,必须要加的;grid为组件名;id可写可不写--&gt;</span>
+ <span class="hljs-tag">&lt;<span class="hljs-name">h:grid</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"grid"</span>/&gt;</span>
+</code></pre>
+<pre><code class="lang-xml"><span class="hljs-comment">&lt;!--grid--&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">h:grid</span> <span class="hljs-attr">dataSource</span>=<span class="hljs-string">"dataSource"</span> <span class="hljs-attr">selectable</span>=<span class="hljs-string">"multiple, rowbox"</span> <span class="hljs-attr">editable</span>=<span class="hljs-string">"true"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h:pageable</span> <span class="hljs-attr">pageSizes</span>=<span class="hljs-string">"5, 10, 20, 50"</span> <span class="hljs-attr">buttonCount</span>=<span class="hljs-string">"5"</span> <span class="hljs-attr">refresh</span>=<span class="hljs-string">"true"</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">h:pageable</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h:columns</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">h:column</span> <span class="hljs-attr">field</span>=<span class="hljs-string">"moduleCode"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">''</span> <span class="hljs-attr">width</span>=<span class="hljs-string">"100"</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">h:column</span> <span class="hljs-attr">field</span>=<span class="hljs-string">"functionCode"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">''</span> <span class="hljs-attr">width</span>=<span class="hljs-string">"180"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">h:columns</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:grid</span>&gt;</span>
+</code></pre>
+<hr>
+<p>对于所有属性，无论是直接属性，还是子标签的属性，都遵循以下原则：
+1.若是简单的属性，就添加到当前标签上，若是对象，就创建子标签，这里的简单属性是指能直接被描述在当前标签上的属性，如字符串，函数，(函数只是一个引用)，布尔类型，数字类型等等，对象是指这个属性又包含了子属性，所以我们不得不向下创建子标签才能将其子属性描述出来。
+2.对于String和Function类型，必须用fn：前缀加以区分，
+3.对于数组，有些数组是字符串数组，这种直接当作简单的属性处理，用逗号分隔每个字符串即可，有些数组是list集合数组，这种必须先创建属性子标签，再创建tem子标签来描述集合，详情可参考子标签columns</p>
+<hr>
+<h3 id="-"><strong>一般属性</strong></h3>
+<blockquote>
+<p><strong>提示:</strong></p>
+<ul>
+<li>属性用法请参考kendoui API文档的grid: <a href="http://docs.telerik.com/kendo-ui/api/javascript/ui/gird">http:\/\/docs.telerik.com\/kendo-ui\/api\/javascript\/ui\/gird</a></li>
+</ul>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>allowCopy</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>altRowTemplate</td>
+<td>String &amp; Function</td>
+</tr>
+<tr>
+<td>autoBind</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>columnResizeHandleWidth</td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>columnMenu</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>dataSource</td>
+<td>kendo.data.DataSource(Function)</td>
+</tr>
+<tr>
+<td>detailTemplate</td>
+<td>String &amp; Function</td>
+</tr>
+<tr>
+<td>editable</td>
+<td>Boolean &amp; String</td>
+</tr>
+<tr>
+<td>groupable</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>height</td>
+<td>Integer &amp; String</td>
+</tr>
+<tr>
+<td>mobile</td>
+<td>Boolean &amp; String</td>
+</tr>
+<tr>
+<td>navigatable</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>noRecords</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>pageable</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>reorderable</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>resizable</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>rowTemplate</td>
+<td>String &amp; Function</td>
+</tr>
+<tr>
+<td>scrollable</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>selectable</td>
+<td>Boolean &amp; String</td>
+</tr>
+<tr>
+<td>sortable</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>toolbar</td>
+<td>String &amp; Function</td>
+</tr>
+<tr>
+<td>cancel</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>change</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>columnHide</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>columnMenuInit</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>columnReorder</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>columnResize</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>columnShow</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>dataBinding</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>dataBound</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>detailCollapse</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>detailExpand</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>detailInit</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>edit</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>excelExport</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>filter</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>group</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>page</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>pdfExport</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>filterMenuInit</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>remove</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>save</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>saveChanges</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>sort</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>columnLock</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>columnUnlock</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>navigate</td>
+<td>Function</td>
+</tr>
+</tbody>
+</table>
+<p>用法示例：</p>
+<pre><code class="lang-javascript"><span class="hljs-comment">//注意是写在script标签里的内容</span>
+<span class="hljs-keyword">var</span> dataSource = <span class="hljs-keyword">new</span> kendo.data.DataSource({
+    data: [
+        { name: <span class="hljs-string">"Jane Doe"</span>, age: <span class="hljs-number">30</span> },
+        { name: <span class="hljs-string">"John Doe"</span>, age: <span class="hljs-number">33</span> }
+    ]
+});
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">edit</span><span class="hljs-params">()</span></span>{
+<span class="hljs-comment">//...</span>
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">rowTemplate</span><span class="hljs-params">()</span></span>{
+<span class="hljs-comment">//...</span>
+}
+</code></pre>
+<pre><code class="lang-xml">&lt;h:grid <span class="hljs-attribute">id</span>=<span class="hljs-string">"grid"</span> <span class="hljs-attribute">dataSource</span>=<span class="hljs-string">"dataSource"</span> resizable= <span class="hljs-string">"true"</span> height= <span class="hljs-string">"100%"</span> <span class="hljs-builtin-name">edit</span> =<span class="hljs-string">"edit"</span> <span class="hljs-attribute">rowTemplate</span>=<span class="hljs-string">"fn:rowTemplate"</span>/&gt;
+</code></pre>
+<blockquote>
+<p><strong>提示:</strong></p>
+<ul>
+<li>上述所有属性直接添加在标签内即可，（<strong>[**</strong>属性名]<strong>** = &quot;...&quot;</strong>）,对于类型是函数的属性，需要另外在script标签中具体定义函数，这里只是一个引用,对于类型<strong>既是函数又是字符串</strong>类型的属性，一定要加<strong>fn:</strong> 来区分，加fn:的代表这是一个函数，对于<strong>既是字符串又是布尔类型</strong>的属性，照常输入就行了。</li>
+</ul>
+</blockquote>
+<h4 id="-"><strong>子标签</strong></h4>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>allowCopy</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>columns</td>
+<td>Array</td>
+</tr>
+<tr>
+<td>columnMenu</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>editable</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>messages</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>scrollable</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>sortable</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>toolbar</td>
+<td>Array</td>
+</tr>
+</tbody>
+</table>
+<h4 id="-allowcopy-"><strong>allowCopy</strong>子标签</h4>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>delimeter</td>
+<td>String &amp; Object</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-xml"><span class="hljs-comment">&lt;!--delimeter是Object类型--&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">h:grid</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h:allowCopy</span>&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-name">h:delimeter</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">h:allowCopy</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:grid</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!--delimeter是String类型--&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">h:grid</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h:allowCopy</span> <span class="hljs-attr">delimeter</span>=<span class="hljs-string">","</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">h:allowCopy</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:grid</span>&gt;</span>
+</code></pre>
+<h4 id="-columns-"><strong>columns</strong>子标签</h4>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>attributes</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>command</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>editor</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>encoded</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>expandable</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>field</td>
+<td>String</td>
+</tr>
+<tr>
+<td>footerTemplate</td>
+<td>String &amp; Function</td>
+</tr>
+<tr>
+<td>format</td>
+<td>String</td>
+</tr>
+<tr>
+<td>headerAttributes</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>headerTemplate</td>
+<td>String &amp; Function</td>
+</tr>
+<tr>
+<td>minScreenWidth</td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>sortable</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>template</td>
+<td>String &amp; Function</td>
+</tr>
+<tr>
+<td>title</td>
+<td>String</td>
+</tr>
+<tr>
+<td>width</td>
+<td>Integer &amp; String</td>
+</tr>
+<tr>
+<td>hidden</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>menu</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>locked</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>lockable</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>aggregates</td>
+<td>Array</td>
+</tr>
+<tr>
+<td>columns</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>filterable</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>groupable</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>groupHeaderTemplate</td>
+<td>String &amp; Function</td>
+</tr>
+<tr>
+<td>groupFooterTemplate</td>
+<td>String &amp; Function</td>
+</tr>
+<tr>
+<td>values</td>
+<td>Array</td>
+</tr>
+<tr>
+<td>footerAttributes</td>
+<td>Object</td>
+</tr>
+</tbody>
+</table>
+<h4 id="-columns-filterable-"><strong>columns-filterable</strong>子标签</h4>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cell</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>multi</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>dataSource</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>checkAll</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>itemTemplate</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>operators</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>search</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>ignoreCase</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>ui</td>
+<td>Object</td>
+</tr>
+</tbody>
+</table>
+<p><strong>attributes</strong>用法:</p>
+<pre><code class="lang-xml">  <span class="hljs-tag">&lt;<span class="hljs-name">h:grid</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h:columns</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">h:column</span>&gt;</span>
+               <span class="hljs-tag">&lt;<span class="hljs-name">h:attributes</span> "<span class="hljs-attr">style</span>"=<span class="hljs-string">"text-align:center"</span>/&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-name">h:column</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">h:columns</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">h:grid</span>&gt;</span>
+</code></pre>
+<p><strong>command</strong>用法：</p>
+<pre><code class="lang-xml"><span class="hljs-comment">&lt;!--对于数组来说，有两种形式，一种是直接用逗号分隔，放在标签上的,如 aggregates;另一种是创建子标签，再创建item子标签，再将数组内的内容整合到item子标签上，如command，先创建command子标签，再创建item子标签，再将数组中的每一个集合放在item标签上--&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">h:grid</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">h:columns</span> <span class="hljs-attr">aggregates</span>=<span class="hljs-string">"count,min,max"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h:column</span> <span class="hljs-attr">template</span>=<span class="hljs-string">"fn:template"</span>/&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h:column</span> <span class="hljs-attr">field</span>=<span class="hljs-string">"functionId"</span> <span class="hljs-attr">width</span>=<span class="hljs-string">"30px/&gt;
+      &lt;h:column title="</span>列头" <span class="hljs-attr">locked</span>=<span class="hljs-string">"true"</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">h:command</span>&gt;</span>
+             <span class="hljs-tag">&lt;<span class="hljs-name">h:item</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"edit"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">h:item</span>&gt;</span>
+             <span class="hljs-tag">&lt;<span class="hljs-name">h:item</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"destroy"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">h:item</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-name">h:command</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">h:column</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">h:columns</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:grid</span>&gt;</span>
+</code></pre>
+<p><strong>editor</strong>用法：</p>
+<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">editor</span><span class="hljs-params">()</span></span>{
+<span class="hljs-comment">//...</span>
+}
+</code></pre>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h:grid</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h:columns</span>&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-name">h:column</span> <span class="hljs-attr">editor</span>=<span class="hljs-string">"editor"</span>&gt;</span>
+         <span class="hljs-tag">&lt;/<span class="hljs-name">h:column</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">h:coulmns</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:grid</span>&gt;</span>
+</code></pre>
+<p><strong>filterable</strong>用法：</p>
+<pre><code class="lang-xml"><span class="hljs-comment">&lt;!--以filterable举例 遇到对象就向下添加子标签--&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">h:grid</span>&gt;</span>
+     <span class="hljs-tag">&lt;<span class="hljs-name">h:columns</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">h:column</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-name">h:filterable</span>&gt;</span>
+                   <span class="hljs-tag">&lt;<span class="hljs-name">h:cell</span> <span class="hljs-attr">dataTextField</span>=<span class="hljs-string">"name"</span>/&gt;</span>
+              <span class="hljs-tag">&lt;/<span class="hljs-name">h:filterable</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-name">h:column</span>&gt;</span>   
+     <span class="hljs-tag">&lt;/<span class="hljs-name">h:columns</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:grid</span>&gt;</span>
+</code></pre>
+<p><strong>headerAtrributes</strong>用法:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h:grid</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h:columns</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">h:column</span>&gt;</span>
+             <span class="hljs-tag">&lt;<span class="hljs-name">h:headerAttributes</span> "<span class="hljs-attr">style</span>"=<span class="hljs-string">"color:red"</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">h:column</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">h:columns</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:grid</span>&gt;</span>
+</code></pre>
+<h4 id="-columnmenu-"><strong>ColumnMenu</strong>子标签</h4>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>columns</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>filterable</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>sortable</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>messages</td>
+<td>Object</td>
+</tr>
+</tbody>
+</table>
+<p>用法:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h:grid</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"grid"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h:columnMenu</span> <span class="hljs-attr">columns</span>=<span class="hljs-string">"true"</span> <span class="hljs-attr">fileterable</span>=<span class="hljs-string">"false"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">h:messages</span> <span class="hljs-attr">columns</span>=<span class="hljs-string">"choose columns"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">h:columnMenu</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:grid</span> &gt;</span>
+</code></pre>
+<h4 id="-editable-"><strong>editable</strong>子标签</h4>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>confirmation</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>cancelDelete</td>
+<td>String</td>
+</tr>
+<tr>
+<td>confirmDelete</td>
+<td>String</td>
+</tr>
+<tr>
+<td>createAt</td>
+<td>String</td>
+</tr>
+<tr>
+<td>destroy</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>mode</td>
+<td>String</td>
+</tr>
+<tr>
+<td>template</td>
+<td>String &amp; Function</td>
+</tr>
+<tr>
+<td>update</td>
+<td>Boolean</td>
+</tr>
+</tbody>
+</table>
+<p>用法:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h:grid</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"grid"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h:columnMenu</span> <span class="hljs-attr">columns</span>=<span class="hljs-string">"true"</span> <span class="hljs-attr">fileterable</span>=<span class="hljs-string">"false"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">h:messages</span> <span class="hljs-attr">columns</span>=<span class="hljs-string">"choose columns"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">h:columnMenu</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:grid</span> &gt;</span>
+</code></pre>
+<h4 id="-pageable-"><strong>pageable</strong>子标签</h4>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pageSize</td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>previousNext</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>numeric</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>buttonCount</td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>input</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>pageSizes</td>
+<td>Boolean &amp; Array</td>
+</tr>
+<tr>
+<td>refresh</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>info</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>messages</td>
+<td>Object</td>
+</tr>
+</tbody>
+</table>
+<p>用法:</p>
+<pre><code class="lang-xml"><span class="hljs-comment">&lt;!--pageSizes 为array时--&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">h:grid</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">h:pageable</span> <span class="hljs-attr">pageSizes</span>=<span class="hljs-string">"all,5,10,20,50"</span> <span class="hljs-attr">buttonCount</span>=<span class="hljs-string">"5"</span> <span class="hljs-attr">refresh</span>=<span class="hljs-string">"true"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h:messages</span> <span class="hljs-attr">display</span>=<span class="hljs-string">"show"</span>/&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">h:pageable</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:grid</span>&gt;</span>
+</code></pre>
+<h4 id="-messages-"><strong>messages</strong>子标签</h4>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>commands</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>noRecords</td>
+<td>String</td>
+</tr>
+</tbody>
+</table>
+<p>用法:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h:grid</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">h:messages</span> <span class="hljs-attr">noRecords</span>=<span class="hljs-string">"no data"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h:commands</span> <span class="hljs-attr">cancel</span>=<span class="hljs-string">"cancel"</span>/&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">h:messages</span> &gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:grid</span>&gt;</span>
+</code></pre>
+<h4 id="-norecords-"><strong>noRecords</strong>子标签</h4>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>template</td>
+<td>String &amp; Function</td>
+</tr>
+</tbody>
+</table>
+<p>用法:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h:grid</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h:noRecords</span> <span class="hljs-attr">template</span>=<span class="hljs-string">"no records"</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">h:noRecords</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:grid</span>&gt;</span>
+</code></pre>
+<h4 id="-scrollable-"><strong>scrollable</strong>子标签</h4>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>virtual</td>
+<td>Boolean</td>
+</tr>
+</tbody>
+</table>
+<p>用法:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h:grid</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h:scrollable</span> <span class="hljs-attr">virtual</span>=<span class="hljs-string">"true"</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:grid</span>&gt;</span>
+</code></pre>
+<h4 id="-sortable-"><strong>sortable</strong>子标签</h4>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>allowUnsort</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>mode</td>
+<td>String</td>
+</tr>
+</tbody>
+</table>
+<p>用法:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h:grid</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">h:sortable</span> <span class="hljs-attr">allowUnsort</span>=<span class="hljs-string">"true"</span> <span class="hljs-attr">mode</span>=<span class="hljs-string">"multiple"</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:grid</span>&gt;</span>
+</code></pre>
+<h4 id="-toolbar-"><strong>toolbar</strong>子标签</h4>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>String</td>
+</tr>
+<tr>
+<td>template</td>
+<td>String &amp; Function</td>
+</tr>
+<tr>
+<td>text</td>
+<td>String</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">template</span><span class="hljs-params">()</span></span>{
+<span class="hljs-comment">//...</span>
+}
+</code></pre>
+<pre><code class="lang-xml"><span class="hljs-comment">&lt;!--toolbar是数组 所以属性都是针对于数组内的集合来说的--&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">h:grid</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">h:toolbar</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h:item</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"create"</span>&gt;</span>
+            <span class="hljs-comment">&lt;!--当template为String时，由于xml会对标签的封闭符号敏感，所以可以采取下面的方式--&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">h:template</span>&gt;</span>
+              &lt;![CDATA[&lt;span class=" btn btn-primary k-grid-add"&gt;#=text#&lt;/span&gt;]]&gt;
+            <span class="hljs-tag">&lt;/<span class="hljs-name">h:template</span>&gt;</span>
+         <span class="hljs-tag">&lt;/<span class="hljs-name">h:item</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">h:toolbar</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:grid</span>&gt;</span>
+</code></pre>
+<blockquote>
+<p><strong>提示</strong>：</p>
+<ul>
+<li>遇到<strong>object</strong>类型 就向下添加子标签，当遇到普通类型时，就添加到当前的标签上,就像处理一般属性那样。</li>
+</ul>
+</blockquote>

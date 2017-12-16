@@ -1,0 +1,48 @@
+<h1 id="-">用户安全策略</h1>
+<p>框架提供标准的用户安全策略接口</p>
+<p>com.hand.hap.security.IUserSecurityStrategy</p>
+<blockquote>
+<p>默认实现DefaultUserSecurityStrategy，order值为9999</p>
+</blockquote>
+<p>编写自定义实现类，需要在 Spring 中定义为 bean （也可以通过 @Component之类的注解自动扫描注册）</p>
+<p>可以实现下列方法，自定义安全策略：</p>
+<h3 id="-index-">登录成功以后，跳转至index页面前的策略</h3>
+<pre><code class="lang-java">ModelAndView loginVerifyStrategy(<span class="hljs-keyword">User</span> <span class="hljs-title">user</span>, HttpServletRequest request);
+</code></pre>
+<p>参数及返回类型说明</p>
+<blockquote>
+<ul>
+<li><p>user 通过登录验证的User对象</p>
+<ul>
+<li>ModelAndView 重定向到该 ModelAndView </li>
+</ul>
+<p>如果想要正常跳转到index页面，请返回null</p>
+</li>
+</ul>
+</blockquote>
+<p>注意：会根据order大小依次执行实现类的该方法，注意顺序</p>
+<h3 id="-">用户修改密码时，自定义密码复杂度</h3>
+<pre><code class="lang-java">
+  void passwordVerifyStrategy(IRequest request ,User user,<span class="hljs-keyword">String</span> oldPwd, <span class="hljs-keyword">String</span> <span class="hljs-keyword">new</span><span class="hljs-type">Pwd</span>, <span class="hljs-keyword">String</span> <span class="hljs-keyword">new</span><span class="hljs-type">PwdAgain</span>) throws UserException;
+</code></pre>
+<p>参数及异常说明</p>
+<blockquote>
+<ul>
+<li>user 通过登录验证的User对象</li>
+<li>oldPwd 旧密码</li>
+<li>newPwd 新密码</li>
+<li>newPwdAgain 再次输入的新密码</li>
+<li>如果验证不通过，请抛出自定义的UserException</li>
+</ul>
+</blockquote>
+<p>一般来说修改了复杂度验证策略，需要修改sys_config页面。</p>
+<h3 id="-">新建用户时的策略</h3>
+<pre><code class="lang-java"><span class="hljs-built_in">
+User </span>beforeCreateUser(IRequest request ,User user)
+</code></pre>
+<p>可以对用户做统一的信息处理，如统一设置一些属性值，注意如果实现了该方法，一定要返回处理后的User对象，默认返回传入的user</p>
+<blockquote>
+<p>实现IAuthenticationSuccessListener
+ 接口， 是在用户登录验证成功时执行.</p>
+<p>一般用来往session里面放一些值，或其他逻辑，如果抛出异常，则会在login页面显示异常信息，注意区别。</p>
+</blockquote>

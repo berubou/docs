@@ -1,0 +1,51 @@
+<h1 id="-">编码生成器</h1>
+<h1 id="-">简介</h1>
+<p>3.1.8-RELEASE版本以后新增功能，支持定义编码规则，包括序列，日期，常量，动态参数，UUID等，通过编码code获取生成好的编码。</p>
+<h2 id="-">功能入口</h2>
+<p><strong>系统管理-&gt;编码规则</strong></p>
+<h2 id="-">使用说明</h2>
+<p>规则定义界面</p>
+<p><img width='920' src='/assets/codeRule_list.png'/></p>
+<blockquote>
+<p>已经启用的规则不可以编辑，只可以查看！</p>
+</blockquote>
+<p><img width='920' src='/assets/code_rule_edit.png'/></p>
+<blockquote>
+<p>如果没有更新序列配置，重新启用编码规则并不会重置序列。反之序列会重新生成。</p>
+</blockquote>
+<p><strong>段类型说明</strong></p>
+<ul>
+<li>序列：利用redis实现的自增序列，需要设置序列位数与开始值，可以设置重置频率（每年，每季度，每月），在指定周期内会重置序列。</li>
+</ul>
+<blockquote>
+<p>序列每自增100会更新当前值，当前值可以反应当前序列范围：比如当前值是1200，那么此时序列范围是1100-1200</p>
+</blockquote>
+<ul>
+<li><p>常数：一个固定的字符串</p>
+</li>
+<li><p>变量：动态参数，使用freemaker替换变量，${xxx}形式</p>
+</li>
+<li><p>日期： 根据日期掩码拼接指定格式的日期</p>
+</li>
+<li><p>UUID： 生成一段32位长度的UUID</p>
+</li>
+</ul>
+<p><strong>调用说明</strong></p>
+<p>在service中注入ICodeRuleProcessService：</p>
+<pre><code class="lang-java">
+  <span class="hljs-comment">//...</span>
+  @Autowired
+  ISysCodeRuleProcessService codeRuleProcessService
+  <span class="hljs-comment">//...</span>
+  <span class="hljs-comment">//设置编码</span>
+  xxx.setXXX(codeRuleProcessService.getRuleCode(<span class="hljs-string">"编码code"</span>));
+
+  <span class="hljs-comment">//使用动态参数，需要传入一个Map</span>
+  <span class="hljs-comment">//比如编码定义了一个变量${var}</span>
+  Map&lt;<span class="hljs-keyword">String</span>,<span class="hljs-keyword">String</span>&gt; <span class="hljs-built_in">map</span> = <span class="hljs-keyword">new</span> HashMap&lt;&gt;();
+  <span class="hljs-built_in">map</span>.<span class="hljs-built_in">put</span>(<span class="hljs-string">"var"</span>,<span class="hljs-string">"demo"</span>);
+  xxx.setXXX(codeRuleProcessService.getRuleCode(<span class="hljs-string">"编码code"</span>,<span class="hljs-built_in">map</span>));
+</code></pre>
+<blockquote>
+<p>使用动态参数时，如果没有传入包含该参数的map，依然会正常生成编码,动态参数的位置将为空！</p>
+</blockquote>

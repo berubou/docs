@@ -1,0 +1,424 @@
+<h1 id="-1-0-">前端开发手册 (1.0)</h1>
+<h4 id="-">目录划分</h4>
+<p>按照web目录规范，前端文件存放在如下目录</p>
+<pre><code>  webapp
+    ├─<span class="hljs-class"><span class="hljs-keyword">lib</span></span>
+    │  ├─images
+    │  ├─jquery
+    │  ├─jquery-validation
+    │  └─ligerUI
+    ├─resources
+    │  ├─css
+    │  ├─font
+    │  ├─images
+    │  ├─js
+    └─WEB-INF
+        ├─spring
+        └─view
+</code></pre><p>资源文件目录
+资源文件按照类型划分为两个目录：<strong><code>lib</code></strong>和<strong><code>resources</code></strong></p>
+<ul>
+<li><strong><code>lib</code></strong>目录存放LigerUI的所有文件</li>
+<li><strong><code>resources</code></strong>目录存放程序通用的资源文件</li>
+</ul>
+<p>功能文件目录
+功能文件存放在<strong><code>view</code></strong>目录下，目录的命名规则按照</p>
+<blockquote>
+<p><strong>[模块代码]</strong>/<strong>[功能项代码]</strong></p>
+</blockquote>
+<p>例如：用户管理的功能代码是SYS001,那么用户管理相关的界面文件都存放在</p>
+<pre><code>src<span class="hljs-regexp">/main/</span>webapp<span class="hljs-regexp">/WEB-INF/</span>view<span class="hljs-regexp">/sys/</span>sys001<span class="hljs-regexp">/</span>
+</code></pre><h4 id="-">文件命名约定</h4>
+<p>界面文件按照如下格式：</p>
+<blockquote>
+<p>[模块代码]<u> </u>[业务对象]<u> </u>[功能操作].html</p>
+</blockquote>
+<p>例如：用户查询界面: sys_user_query.html</p>
+<p>####url命名约定
+对于系统中提交的url地址，按照以下格式命名</p>
+<blockquote>
+<p>[contextPath]/[模块代码]/[业务对象]/[操作类型]</p>
+</blockquote>
+<p>对于常见的几种操作类型定义如下</p>
+<p>查询URL</p>
+<blockquote>
+<p>[模块代码]/[业务对象]/query</p>
+</blockquote>
+<p>批量提交  </p>
+<blockquote>
+<p>[模块代码]/[业务对象]/submit</p>
+</blockquote>
+<p>批量删除</p>
+<blockquote>
+<p>[模块代码]/[业务对象]/remove</p>
+</blockquote>
+<p>例如用户的查询: sys/user/query</p>
+<p>####代码编程规范</p>
+<p>javascript注释
+文件头上定义版权声明以及文件的主要描述信息</p>
+<pre><code class="lang-javascript"><span class="hljs-comment">/**
+ * <span class="hljs-doctag">@summary</span> Hap
+ * <span class="hljs-doctag">@description</span> 抽象通用函数
+ * <span class="hljs-doctag">@version</span> 1.0
+ * <span class="hljs-doctag">@author</span> njq.niu<span class="hljs-doctag">@hand</span>-china.com
+ * <span class="hljs-doctag">@copyright</span> Copyright Hand China Co.,Ltd.
+ */</span>
+</code></pre>
+<p>函数上注释</p>
+<pre><code class="lang-javascript">/**
+ * 提交表单数据(头行数据可一起提交).
+ * 
+ * <span class="hljs-symbol">&lt;ul&gt;</span>
+ * <span class="hljs-symbol">&lt;li&gt;</span><span class="hljs-keyword">options</span>.form: form对象&lt;/li&gt;
+ * <span class="hljs-symbol">&lt;li&gt;</span><span class="hljs-keyword">options</span>.grid: grid对象&lt;/li&gt;
+ * <span class="hljs-symbol">&lt;li&gt;</span><span class="hljs-keyword">options</span>.gridName: grid数据的name&lt;/li&gt;
+ * <span class="hljs-symbol">&lt;li&gt;</span><span class="hljs-keyword">options</span>.ur<span class="hljs-variable">l:</span> 提交的url&lt;/li&gt;
+ * <span class="hljs-symbol">&lt;li&gt;</span><span class="hljs-keyword">options</span>.succes<span class="hljs-variable">s:</span> success回调函数&lt;/li&gt;
+ * <span class="hljs-symbol">&lt;li&gt;</span><span class="hljs-keyword">options</span>.failure: failure回调函数&lt;/li&gt;
+ * &lt;/ul&gt;
+ * @param {<span class="hljs-keyword">options</span>}
+ */
+</code></pre>
+<p>freemarker 注释
+端界面主要采用freemarker模板技术，文件后缀名统一为.html</p>
+<pre><code class="lang-html">&lt;<span class="hljs-selector-id">#--</span>
+ * <span class="hljs-selector-tag">Description</span>: 快速编码修改界面
+ * <span class="hljs-selector-tag">Version</span>: 1<span class="hljs-selector-class">.0</span>
+ * <span class="hljs-selector-tag">Author</span>: <span class="hljs-selector-tag">njq</span><span class="hljs-selector-class">.niu</span>@<span class="hljs-keyword">hand</span>-<span class="hljs-keyword">china</span>.<span class="hljs-keyword">com</span>
+ * Copyright Hand China Co.,Ltd.
+--&gt;
+</code></pre>
+<p>css注释</p>
+<pre><code class="lang-css"><span class="hljs-string">/*!</span> 
+ <span class="hljs-string">*</span> <span class="hljs-attr">description:通用样式文件</span>
+ <span class="hljs-string">*</span> <span class="hljs-attr">version:</span> <span class="hljs-number">1.0</span>
+ <span class="hljs-string">*</span> <span class="hljs-attr">author:</span> <span class="hljs-string">njq.niu@hand-china.com</span>
+ <span class="hljs-string">*</span> <span class="hljs-string">Copyright</span> <span class="hljs-string">Hand</span> <span class="hljs-string">China</span> <span class="hljs-string">Co.,Ltd.</span>
+ <span class="hljs-string">*/</span>
+</code></pre>
+<p>脚本变量
+变量命名原则是减少变量冲突，采用Camel命名法。</p>
+<blockquote>
+<p>var [开发项ID]_[具体业务含义] = {}</p>
+</blockquote>
+<p>例如：用户管理界面中用户查询的form对象</p>
+<blockquote>
+<p>var d_um_002_form = $(&#39;#d_um_002_form&#39;).ligerForm({...})</p>
+</blockquote>
+<p>脚本函数名
+函数命名也采用Camel命名法.</p>
+<blockquote>
+<p>function [开发项ID]_<a href="">具体业务含义</a>{...}</p>
+</blockquote>
+<p>例如用户查询函数</p>
+<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">d_um_002_query</span><span class="hljs-params">()</span></span>{
+    ....
+}
+</code></pre>
+<p>####开发实践
+前端界面采用LigerUI开源框架，相同的显示效果可以采用多种代码方式来实现，为了规范项目组成员的代码样式，统一编码风格，避免以后维护的工作量，根据不同的应用场景总结以下几种开发实践.</p>
+<p>通用引入头文件</p>
+<p>界面中会引入一些资源文件，例如脚本，样式文件等。为了避免每个界面都重复引入增加工作量以及后续维护的困难，每个界面应该引入通用的文件头。</p>
+<pre><code class="lang-html">&lt;<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-string">"../../include/head.html"</span>&gt;</span>
+</code></pre>
+<p>界面多语言实现</p>
+<p>界面中的多语言在数据库中统一存放在sys_prompts表中，系统启动时加载进redis缓存。界面中实现多语言是通过freemarker的标签以及对应的多语言code来实现。
+例如：“确定”的多语言code是“sys.hand.btn.ok”在界面中的写法：</p>
+<pre><code class="lang-html">&lt;@<span class="hljs-keyword">spring</span>.<span class="hljs-keyword">message</span> <span class="hljs-string">"sys.hand.btn.ok"</span>/&gt;
+</code></pre>
+<p>表单(form)实现</p>
+<p>通过脚本方式来创建form对象，避免直接写html的方式创建.通过脚本方式更灵活，也更好控制</p>
+<ul>
+<li><p>第一步首先创建一个form的容器对象，一般我们采用div</p>
+<pre><code class="lang-html">&lt;<span class="hljs-keyword">div</span> <span class="hljs-built_in">id</span>=<span class="hljs-string">"d_um_002_form"</span> &gt;&lt;/<span class="hljs-keyword">div</span>&gt;
+</code></pre>
+</li>
+<li>在脚本中根据容器id创建form对象<pre><code class="lang-javascript"><span class="hljs-string">window['d_um_002_form']</span> <span class="hljs-string">=</span> <span class="hljs-string">$("#d_um_002_form").ligerForm({</span>
+<span class="hljs-attr"> fields:</span> <span class="hljs-string">[{</span>
+<span class="hljs-attr">     type:</span> <span class="hljs-string">'text'</span><span class="hljs-string">,</span>
+<span class="hljs-attr">     label:</span> <span class="hljs-string">'loginname'</span><span class="hljs-string">,</span>
+<span class="hljs-attr">     name:</span> <span class="hljs-string">'loginName'</span>
+ <span class="hljs-string">},</span> <span class="hljs-string">{</span>
+<span class="hljs-attr">     type:</span> <span class="hljs-string">'text'</span><span class="hljs-string">,</span>
+<span class="hljs-attr">     label:</span> <span class="hljs-string">'name'</span><span class="hljs-string">,</span>
+<span class="hljs-attr">     newline:</span> <span class="hljs-literal">false</span><span class="hljs-string">,</span>
+<span class="hljs-attr">     name:</span> <span class="hljs-string">'name'</span>
+ <span class="hljs-string">}],</span>
+<span class="hljs-attr"> buttons:</span> <span class="hljs-string">[{</span>
+<span class="hljs-attr">     text:</span> <span class="hljs-string">'查询'</span><span class="hljs-string">,</span>
+<span class="hljs-attr">     width:</span> <span class="hljs-number">60</span><span class="hljs-string">,</span>
+<span class="hljs-attr">     click:</span> <span class="hljs-string">function()</span> <span class="hljs-string">{</span>
+         <span class="hljs-string">Hap.gridQuery({</span>
+<span class="hljs-attr">             form:</span> <span class="hljs-string">d_um_002_form,</span>
+<span class="hljs-attr">             grid:</span> <span class="hljs-string">d_um_002_grid</span>
+         <span class="hljs-string">})</span>
+     <span class="hljs-string">}</span>
+ <span class="hljs-string">}]</span>
+<span class="hljs-string">});</span>
+</code></pre>
+</li>
+</ul>
+<p>一般的查询界面都会包含一个查询的表单，以及一个数据展示的grid，查询按钮函数中调用ajax把表单中的查询条件提交到后台返回json数据。这里可以直接调用Hap.gridQuery函数将form对象以及grid作为参数传递进去。
+具体Hap.gridQuery查询参数参考 Hap.js中的注释。</p>
+<p>表单校验</p>
+<p>表单验证采用的是jQuery validation库，因此表单验证写法一致。
+在field上定义validate对象</p>
+<pre><code class="lang-javascript">{
+    display : <span class="hljs-string">"用户名"</span>,
+    name : <span class="hljs-string">"userName"</span>,
+   <span class="hljs-built_in"> type </span>: <span class="hljs-string">"text"</span>,
+    validate : {
+        required : <span class="hljs-literal">true</span>,
+        minlength : 10
+    }
+}
+</code></pre>
+<p>对于复杂的校验逻辑可单独写一个脚本函数，在提交数据前调用判断。</p>
+<p>表单加载数据</p>
+<p>加载form数据可以通过调用Hap.loadForm函数</p>
+<pre><code class="lang-javascript"><span class="hljs-selector-tag">Hap</span><span class="hljs-selector-class">.loadForm</span>({
+    <span class="hljs-attribute">form</span>: form,
+    url: <span class="hljs-string">'${base.contextPath}/sys/code/query'</span>,
+    para: {}
+})
+</code></pre>
+<p>表格Grid</p>
+<ul>
+<li><p>定义grid的dom容器</p>
+<pre><code class="lang-html">&lt;<span class="hljs-keyword">div</span> <span class="hljs-built_in">id</span>=<span class="hljs-string">"d_um_002_grid"</span> style=<span class="hljs-string">"margin: 0; padding: 0"</span>&gt;&lt;/<span class="hljs-keyword">div</span>&gt;
+</code></pre>
+</li>
+<li><p>根据id生成grid对象</p>
+<pre><code class="lang-javascript"><span class="hljs-built_in">window</span>[<span class="hljs-string">'d_um_002_grid'</span>] = $(<span class="hljs-string">"#d_um_002_grid"</span>).ligerGrid({})
+</code></pre>
+</li>
+</ul>
+<p>Grid工具栏</p>
+<ul>
+<li>新增按钮</li>
+</ul>
+<pre><code class="lang-javascript">{ 
+      text: '&lt;@spring.message <span class="hljs-string">"sys.hand.btn.new"</span>/&gt;', 
+      click: function(){
+        d_um_002_grid.addRow({})
+      }, 
+      icon: 'add' 
+}
+</code></pre>
+<ul>
+<li><p>删除按钮</p>
+<pre><code class="lang-javascript">{ 
+<span class="hljs-attribute">text</span>: <span class="hljs-string">'&lt;@spring.message "sys.hand.btn.delete"/&gt;'</span>, 
+click: <span class="hljs-built_in">function</span>(){
+    Hap.<span class="hljs-built_in">gridDelete</span>({
+        grid:d_um_002_grid, 
+        url:<span class="hljs-string">'${base.contextPath}/sys/user/remove'</span>
+    }) 
+}
+}
+</code></pre>
+</li>
+</ul>
+<p>Hap.gridDelete函数具体参数如下:</p>
+<pre><code class="lang-javascript"><span class="xml">/**
+ * 表格删除函数代理. 
+ * <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+ * <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>options.grid: grid对象<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+ * <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>options.confirmTip: 是否删除提示信息<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+ * <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>options.url: 提交删除的url<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+ * <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>options.waitingTip: 等待提示信息<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+ * <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>options.successTip: 删除成功提示信息<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+ * <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>options.infoTip:提示标题信息<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+ * <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+ * @param </span><span class="hljs-template-variable">{options}</span><span class="xml">  删除配置选项
+ * /</span>
+</code></pre>
+<ul>
+<li><p>保存函数</p>
+<pre><code class="lang-javascript">{ 
+ <span class="hljs-attribute">text</span>: <span class="hljs-string">'&lt;@spring.message "sys.hand.btn.save"/&gt;'</span>, 
+ <span class="hljs-attribute">click</span>: function(){
+     Hap.gridSave({
+         <span class="hljs-attribute">grid</span>:d_um_002_grid,
+         <span class="hljs-attribute">url</span>:<span class="hljs-string">'${base.contextPath}/sys/user/submit'</span>
+      }) 
+   }, 
+  <span class="hljs-attribute">icon</span>: <span class="hljs-string">'save'</span>}
+</code></pre>
+<p><strong>注意: 为了客户端不再重新刷新，服务端一定要返回提交的数据</strong> </p>
+<pre><code class="lang-java"><span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-type">ResponseData</span>(users);
+</code></pre>
+</li>
+</ul>
+<p>Hap.gridSave函数可对新增以及修改过的数据统一提交到服务端.
+gridSave函数的具体参数如下:</p>
+<pre><code class="lang-javascript"><span class="xml">/**
+ * 表格保存函数代理.
+ * <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+ * <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>options.grid: grid对象<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+ * <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>options.url: 保存的url<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+ * <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>options.waitingTip: 等待提示信息<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+ * <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>options.successTip: 删除成功提示信息<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+ * <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>options.infoTip:提示标题信息<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+ * <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+ * @param </span><span class="hljs-template-variable">{options}</span><span class="xml"> 删除配置选项
+ */</span>
+</code></pre>
+<p>JSON数据格式</p>
+<p>grid和服务端的数据交互统一采用json格式</p>
+<pre><code class="lang-javascript">{
+        <span class="hljs-attribute">success</span>:true,
+        rows[{},{}],
+        <span class="hljs-selector-tag">total</span><span class="hljs-selector-pseudo">:10</span>
+}
+</code></pre>
+<p>success: ajax是否成功的标志 true|false
+rows: 返回的数据集
+total: 总记录数</p>
+<p>需要在grid中定义json的格式属性</p>
+<pre><code class="lang-javascript"><span class="hljs-string">pageSize:</span> <span class="hljs-number">10</span>, <span class="hljs-comment">//分页大小</span>
+<span class="hljs-string">root:</span> <span class="hljs-string">'rows'</span>,<span class="hljs-comment">//数据集字段</span>
+<span class="hljs-string">record:</span> <span class="hljs-string">'total'</span><span class="hljs-comment">//总记录数字段</span>
+</code></pre>
+<p>头行关系</p>
+<p>头行数据建议采用form+grid的形式.其中form展现头信息，grid展现行信息。
+form和grid的定义参考以上章节，这里主要介绍保存逻辑</p>
+<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">f_save</span><span class="hljs-params">()</span> {</span>
+            Hap.submitForm({
+                form:form,
+                grid:codeValueGrid,
+                gridName:<span class="hljs-string">'codeValues'</span>,
+                url:<span class="hljs-string">'${base.contextPath}/sys/code/submit'</span>,
+                success:<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(json,opt)</span>{</span>
+                    $.ligerDialog.success(
+         <span class="hljs-string">'&lt;@spring.message "</span>sys.hand.tip.success<span class="hljs-string">"/&gt;'</span>, 
+         <span class="hljs-string">'&lt;@spring.message "</span>sys.hand.tip.info<span class="hljs-string">"/&gt;'</span>, 
+          <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span>{</span>
+                        parent.d_sc_002_grid.reload();
+                        f_cancel();
+                    });
+
+                }
+            });
+}
+</code></pre>
+<blockquote>
+<p>头行保存这里调用了Hap.submitForm方法，参数对象中包含了form对象以及grid对象，gridName定义行数据存放在头上的属性名。</p>
+</blockquote>
+<pre><code class="lang-javascript">/**
+ * 提交表单数据(头行数据可一起提交).
+ * 
+ * <span class="hljs-symbol">&lt;ul&gt;</span>
+ * <span class="hljs-symbol">&lt;li&gt;</span><span class="hljs-keyword">options</span>.form: form对象&lt;/li&gt;
+ * <span class="hljs-symbol">&lt;li&gt;</span><span class="hljs-keyword">options</span>.grid: grid对象&lt;/li&gt;
+ * <span class="hljs-symbol">&lt;li&gt;</span><span class="hljs-keyword">options</span>.gridName: grid数据的name&lt;/li&gt;
+ * <span class="hljs-symbol">&lt;li&gt;</span><span class="hljs-keyword">options</span>.ur<span class="hljs-variable">l:</span> 提交的url&lt;/li&gt;
+ * <span class="hljs-symbol">&lt;li&gt;</span><span class="hljs-keyword">options</span>.succes<span class="hljs-variable">s:</span> success回调函数&lt;/li&gt;
+ * <span class="hljs-symbol">&lt;li&gt;</span><span class="hljs-keyword">options</span>.failure: failure回调函数&lt;/li&gt;
+ * &lt;/ul&gt;
+ * @param {<span class="hljs-keyword">options</span>}
+ */
+</code></pre>
+<p>通用lov设置</p>
+<p>系统中可以设置一些常用的lov方便其他模块调用。
+进入系统功能-&gt;lov定义</p>
+<p>点击新增按钮，创建一个lov
+<img src="http://7xruj6.com1.z0.glb.clouddn.com/sys_lov_edit.png" alt="enter image description here"></p>
+<p>form字段说明：</p>
+<ul>
+<li><strong><code>代码</code></strong>  lov的编码，全局唯一，通过此code获取lov</li>
+<li><strong><code>描述</code></strong>   lov的描述字段，仅用于说明</li>
+<li><strong><code>sqlid</code></strong> lov查询的sqlid，对应后台xml中sql的id</li>
+<li><strong><code>标题</code></strong> 弹出lov的标题</li>
+<li><strong><code>valueField</code></strong> popup中的valueField字段</li>
+<li><strong><code>textField</code></strong> popup中的textField字段</li>
+<li><strong><code>宽度</code></strong> lov的宽度</li>
+<li><strong><code>高度</code></strong> lov的高度</li>
+<li><strong><code>延迟加载</code></strong> grid数据是否自动加载</li>
+<li><p><strong><code>查询条件必输</code></strong> 是否必须输入查询条件</p>
+<p>grid字段说明</p>
+</li>
+<li><p><strong><code>显示</code></strong> 字段的描述(支持多语言)</p>
+</li>
+<li><strong><code>字段名</code></strong> 字段的name</li>
+<li><strong><code>列宽度</code></strong> 字段的宽度</li>
+<li><ul>
+<li><strong><code>表格列</code></strong> 是否是表格字段</li>
+</ul>
+</li>
+<li><strong><code>查询字段</code></strong> 是否是查询字段</li>
+<li><strong><code>列序号</code></strong> 表格列排序号</li>
+<li><strong><code>查询配置</code></strong> 如果“查询字段”为“是”，配置查询字段类型</li>
+<li><strong><code>自动完成</code></strong> 是否是自动完成列(每个表格列只能有唯一一个自动完成列)</li>
+</ul>
+<p>点击&quot;查询配置&quot;，配置查询字段</p>
+<p><img src="http://7xruj6.com
+1.z0.glb.clouddn.com/sys_lov_select.png" alt="enter image description here"></p>
+<p><img src="http://7xruj6.com1.z0.glb.clouddn.com/sys_lov_lov.png" alt="enter image description here">
+查询字段可以配置多种类型，文本，数字，下拉框以及值列表</p>
+<ul>
+<li><strong><code>字段类型</code></strong> 查询字段的类型</li>
+<li><strong><code>新行</code></strong> 是否新开一行显示</li>
+<li><strong><code>查询字段宽度</code></strong> 查询字段宽度</li>
+<li><strong><code>查询字段序号</code></strong> 查询字段排序号</li>
+<li><strong><code>查询字段名</code></strong> 查询字段名</li>
+<li><strong><code>快速编码</code></strong> 当“字段类型”为“下拉框”时指定快速编码的code</li>
+<li><strong><code>通用lov编码</code></strong> 当“字段类型”为“值列表”时指定通用lov编码</li>
+</ul>
+<p>定义好lov配置后，在html中通过以下代码生成lov
+<code>${lovService.getLov(contextPath,locale,code)}</code></p>
+<p>grid中</p>
+<pre><code class="lang-javascript">{ 
+    <span class="hljs-attribute">display </span>: <span class="hljs-string">'通用lov1'</span>,
+    name : <span class="hljs-string">'roleId'</span>,
+    width : <span class="hljs-number">150</span>,
+    textField:<span class="hljs-string">'roleName'</span>,
+    align: <span class="hljs-string">'left'</span>,
+    editor: ${lovService.<span class="hljs-built_in">getLov</span>(base.contextPath,base.locale, <span class="hljs-string">"lov_role"</span>)} 
+}
+</code></pre>
+<p>form中</p>
+<pre><code class="lang-javascript">{
+    <span class="hljs-attribute">display </span>: <span class="hljs-string">"通用lov(角色)"</span>,
+    name : <span class="hljs-string">"roleId"</span>,
+    type : <span class="hljs-string">"popup"</span>,
+    newline : false,
+    textField:<span class="hljs-string">'roleName'</span>,
+    group : <span class="hljs-string">"基本信息"</span>,
+    options:${lovService.<span class="hljs-built_in">getLov</span>(base.contextPath,base.locale, <span class="hljs-string">"lov_role"</span>)}
+}
+</code></pre>
+<p>###多语言编辑器###
+框架中提供了TLEdit编辑器来统一多语言设置。
+首先更新到最新的框架版本.</p>
+<p>form中使用TLEdit</p>
+<pre><code class="lang-javascript">{
+    <span class="hljs-attribute">display</span>: <span class="hljs-string">'&lt;@spring.message "code.description"/&gt;'</span>,
+    <span class="hljs-attribute">name</span>: <span class="hljs-string">'description'</span>,
+    <span class="hljs-attribute">type</span>: <span class="hljs-string">'tl'</span>,
+    <span class="hljs-attribute">options</span>: {
+        <span class="hljs-attribute">idField</span>: <span class="hljs-string">'codeId'</span>,
+        <span class="hljs-attribute">dto</span>: <span class="hljs-string">'com.hand.hap.sys.dto.Code'</span>
+    }
+}
+</code></pre>
+<p>grid中使用TLEdit</p>
+<pre><code class="lang-javascript">{
+    <span class="hljs-attribute">display</span>: <span class="hljs-string">'&lt;@spring.message "codevalue.description"/&gt;'</span>,
+    <span class="hljs-attribute">name</span>: <span class="hljs-string">'description'</span>,
+    <span class="hljs-attribute">width</span>: <span class="hljs-number">200</span>,
+    <span class="hljs-attribute">align</span>: <span class="hljs-string">'left'</span>,
+    <span class="hljs-attribute">editor</span>: {
+        <span class="hljs-attribute">type</span>: <span class="hljs-string">'tl'</span>,
+        <span class="hljs-attribute">idField</span>: <span class="hljs-string">'codeValueId'</span>,
+        <span class="hljs-attribute">dto</span>: <span class="hljs-string">'com.hand.hap.sys.dto.CodeValue'</span>
+    }
+}
+</code></pre>
+<p>字段说明 ：</p>
+<ul>
+<li><strong><code>name</code></strong> 多语言字段名</li>
+<li><strong><code>type</code></strong> 多语言编辑器&#39;tl&#39;</li>
+<li><strong><code>idField</code></strong> dto中主键字段名（确保当前form中有对应的值)</li>
+<li><strong><code>dto</code></strong> dto的类名</li>
+</ul>

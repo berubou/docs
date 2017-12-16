@@ -1,0 +1,37 @@
+<h1 id="-ldap-">开启LDAP验证</h1>
+<p>HAP框架支持LDAP验证（如果还没有LDAP服务器,可以参考<a href="ldap-server.md">LDAP服务器搭建</a>) 启用LDAP验证的步骤如下：</p>
+<h2 id="1-standardsecurity-xml">1 修改 standardSecurity.xml</h2>
+<p>修改src/main/resources/spring目录下的文件standardSecurity.xml，文件54行左右内容如下：</p>
+<pre><code class="lang-xml"><span class="hljs-comment">&lt;!--&lt;beans:import resource="standardSecurity-LDAP.xml"/&gt;--&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">authentication-manager</span>&gt;</span>
+ <span class="hljs-comment">&lt;!--Ldap验证--&gt;</span>
+ <span class="hljs-comment">&lt;!-- &lt;authentication-provider ref="ldapAuthProvider" /&gt;--&gt;</span>
+ <span class="hljs-comment">&lt;!--标准登录验证--&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">authentication-provider</span> <span class="hljs-attr">user-service-ref</span>=<span class="hljs-string">"customUserDetailsService"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">password-encoder</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"passwordManager"</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">authentication-provider</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">authentication-manager</span>&gt;</span>
+</code></pre>
+<p>可以同时开启Ldap验证和标准验证，注意两个provider顺序，优先验证前者。</p>
+<blockquote>
+<p>开启ldap验证 请把<beans:import>...也取消注释，注册相关bean</p>
+<p>如果同时使用两种验证，注意密码问题，hap中设置的密码和ldap中的密码将都可以成功登录。建议做法是，导入到数据库里的用户，密码都设置为null或者空字符串，则用户密码验证不会通过</p>
+</blockquote>
+<h2 id="2-config-properties">2 修改 config.properties</h2>
+<p>修改 src/main/resources/config.properties 文件，将其中的LDAP部分根据实际情况修改：</p>
+<pre><code class="lang-properties">
+<span class="hljs-selector-id">#LDAP</span>
+#LDAP服务器的URL 可以设置远程服务器　注意是ldap开头的url
+ldap<span class="hljs-selector-class">.server</span><span class="hljs-selector-class">.url</span>=ldap:<span class="hljs-comment">//localhost:389/</span>
+#登录LDAP服务器的用户凭证 根据实际服务器的配置修改
+ldap<span class="hljs-selector-class">.conn</span><span class="hljs-selector-class">.userDn</span>=cn=Manager,dc=hand,dc=com
+ldap<span class="hljs-selector-class">.conn</span><span class="hljs-selector-class">.password</span>=secret
+#用户查询策略 在指定的目录下查询
+ldap<span class="hljs-selector-class">.user</span><span class="hljs-selector-class">.search</span><span class="hljs-selector-class">.base</span>=dc=hand,dc=com
+#匹配条件 默认匹配uid　
+ldap<span class="hljs-selector-class">.user</span><span class="hljs-selector-class">.search</span><span class="hljs-selector-class">.filter</span>=(uid={<span class="hljs-number">0</span>})
+</code></pre>
+<p>至此LDAP验证已经开启，确保LDAP服务器正常运行，且用户表中有与LDAP指定目录相同的用户名，并且分配适当角色，则可以正常登陆</p>
+<p>如果需要更精确的配置请参考文章
+  <a href="http://lengyun3566.iteye.com/blog/1358321">http://lengyun3566.iteye.com/blog/1358321</a></p>
+<p>  修改 src/main/resources/spring目录下的配置文件 standardSecurity-LDAP.xml</p>

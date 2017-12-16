@@ -1,0 +1,176 @@
+<h1 id="mongodb-">MongoDB 集成</h1>
+<p>HAP使用 spring-data-mongodb 进行对MongoDB的访问。</p>
+<h2 id="1-">1 版本说明</h2>
+<p>示例使用1.10.7.RELEASE版本的spring-data-mongodb（需要spring版本最低4.3.11.RELEASE）</p>
+<p>HAP在3.20之后升级spring版本为4.3.11.RELEASE(不支持1.10.7以上版本的spring-data-mongodb)</p>
+<h2 id="2-">2 配置说明</h2>
+<p>在pom文件中添加</p>
+<pre><code class="lang-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.data<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-data-mongodb<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.10.7.RELEASE<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+</code></pre>
+<p>添加application-mongodb.xml文件</p>
+<p>(参考文档) <a href="https://docs.spring.io/spring-data/mongodb/docs/current/reference/html/#mongo.mongo-xml-config">https://docs.spring.io/spring-data/mongodb/docs/current/reference/html/#mongo.mongo-xml-config</a></p>
+<pre><code class="lang-xml"><span class="xml"><span class="php"><span class="hljs-meta">&lt;?</span>xml version=<span class="hljs-string">"1.0"</span> encoding=<span class="hljs-string">"UTF-8"</span><span class="hljs-meta">?&gt;</span></span>
+<span class="hljs-tag">&lt;<span class="hljs-name">beans</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">"http://www.springframework.org/schema/beans"</span>
+       <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">"http://www.w3.org/2001/XMLSchema-instance"</span>
+       <span class="hljs-attr">xmlns:mongo</span>=<span class="hljs-string">"http://www.springframework.org/schema/data/mongo"</span>
+       <span class="hljs-attr">xmlns:context</span>=<span class="hljs-string">"http://www.springframework.org/schema/context"</span>
+       <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">context:property-placeholder</span> <span class="hljs-attr">location</span>=<span class="hljs-string">"classpath:config.properties"</span>/&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">mongo:mongo</span> <span class="hljs-attr">host</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{mongo.host}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span> <span class="hljs-attr">port</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{mongo.port}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">mongo:options</span> <span class="hljs-attr">connections-per-host</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{mongo.connections-per-host}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>
+                       <span class="hljs-attr">threads-allowed-to-block-for-connection-multiplier</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{mongo.threads-allowed-to-block-for-connection-multiplier}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>
+                       <span class="hljs-attr">connect-timeout</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{mongo.connect-timeout}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>
+                       <span class="hljs-attr">max-wait-time</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{mongo.max-wait-time}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>
+                       <span class="hljs-attr">auto-connect-retry</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{mongo.auto-connect-retry}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>
+                       <span class="hljs-attr">socket-keep-alive</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{mongo.socket-keep-alive}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>
+                       <span class="hljs-attr">socket-timeout</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{mongo.socket-timeout}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>
+                       <span class="hljs-attr">slave-ok</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{mongo.slave-ok}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>
+                       <span class="hljs-attr">write-number</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{mongo.write-number}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>
+                       <span class="hljs-attr">write-timeout</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{mongo.write-timeout}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>
+                       <span class="hljs-attr">write-fsync</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{mongo.write-fsync}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">mongo:mongo</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">mongo:db-factory</span>   <span class="hljs-attr">id</span>=<span class="hljs-string">"mongoDbFactory"</span>
+                        <span class="hljs-attr">mongo-ref</span>=<span class="hljs-string">"mongo"</span>
+                        <span class="hljs-attr">dbname</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{mongo.dbname}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>
+                        <span class="hljs-attr">username</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{mongo.username}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>
+                        <span class="hljs-attr">password</span>=<span class="hljs-string">"$</span></span></span><span class="hljs-template-variable">{mongo.password}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span>/&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"simpleMongoTemplate"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"org.springframework.data.mongodb.core.MongoTemplate"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">constructor-arg</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"mongoDbFactory"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"mongoDbFactory"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-name">beans</span>&gt;</span></span>
+</code></pre>
+<h2 id="3-">3 使用说明</h2>
+<h3 id="3-1-">3.1 项目结构</h3>
+<p><img src="/assets/mongo-test.png" alt=""></p>
+<h3 id="3-2-dto">3.2 dto</h3>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Mongo</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Serializable</span> {</span>
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">long</span> serialVersionUID = <span class="hljs-number">1</span>L;
+    <span class="hljs-meta">@Id</span>
+    <span class="hljs-keyword">private</span> String id;
+    <span class="hljs-keyword">private</span> String name;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> age;
+    <span class="hljs-keyword">private</span> String password;
+
+    <span class="hljs-meta">@DBRef</span>
+    <span class="hljs-comment">/** mongodb的注解，文档之间建立引用关联关系，可以认为是关系型数据库中的外键，
+     *  需要在关联类中声明<span class="hljs-doctag">@Id</span>（org.springframework.data.annotation.Id）
+    **/</span>
+    <span class="hljs-keyword">private</span> MongoLink mongoLink;
+
+     <span class="hljs-comment">//省略 set()... get()..</span>
+    }
+</code></pre>
+<pre><code class="lang-java">    <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MongoLink</span> </span>{
+
+    @Id
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">String</span> MongoId;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">String</span> linkName;
+
+    <span class="hljs-comment">//省略 set()... get()..</span>
+    }
+</code></pre>
+<h3 id="3-3-service">3.3 service</h3>
+<pre><code class="lang-java">public <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">IMongoService</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ProxySelf</span>&lt;<span class="hljs-title">IMongoService</span>&gt; </span>{
+    <span class="hljs-comment">//添加</span>
+     <span class="hljs-keyword">void</span> insert(Mongo object);
+    <span class="hljs-comment">//根据条件查找</span>
+     Mongo findOne(<span class="hljs-built_in">Map</span>&lt;<span class="hljs-built_in">String</span>, <span class="hljs-built_in">Object</span>&gt; params);
+    <span class="hljs-comment">//查找所有</span>
+     <span class="hljs-built_in">List</span>&lt;Mongo&gt; findAll(<span class="hljs-built_in">Map</span>&lt;<span class="hljs-built_in">String</span>, <span class="hljs-built_in">Object</span>&gt; params);
+     <span class="hljs-comment">//根据pojo查找</span>
+     <span class="hljs-built_in">List</span>&lt;Mongo&gt; find(Mongo mongo);
+    <span class="hljs-comment">//修改</span>
+     <span class="hljs-keyword">void</span> update(<span class="hljs-built_in">Map</span>&lt;<span class="hljs-built_in">String</span>, <span class="hljs-built_in">Object</span>&gt; params);
+    <span class="hljs-comment">//根据条件删除</span>
+     <span class="hljs-keyword">void</span> remove(<span class="hljs-built_in">Map</span>&lt;<span class="hljs-built_in">String</span>, <span class="hljs-built_in">Object</span>&gt; params);
+}
+</code></pre>
+<h3 id="3-4-impl">3.4 impl</h3>
+<pre><code class="lang-java"><span class="hljs-meta">@Service</span>
+public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MongoServiceImpl</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">IMongoService</span></span>{
+
+    <span class="hljs-meta">@Autowired</span>
+    MongoTemplate simpleMongoTemplate;
+
+
+    <span class="hljs-meta">@Override</span>
+    public <span class="hljs-keyword">void</span> insert(Mongo object) {
+    <span class="hljs-comment">//如果使用ref则需要先将MongoLink插入数据库</span>
+        Optional.ofNullable(object.getMongoLink()).ifPresent(v-&gt;{
+            simpleMongoTemplate.insert(v);
+        });
+        simpleMongoTemplate.insert(object);
+    }
+
+    <span class="hljs-meta">@Override</span>
+    public Mongo findOne(<span class="hljs-built_in">Map</span>&lt;<span class="hljs-built_in">String</span>, <span class="hljs-built_in">Object</span>&gt; params) {
+        <span class="hljs-keyword">return</span> simpleMongoTemplate.findOne(<span class="hljs-keyword">new</span> Query(Criteria.where(<span class="hljs-string">"id"</span>).<span class="hljs-keyword">is</span>(params.<span class="hljs-keyword">get</span>(<span class="hljs-string">"id"</span>))),Mongo.<span class="hljs-keyword">class</span>);
+    }
+
+    <span class="hljs-meta">@Override</span>
+    public <span class="hljs-built_in">List</span>&lt;Mongo&gt; findAll(<span class="hljs-built_in">Map</span>&lt;<span class="hljs-built_in">String</span>, <span class="hljs-built_in">Object</span>&gt; params) {
+    <span class="hljs-comment">//skip 和limit配合使用来进行分页</span>
+        <span class="hljs-keyword">return</span> simpleMongoTemplate.find(<span class="hljs-keyword">new</span> Query().skip(<span class="hljs-number">0</span>).limit(<span class="hljs-number">2</span>), Mongo.<span class="hljs-keyword">class</span>);
+    }
+
+    <span class="hljs-meta">@Override</span>
+    public <span class="hljs-built_in">List</span>&lt;Mongo&gt; find(Mongo mongo) {
+        <span class="hljs-keyword">return</span> simpleMongoTemplate.find(<span class="hljs-keyword">new</span> Query(Criteria.byExample(mongo)),Mongo.<span class="hljs-keyword">class</span>);
+    }
+
+    <span class="hljs-meta">@Override</span>
+    public <span class="hljs-keyword">void</span> update(<span class="hljs-built_in">Map</span>&lt;<span class="hljs-built_in">String</span>, <span class="hljs-built_in">Object</span>&gt; params) {
+        simpleMongoTemplate.upsert(<span class="hljs-keyword">new</span> Query(Criteria.where(<span class="hljs-string">"age"</span>).<span class="hljs-keyword">is</span>(params.<span class="hljs-keyword">get</span>(<span class="hljs-string">"age"</span>))), <span class="hljs-keyword">new</span> Update().<span class="hljs-keyword">set</span>(<span class="hljs-string">"name"</span>, params.<span class="hljs-keyword">get</span>(<span class="hljs-string">"name"</span>)), Mongo.<span class="hljs-keyword">class</span>);
+    }
+
+    <span class="hljs-meta">@Override</span>
+    public <span class="hljs-keyword">void</span> remove(<span class="hljs-built_in">Map</span>&lt;<span class="hljs-built_in">String</span>, <span class="hljs-built_in">Object</span>&gt; params) {
+        simpleMongoTemplate.remove(<span class="hljs-keyword">new</span> Query(Criteria.where(<span class="hljs-string">"id"</span>).<span class="hljs-keyword">is</span>(params.<span class="hljs-keyword">get</span>(<span class="hljs-string">"id"</span>))),Mongo.<span class="hljs-keyword">class</span>);
+    }
+}
+</code></pre>
+<h3 id="3-5-controller">3.5 Controller</h3>
+<pre><code class="lang-java">@RestController
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">MongoController</span> {
+
+    @Autowired
+    IMongoService iMongoService;
+
+    @RequestMapping(<span class="hljs-string">"/mongo/test"</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">mongoTest</span>(<span class="hljs-params"></span>)</span>{
+        Mongo mongo=<span class="hljs-keyword">new</span> Mongo();
+        mongo.setAge(<span class="hljs-number">10</span>);
+        iMongoService.insert(mongo);
+
+        Map&lt;String,Object&gt; <span class="hljs-keyword">params</span>=<span class="hljs-keyword">new</span> HashMap&lt;String,Object&gt;();
+        <span class="hljs-keyword">params</span>.put(<span class="hljs-string">"age"</span>,<span class="hljs-number">10</span>);
+        <span class="hljs-keyword">params</span>.put(<span class="hljs-string">"name"</span>,<span class="hljs-string">"userA"</span>);
+        iMongoService.update(<span class="hljs-keyword">params</span>);
+
+        MongoLink mongoLink=<span class="hljs-keyword">new</span> MongoLink();
+        mongoLink.setLinkName(<span class="hljs-string">"LinKA"</span>);
+        mongo.setMongoLink(mongoLink);
+
+        iMongoService.insert(mongo);
+
+        <span class="hljs-keyword">params</span>.put(<span class="hljs-string">"id"</span>, <span class="hljs-string">"1"</span>);
+        iMongoService.<span class="hljs-keyword">remove</span>(<span class="hljs-keyword">params</span>);
+
+        iMongoService.find(mongo);
+    }
+}
+</code></pre>
+<h2 id="4-">4 结果展示</h2>
+<p><img src="/assets/mongodb-result.png" alt=""></p>
+<p>注：$ref 为使用@DBRef 之后的document结构。</p>

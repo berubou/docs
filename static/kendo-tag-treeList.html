@@ -1,0 +1,441 @@
+<p>treeList</p>
+<hr>
+<p>树列表</p>
+<h5 id="xml-">xml配置</h5>
+<pre><code class="lang-xml">
+ <span class="hljs-comment">&lt;!--h:为命名空间,必须要加的;treeList为组件名;id可写可不写--&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">h:treeList</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"testTreeList"</span>&gt;</span>
+    ...
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:treeList</span>&gt;</span>
+</code></pre>
+<h4 id="-"><strong>一般属性</strong></h4>
+<blockquote>
+<p><strong>提示:</strong></p>
+<ul>
+<li>属性用法请参考kendoui API文档的treeList: <a href="http://docs.telerik.com/kendo-ui/api/javascript/ui/treelist">http://docs.telerik.com/kendo-ui/api/javascript/ui/treelist</a></li>
+</ul>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>columnMenu</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>autoBind</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>dataSource</td>
+<td>kendo.data.TreeListDataSource</td>
+</tr>
+<tr>
+<td>resizable</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>reorderable</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>editable</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>height</td>
+<td>Integer &amp; String</td>
+</tr>
+<tr>
+<td>scrollable</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>selectable</td>
+<td>Boolean &amp; String </td>
+</tr>
+<tr>
+<td>sortable</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>autoScroll</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>toolbar</td>
+<td>String &amp; function</td>
+</tr>
+<tr>
+<td>cancel</td>
+<td>function</td>
+</tr>
+<tr>
+<td>change</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>columnHide</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>columnMenuInit</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>columnReorder</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>columnResize</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>columnShow</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>columnLock</td>
+<td>function</td>
+</tr>
+<tr>
+<td>columnUnlock</td>
+<td>function</td>
+</tr>
+<tr>
+<td>dataBinding</td>
+<td>function</td>
+</tr>
+<tr>
+<td>dataBound</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>dragstart</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>drag</td>
+<td>function</td>
+</tr>
+<tr>
+<td>dragend</td>
+<td>function</td>
+</tr>
+<tr>
+<td>drop</td>
+<td>function</td>
+</tr>
+<tr>
+<td>edit</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>excelExport</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>expand</td>
+<td>function</td>
+</tr>
+<tr>
+<td>filterMenuInit</td>
+<td>function</td>
+</tr>
+<tr>
+<td>pdfExport</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>remove</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>save</td>
+<td>Function</td>
+</tr>
+</tbody>
+</table>
+<p>用法示例：</p>
+<pre><code class="lang-javascript"><span class="hljs-comment">//注意是写在script标签里的内容</span>
+<span class="hljs-keyword">var</span> treeListData = <span class="hljs-keyword">new</span> kendo.data.TreeListDataSource({
+    <span class="hljs-string">"data"</span>:[{<span class="hljs-string">"name"</span>:<span class="hljs-string">"z"</span>,<span class="hljs-string">"age"</span>:<span class="hljs-string">"12"</span>},
+            {<span class="hljs-string">"name"</span>:<span class="hljs-string">"t"</span>,<span class="hljs-string">"age"</span>:<span class="hljs-string">"16"</span>}]
+});
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">test</span><span class="hljs-params">()</span></span>{
+    ...
+}
+</code></pre>
+<pre><code class="lang-xml"><span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">h:treeList</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"testTreeList"</span> <span class="hljs-attr">dataSource</span>=<span class="hljs-string">"treeListData"</span> <span class="hljs-attr">editable</span>=<span class="hljs-string">"true"</span>&gt;</span>
+     <span class="hljs-tag">&lt;<span class="hljs-name">h:columns</span>&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-name">h:column</span> <span class="hljs-attr">field</span>=<span class="hljs-string">"name"</span> <span class="hljs-attr">width</span>=<span class="hljs-string">"300"</span> <span class="hljs-attr">editor</span>=<span class="hljs-string">"test"</span>&lt;/<span class="hljs-attr">h:column</span>&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-name">h:column</span> <span class="hljs-attr">field</span>=<span class="hljs-string">"age"</span> <span class="hljs-attr">width</span>=<span class="hljs-string">"200"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">h:column</span>&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-name">h:column</span>&gt;</span>
+             <span class="hljs-tag">&lt;<span class="hljs-name">h:command</span>&gt;</span>
+                 <span class="hljs-tag">&lt;<span class="hljs-name">h:item</span> <span class="hljs-attr">click</span>=<span class="hljs-string">"test"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"detail"</span>/&gt;</span>
+                 <span class="hljs-tag">&lt;<span class="hljs-name">h:item</span> <span class="hljs-attr">click</span>=<span class="hljs-string">"test"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"read"</span>/&gt;</span>
+             <span class="hljs-tag">&lt;/<span class="hljs-name">h:command</span>&gt;</span>
+         <span class="hljs-tag">&lt;/<span class="hljs-name">h:column</span>&gt;</span>
+     <span class="hljs-tag">&lt;/<span class="hljs-name">h:columns</span>&gt;</span>
+ <span class="hljs-tag">&lt;/<span class="hljs-name">h:treeList</span>&gt;</span></span>
+</code></pre>
+<blockquote>
+<p><strong>提示:</strong></p>
+<ul>
+<li>上述所有属性直接添加在标签内即可，（<strong>[属性名] = &quot;...&quot;</strong>）,对于类型是函数的属性，需要另外在script标签中具体定义函数，这里只是一个引用,对于类型<strong>既是函数又是字符串</strong>类型的属性，一定要加<strong>fn:</strong> 来区分，加fn:的代表这是一个函数，对于<strong>既是字符串又是数组</strong>的属性，数组内容只需要用<strong>逗号分割</strong>即可</li>
+</ul>
+</blockquote>
+<h4 id="-"><strong>子标签</strong></h4>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>columns</td>
+<td>Array</td>
+</tr>
+<tr>
+<td>editable</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>messages</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>scrollable</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>sortable</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>toolbar</td>
+<td>Array</td>
+</tr>
+</tbody>
+</table>
+<h6 id="-columns-"><strong>columns</strong>子标签</h6>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>attributes</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>command</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>editor</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>encoded</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>expandable</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>field</td>
+<td>String</td>
+</tr>
+<tr>
+<td>filterable</td>
+<td>Boolean &amp; Object</td>
+</tr>
+<tr>
+<td>footerTemplate</td>
+<td>String &amp; Function</td>
+</tr>
+<tr>
+<td>format</td>
+<td>String</td>
+</tr>
+<tr>
+<td>headerAttributes</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>headerTemplate</td>
+<td>String &amp; Function</td>
+</tr>
+<tr>
+<td>minScreenWidth</td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>sortable</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>template</td>
+<td>String &amp; Function</td>
+</tr>
+<tr>
+<td>title</td>
+<td>String</td>
+</tr>
+<tr>
+<td>width</td>
+<td>Integer &amp; String</td>
+</tr>
+<tr>
+<td>hidden</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>menu</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>locked</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>lockable</td>
+<td>Boolean</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>template的类型既可以是Sting，有可以是function，则当使用类型为function时，需要function名的的前面加<code>fn:</code>前缀</p>
+<pre><code class="lang-javacript">//script标签内的example函数
+function example()<span class="hljs-meta">{...}</span>
+</code></pre>
+<pre><code class="lang-xml"> <span class="hljs-tag">&lt;<span class="hljs-name">h:xxx</span>&gt;</span>
+    ...
+ <span class="hljs-comment">&lt;!--template的前缀fn: 表明此时是函数，example为script中定义的函数名--&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h:xxx</span> <span class="hljs-attr">template</span>=<span class="hljs-string">"fn:example"</span> /&gt;</span>
+    ...
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:xxx</span>&gt;</span>
+</code></pre>
+</blockquote>
+<p>######<strong>editable</strong>子标签</p>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mode</td>
+<td>String</td>
+</tr>
+<tr>
+<td>move</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>template</td>
+<td>String &amp; function</td>
+</tr>
+<tr>
+<td>window</td>
+<td>Object</td>
+</tr>
+</tbody>
+</table>
+<p>######<strong>messages</strong>子标签</p>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>commands</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>loading</td>
+<td>String</td>
+</tr>
+<tr>
+<td>noRows</td>
+<td>String</td>
+</tr>
+<tr>
+<td>requestFailed</td>
+<td>String</td>
+</tr>
+<tr>
+<td>retry</td>
+<td>String</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>commands对象的属性可参考kendoUi官网的API</p>
+</blockquote>
+<p>######<strong>sortable</strong>子标签</p>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>allowUnsort</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>mode</td>
+<td>String</td>
+</tr>
+</tbody>
+</table>
+<p>######<strong>toolbar</strong>子标签</p>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>click</td>
+<td>function</td>
+</tr>
+<tr>
+<td>name</td>
+<td>String</td>
+</tr>
+<tr>
+<td>text</td>
+<td>String</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>提示</strong>：</p>
+<ul>
+<li>遇到<strong>object</strong>类型 就向下添加子标签，当遇到普通类型时，就添加到当前的标签上,就像处理一般属性那样。</li>
+</ul>
+</blockquote>

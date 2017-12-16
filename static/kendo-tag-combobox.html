@@ -1,0 +1,309 @@
+<h1 id="combobox-">Combobox标签</h1>
+<p>ComboBox下拉列表组件</p>
+<pre><code class="lang-xml"> &lt;h:combobox <span class="hljs-attribute">placeholder</span>=<span class="hljs-string">"combobox"</span> 
+             <span class="hljs-attribute">valuePrimitive</span>=<span class="hljs-string">"true"</span> 
+             <span class="hljs-attribute">dataTextField</span>=<span class="hljs-string">"text"</span>
+             <span class="hljs-attribute">dataValueField</span>=<span class="hljs-string">"value"</span> 
+             <span class="hljs-attribute">bind</span>=<span class="hljs-string">"enabled: isEnabled, source: comboboxSource, value:data.productId"</span> 
+             <span class="hljs-attribute">style</span>=<span class="hljs-string">"width: 100%;"</span>/&gt;
+</code></pre>
+<h3 id="-"><strong>主要属性</strong></h3>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>animation</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>autoBind</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>autoWidth</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>cascadeFrom</td>
+<td>String</td>
+</tr>
+<tr>
+<td>cascadeFromField</td>
+<td>String</td>
+</tr>
+<tr>
+<td>clearButton</td>
+<td>Boolean </td>
+</tr>
+<tr>
+<td>dataSource</td>
+<td>DataSource</td>
+</tr>
+<tr>
+<td>dataTextField</td>
+<td>String</td>
+</tr>
+<tr>
+<td>dataValueField</td>
+<td>String</td>
+</tr>
+<tr>
+<td>delay</td>
+<td>Number</td>
+</tr>
+<tr>
+<td>enable</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>enforceMinLength</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>filter</td>
+<td>String</td>
+</tr>
+<tr>
+<td>fixedGroupTemplate</td>
+<td>String \</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>footerTemplate</td>
+<td>String \</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>groupTemplate</td>
+<td>String \</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>height</td>
+<td>Number</td>
+</tr>
+<tr>
+<td>highlightFirst</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>ignoreCase</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>index</td>
+<td>Number</td>
+</tr>
+<tr>
+<td>minLength</td>
+<td>Number</td>
+</tr>
+<tr>
+<td>noDataTemplate</td>
+<td>String \</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>placeholder</td>
+<td>String</td>
+</tr>
+<tr>
+<td>suggest</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>headerTemplate</td>
+<td>String \</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>template</td>
+<td>String \</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>text</td>
+<td>String</td>
+</tr>
+<tr>
+<td>value</td>
+<td>String</td>
+</tr>
+<tr>
+<td>valuePrimitive</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>virtual</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>change</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>close</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>dataBound</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>filtering</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>open</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>select</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>cascade</td>
+<td>Function</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>属性用法请参考KendoUI文档 <a href="http://docs.telerik.com/kendo-ui/api/javascript/ui/combobox">http://docs.telerik.com/kendo-ui/api/javascript/ui/combobox</a> </p>
+</blockquote>
+<h3 id="-"><strong>用法示例</strong></h3>
+<pre><code class="lang-javascript"><span class="hljs-comment">//定义数据源DataSource</span>
+<span class="hljs-keyword">var</span> dataSource= <span class="hljs-keyword">new</span> kendo.data.DataSource({
+    data:[<span class="hljs-string">"one"</span>,<span class="hljs-string">"two"</span>]
+});
+
+<span class="hljs-comment">//下拉列表渲染函数</span>
+<span class="hljs-keyword">var</span> itemTemplate = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span></span>{
+    <span class="hljs-comment">//...</span>
+}
+
+<span class="hljs-comment">//选中某一个列表选项后触发</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">onComboboxChange</span><span class="hljs-params">(e)</span></span>{
+    <span class="hljs-keyword">var</span> value = <span class="hljs-keyword">this</span>.value();
+    <span class="hljs-comment">// Use the value of the widget.</span>
+}
+<span class="hljs-comment">//以上两种函数定义方法皆可</span>
+</code></pre>
+<pre><code class="lang-xml">&lt;h:combobox <span class="hljs-attribute">id</span>=<span class="hljs-string">"combobox"</span> <span class="hljs-attribute">dataSource</span>=<span class="hljs-string">"dataSource"</span> <span class="hljs-attribute">clearButton</span>=<span class="hljs-string">"true"</span> <span class="hljs-attribute">placeholder</span>=<span class="hljs-string">"test"</span> <span class="hljs-attribute">enable</span>=<span class="hljs-string">"false"</span> <span class="hljs-attribute">template</span>=<span class="hljs-string">"fn:itemTemplate"</span> <span class="hljs-attribute">change</span>=<span class="hljs-string">"onComboboxChange"</span>/&gt;
+</code></pre>
+<blockquote>
+<p><strong>提示:</strong> 某些属性类型为<strong>String | Function</strong> 时，表明它可以定义为字符串或者函数。因此当需要定义为Function时需要增加前缀<strong>fn:</strong>来区分(例如函数template=&quot;fn:itemTemplate&quot; )</p>
+</blockquote>
+<h3 id="-"><strong>主要子节点</strong></h3>
+<ul>
+<li>animation</li>
+<li>popup</li>
+<li>virtual</li>
+</ul>
+<h3 id="-animation-"><strong>animation</strong></h3>
+<p>主要用来定义动画效果，例如打开关闭效果</p>
+<ul>
+<li>open 打开效果 </li>
+<li>close 关闭效果</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>类型 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>effects</td>
+<td>String </td>
+</tr>
+<tr>
+<td>duration</td>
+<td>Number</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h:combobox</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"combobox"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h:animation</span>&gt;</span>
+       <span class="hljs-tag">&lt;<span class="hljs-name">h:close</span> <span class="hljs-attr">effects</span>=<span class="hljs-string">"zoom:out"</span> <span class="hljs-attr">duration</span>=<span class="hljs-string">"300"</span>/&gt;</span>
+       <span class="hljs-tag">&lt;<span class="hljs-name">h:open</span> <span class="hljs-attr">effects</span>=<span class="hljs-string">"zoom:in"</span> <span class="hljs-attr">duration</span>=<span class="hljs-string">"300"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">h:animation</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:combobox</span>&gt;</span>
+</code></pre>
+<h3 id="-popup-"><strong>popup</strong></h3>
+<p>弹出窗口设置</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>appendTo</td>
+<td>String</td>
+</tr>
+<tr>
+<td>origin</td>
+<td>String</td>
+</tr>
+<tr>
+<td>position</td>
+<td>String</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h:combobox</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"combobox"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h:popup</span> <span class="hljs-attr">appendTo</span>=<span class="hljs-string">"container"</span> <span class="hljs-attr">origin</span>=<span class="hljs-string">"top left"</span> <span class="hljs-attr">position</span>=<span class="hljs-string">"top left"</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:combobox</span>&gt;</span>
+</code></pre>
+<h3 id="-virtual-"><strong>virtual</strong></h3>
+<p>动态加载相关设置</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>itemHeight</td>
+<td>Number</td>
+</tr>
+<tr>
+<td>mapValueTo</td>
+<td>String</td>
+</tr>
+<tr>
+<td>valueMapper</td>
+<td>Function</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">valueMapper</span>(<span class="hljs-params"></span>)</span>{
+    $.ajax({
+        <span class="hljs-attr">url</span>: <span class="hljs-string">"http://demos.telerik.com/kendo-ui/service/Orders/ValueMapper"</span>,
+        <span class="hljs-attr">type</span>: <span class="hljs-string">"GET"</span>,
+        <span class="hljs-attr">dataType</span>: <span class="hljs-string">"jsonp"</span>,
+        <span class="hljs-attr">data</span>: convertValues(options.value),
+        <span class="hljs-attr">success</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{
+            <span class="hljs-comment">//the **data** is either index or array of indices.</span>
+            <span class="hljs-comment">//Example:</span>
+            <span class="hljs-comment">// 10258 -&gt; 10 (index in the Orders collection)</span>
+            <span class="hljs-comment">// [10258, 10261] -&gt; [10, 14] (indices in the Orders collection)</span>
+            options.success(data);
+        }
+    })
+}
+</code></pre>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h:combobox</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"combobox"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h:virtual</span> <span class="hljs-attr">itemHeight</span> =<span class="hljs-string">"20"</span> <span class="hljs-attr">mapValueTo</span>=<span class="hljs-string">"index"</span> <span class="hljs-attr">valueMapper</span>=<span class="hljs-string">"valueMapper"</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:combobox</span>&gt;</span>
+</code></pre>

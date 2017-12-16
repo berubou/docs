@@ -1,0 +1,164 @@
+<h1 id="maven-">Maven 使用手册</h1>
+<h2 id="-">开发环境</h2>
+<ol>
+<li><code>JDK 1.8</code></li>
+<li><code>Maven 3.2.5</code></li>
+</ol>
+<h2 id="-">下载及安装</h2>
+<ol>
+<li>下载 <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">jdk1.8</a> 并安装</li>
+<li>下载 <a href="http://maven.apache.org/download.html">Maven 3.2.5</a> 并解压</li>
+</ol>
+<h2 id="-">配置环境变量</h2>
+<h3 id="-jdk-">配置jdk环境变量</h3>
+<ol>
+<li>将字符串“<code>;C:\Program Files\Java\jdk1.8\bin</code>”添加到系统变量“Path”的末尾</li>
+<li>用户变量新建一个classpath变量并赋值&quot;<code>.</code>&quot;</li>
+<li>在cmd控制台中通过<code>java -version</code>来测试java环境变量是否配置正确</li>
+</ol>
+<h3 id="-maven-">配置maven环境变量</h3>
+<ol>
+<li>添加 M2_HOME、M2、MAVEN_OPTS 到环境变量中,使用系统属性设置环境变量。<ul>
+<li><code>M2_HOME=C:\Program Files\Apache Software Foundation\apache-maven-3.2.5</code></li>
+<li><code>M2=%M2_HOME%\bin</code></li>
+<li><code>MAVEN_OPTS=-Xms256m -Xmx512m</code></li>
+</ul>
+</li>
+<li>添加 M2 变量到系统“Path”变量中,添加字符串 “<code>;%M2%</code>” 到系统“Path”变量末尾</li>
+<li>在cmd控制台中通过<code>mvn --version</code>来测试mvn环境变量是否配置正确</li>
+</ol>
+<h2 id="-">常用命令</h2>
+<blockquote>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mvn archetype:create</code></td>
+<td>创建 Maven 项目</td>
+</tr>
+<tr>
+<td><code>mvn clean</code></td>
+<td>清除目标目录中的生成结果</td>
+</tr>
+<tr>
+<td><code>mvn compile</code></td>
+<td>编译源代码</td>
+</tr>
+<tr>
+<td><code>mvn test-compile</code></td>
+<td>编译测试代码</td>
+</tr>
+<tr>
+<td><code>mvn test</code></td>
+<td>运行应用程序中的单元测试</td>
+</tr>
+<tr>
+<td><code>mvn package</code></td>
+<td>依据项目生成 jar,war 文件</td>
+</tr>
+<tr>
+<td><code>mvn install</code></td>
+<td>在本地 Repository 中安装 jar,war</td>
+</tr>
+<tr>
+<td><code>mvn eclipse:eclipse</code></td>
+<td>生成 Eclipse 项目文件</td>
+</tr>
+<tr>
+<td><code>mvn site</code></td>
+<td>生成项目相关信息的网站</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<h2 id="-maven-">创建maven项目</h2>
+<h3 id="-maven-java-">创建Maven的普通java项目</h3>
+<p>   <code>mvn archetype:generate -DgroupId=com.hand.app -DartifactId=项目名 -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false</code></p>
+<h3 id="-maven-web-">创建Maven的Web项目</h3>
+<ol>
+<li>进入命令行输入以下内容创建webapp项目：<ul>
+<li><code>mvn archetype:generate -DgroupId=com.hand.app -DartifactId=项目名 -DarchetypeArtifactId=maven-archetype-webapp -DinteractiveMode=false</code></li>
+<li>（补充：在该命令行后面加上<code>-X</code>可查看创建web项目的进度）</li>
+</ul>
+</li>
+<li><p>进入工程目录(cd 项目名)，使用以下命令将项目生产为eclipse项目<code>mvn eclipse:eclipse</code></p>
+<blockquote>
+<p>| 命令 | 解释 |
+| -------- | -------- |
+| <code>mvn archetype:generate</code> | 固定格式 |
+| <code>-DgroupId</code> | 组织标识（包名） |
+| <code>-DartifactId</code> | 项目名称 |
+| <code>-DarchetypeArtifactId</code> | 指定ArchetypeId，maven-archetype-quickstart，创建一个Java Project；maven-archetype-webapp，创建一个Web Project |
+| <code>-DinteractiveMode</code> | 是否使用交互模式 |</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="mvn-">mvn编译执行项目</h2>
+<h3 id="-">普通项目</h3>
+<ul>
+<li>main目录的class：在项目根目录下运行命令<code>mvn clean compile</code>进行项目编译</li>
+<li>test目录下class：在项目根目录下运行<code>mvn clean test</code>进行测试</li>
+<li>编译完成后在项目根目录下生成了<code>target</code>文件夹，里面存放了<code>class</code>文件</li>
+<li>使用<code>mvn exec:java -Dexec.mainClass=&quot;com.hand.app.App&quot;</code>运行App这个mainClass</li>
+</ul>
+<h3 id="web-">web项目</h3>
+<ul>
+<li><code>mvn tomcat:run</code> 启动tomcat，根据给定的端口号，在浏览器上输入<code>localhost:端口号/项目名/index.jsp</code>运行项目</li>
+</ul>
+<h2 id="pom-xml-">POM.xml文件</h2>
+<p><code>&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+  xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd&quot;&gt;
+  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</code>  //当前POM模型的版本<br/>
+  <code>&lt;groupId&gt;SpringMVC&lt;/groupId&gt;</code>  //项目或者组织的唯一标志<br/>
+  <code>&lt;artifactId&gt;JspExam10105&lt;/artifactId&gt;</code> //项目的通用名称<br/>
+  <code>&lt;packaging&gt;war&lt;/packaging&gt;</code> //打包机制<br/>
+  <code>&lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;</code>  //项目版本<br/>
+  <code>&lt;name&gt;JspExam10105 Maven Webapp&lt;/name&gt;</code>  //用户描述项目的名称<br/>
+  <code>&lt;url&gt;http://maven.apache.org&lt;/url&gt;</code>  //只是写明开发团队的网站，无关紧要<br/>
+  <code>&lt;dependencies&gt;
+      &lt;dependency&gt;
+        &lt;groupId&gt;junit&lt;/groupId&gt;
+        &lt;artifactId&gt;junit&lt;/artifactId&gt;
+        &lt;version&gt;3.8.1&lt;/version&gt;
+        &lt;scope&gt;test&lt;/scope&gt;</code>  //指定当前依赖范围<br/>
+      <code>&lt;/dependency&gt;  
+  &lt;/dependencies&gt;</code>  //依赖关系<br/>
+  <code>&lt;properties&gt;
+    &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;</code>  //项目字符为UTF-8<br/>
+  <code>&lt;/properties&gt;</code>  //为pom定义一些常量，在pom中的其它地方可以直接引用<br/>
+  <code>&lt;build&gt;
+    &lt;finalName&gt;SpringMVC&lt;/finalName&gt;</code>  //指定去掉后缀的工程名字<br/>
+    <code>&lt;pluginManagement&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.apache.tomcat.maven&lt;/groupId&gt;
+                &lt;artifactId&gt;tomcat8-maven-plugin&lt;/artifactId&gt;
+                &lt;version&gt;2.3-SNAPSHOT&lt;/version&gt;
+            &lt;/plugin&gt;</code>  //配置maven插件<br/>
+        <code>&lt;/plugins&gt;
+    &lt;/pluginManagement&gt;</code>  //用于管理plugin<br/>
+    <code>&lt;resources&gt;  
+        &lt;resource&gt;  
+            &lt;directory&gt;src/main/java&lt;/directory&gt;</code>  //用于管理plugin<br/>
+            <code>&lt;includes&gt;  
+                &lt;include&gt;**/*.properties&lt;/include&gt;</code>  //指定包含文件的patterns,符合样式并且在directory目录下的文件将会包含进project的资源文件<br/>
+                <code>&lt;include&gt;**/*.xml&lt;/include&gt;  
+            &lt;/includes&gt;  
+            &lt;filtering&gt;false&lt;/filtering&gt;</code>  //指定是否将filter文件(即上面说的filters里定义的<code>*.property</code>文件)的变量值在这个resource文件有效<br/>
+        <code>&lt;/resource&gt;  
+        &lt;resource&gt;  
+            &lt;directory&gt;src/main/resources&lt;/directory&gt;  
+            &lt;includes&gt;  
+                &lt;include&gt;**/*.properties&lt;/include&gt;  
+                &lt;include&gt;**/*.xml&lt;/include&gt;  
+            &lt;/includes&gt;  
+            &lt;filtering&gt;false&lt;/filtering&gt;  
+        &lt;/resource&gt; 
+    &lt;/resources&gt;</code>  //描述工程中资源的位置<br/>
+   <code>&lt;/build&gt;
+ &lt;/project&gt;</code></p>

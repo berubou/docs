@@ -1,0 +1,139 @@
+<h1 id="-">部署</h1>
+<h1 id="tomcat">tomcat</h1>
+<p><a href="#tomcat"></a></p>
+<h3 id="1-eclipse-server-auto-reload-">1. 关闭 eclipse server <code>Auto Reload</code> 特性</h3>
+<ul>
+<li><p>禁用默认值
+<img src="assets/disable_autoreload_all.png" width="50%"/></p>
+</li>
+<li><p>单独禁用项
+<img src="assets/disable_autoreload_1.png" width="50%"/></p>
+</li>
+</ul>
+<ul>
+<li>建议关闭 jar 扫描, 提高启动速度, 减少内存占用 , 修改 <code>catalina.properties</code></li>
+</ul>
+<pre><code class="lang-properties">tomcat<span class="hljs-selector-class">.util</span><span class="hljs-selector-class">.scan</span><span class="hljs-selector-class">.StandardJarScanFilter</span><span class="hljs-selector-class">.jarsToSkip</span>=*.jar
+</code></pre>
+<h3 id="2-">2. 内存设置</h3>
+<ul>
+<li><p>Linux  修改 <code>catalina.sh</code> ,开始处添加</p>
+<pre><code class="lang-bash">     JAVA_OPTS='-Xms512m -Xmx<span class="hljs-number">2048</span>m'
+</code></pre>
+</li>
+<li><p>Windows 修改 <code>catalina.bat</code></p>
+<pre><code class="lang-bash">     <span class="hljs-builtin-name">set</span> <span class="hljs-attribute">JAVA_OPTS</span>=-Xms512m -Xmx2048m
+</code></pre>
+</li>
+</ul>
+<h3 id="3-jmx-">3. 启用远程 JMX 连接</h3>
+<p> 修改 catalina.sh , 搜索 <code>[ &quot;$1&quot; = &quot;start&quot; ]</code> , 在下方添加</p>
+<pre><code class="lang-bash">JAVA_OPTS="-Dcom.sun.management.jmxremote \
+-<span class="ruby">Dcom.sun.management.jmxremote.port=<span class="hljs-number">1099</span> \
+</span>-<span class="ruby">Djava.rmi.server.hostname=<span class="hljs-number">192.168</span>.<span class="hljs-number">1.111</span> \
+</span>-<span class="ruby">Dcom.sun.management.jmxremote.ssl=<span class="hljs-literal">false</span> \
+</span>-<span class="ruby">Dcom.sun.management.jmxremote.authenticate=<span class="hljs-literal">false</span> $JAVA_OPTS<span class="hljs-string">"</span></span>
+</code></pre>
+<blockquote>
+<p>linux 系统可以用 <code>`hostname -i` </code> 获取 ip</p>
+</blockquote>
+<h1 id="weblogic">Weblogic</h1>
+<p><a href="#weblogic"></a></p>
+<blockquote>
+<p>感谢融资租赁事业部的技术小伙伴协助!</p>
+</blockquote>
+<p>weblogic 上的部署有些特殊，主要注意以下几点：</p>
+<blockquote>
+<p><strong>以下设置仅仅针对 weblogic 12 版本，其他版本可能存在通配符等问题</strong></p>
+</blockquote>
+<h3 id="1-jndi-">1. JNDI 数据源</h3>
+<p>weblogic 上定义好数据源后，在 <code>config.properties</code> 中需要修改 jndi 的名字</p>
+<pre><code class="lang-properties">db.<span class="hljs-attribute">jndiName</span>=hap_dev
+</code></pre>
+<blockquote>
+<p>tomcat 中是 java:comp/env/jdbc/hap_dev，这点不一样</p>
+</blockquote>
+<h3 id="2-jar-">2. jar 冲突问题</h3>
+<p>weblogic 上的一些 jar 和框架中的存在冲突，需要排除掉。</p>
+<p>修改项目中的 <code>pom.xml</code>，留意注释下的配置</p>
+<pre><code class="lang-xml"><span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.hand<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>hap<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">type</span>&gt;</span>war<span class="hljs-tag">&lt;/<span class="hljs-name">type</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>$</span><span class="hljs-template-variable">{hap.version}</span><span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+    <span class="hljs-comment">&lt;!--排除 jar --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">exclusions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">exclusion</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.google.guava<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>guava<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">exclusion</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">exclusions</span>&gt;</span>    
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.hand<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>hap<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>$</span><span class="hljs-template-variable">{hap.version}</span><span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">classifier</span>&gt;</span>classes<span class="hljs-tag">&lt;/<span class="hljs-name">classifier</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">scope</span>&gt;</span>provided<span class="hljs-tag">&lt;/<span class="hljs-name">scope</span>&gt;</span>
+    <span class="hljs-comment">&lt;!--排除 jar --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">exclusions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">exclusion</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.google.guava<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>guava<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">exclusion</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">exclusions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.hand<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>hap-db<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>$</span><span class="hljs-template-variable">{hap.version}</span><span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+    <span class="hljs-comment">&lt;!--排除 jar --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">exclusions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">exclusion</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.google.guava<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>guava<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">exclusion</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">exclusions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+...
+<span class="hljs-tag">&lt;<span class="hljs-name">plugin</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>maven-war-plugin<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.6<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">attachClasses</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">attachClasses</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">overlays</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">overlay</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.hand<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>hap<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+                <span class="hljs-comment">&lt;!--排除 jar --&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">excludes</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">exclude</span>&gt;</span>WEB-INF/lib/guava-15.0.jar<span class="hljs-tag">&lt;/<span class="hljs-name">exclude</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">exclude</span>&gt;</span>WEB-INF/lib/stax-api-1.0.1.jar<span class="hljs-tag">&lt;/<span class="hljs-name">exclude</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">exclude</span>&gt;</span>WEB-INF/lib/xercesImpl-2.10.0.jar<span class="hljs-tag">&lt;/<span class="hljs-name">exclude</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">exclude</span>&gt;</span>WEB-INF/lib/xml-apis-1.3.04.jar<span class="hljs-tag">&lt;/<span class="hljs-name">exclude</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">exclude</span>&gt;</span>WEB-INF/lib/xml-apis-ext-1.3.04.jar<span class="hljs-tag">&lt;/<span class="hljs-name">exclude</span>&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-name">excludes</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">overlay</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">overlays</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">plugin</span>&gt;</span></span>
+</code></pre>
+<p>打包后确保 lib 目录不存在上述 6 个 jar。</p>
+<h3 id="3-weblogic-xml">3. 新增 weblogic.xml</h3>
+<p>在 WEB-INF 目录下新增 weblogic.xml</p>
+<pre><code class="lang-xml"><span class="php"><span class="hljs-meta">&lt;?</span>xml version=<span class="hljs-string">"1.0"</span> encoding=<span class="hljs-string">"UTF-8"</span><span class="hljs-meta">?&gt;</span></span>
+<span class="hljs-tag">&lt;<span class="hljs-name">weblogic-web-app</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">container-descriptor</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">prefer-application-packages</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">package-name</span>&gt;</span>org.springframework.*<span class="hljs-tag">&lt;/<span class="hljs-name">package-name</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">package-name</span>&gt;</span>org.hibernate.*<span class="hljs-tag">&lt;/<span class="hljs-name">package-name</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">package-name</span>&gt;</span>javax.validation.*<span class="hljs-tag">&lt;/<span class="hljs-name">package-name</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">package-name</span>&gt;</span>javax.validation.spi.*<span class="hljs-tag">&lt;/<span class="hljs-name">package-name</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">package-name</span>&gt;</span>org.slf4j.*<span class="hljs-tag">&lt;/<span class="hljs-name">package-name</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">prefer-application-packages</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">show-archived-real-path-enabled</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">show-archived-real-path-enabled</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">container-descriptor</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">weblogic-web-app</span>&gt;</span>
+</code></pre>
+<p>上述 3 点在部署的时候请留意。</p>

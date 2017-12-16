@@ -1,0 +1,110 @@
+<h2 id="-hap-"> HAP 工作流开发指南</h2>
+<h2 id="usertask">UserTask</h2>
+<hr>
+<h3 id="-">指定审批人、组</h3>
+<p>在流程设计器中，选定<code>人工任务</code>节点，右边属性栏，点击<code>任务派遣</code> 弹出对话框</p>
+<p><img width='600' src='/assets/usertask-assignment.png'/></p>
+<p>其中：</p>
+<ul>
+<li>指派对象<br>只能有一个人，可以点击<code>选择</code>按钮来从系统中选择员工</li>
+<li>候选用户<br>可以添加多个，每个指定一个<code>员工工号</code></li>
+<li>候选组<br>可以添加多个，每个指定一个<code>岗位代码</code></li>
+</ul>
+<h3 id="-">动态审批人、组</h3>
+<p>与 上面类似，不过动态的审批人和组不是选择的，而是通过表达式计算得来。   </p>
+<p>表达式有两种情况</p>
+<ul>
+<li>引用变量<br>比如<code>${initiator}</code>， 其中<code>initiator</code> 就是一个变量</li>
+<li><p>调用 service 方法<br>比如<code>${orgStructure.getDirector(initiator)}</code>，其中 <code>orgStructure</code> 是一个自定的用于工作流的 <code>bean</code>，参数则可以使用任意的变量、常量等</p>
+<blockquote>
+<p><code>execution</code> 是一个固有的、特殊的变量，指代 <code>org.activiti.engine.delegate.DelegateExecution</code>，非常有用</p>
+</blockquote>
+</li>
+</ul>
+<p>关于自定义在工作流中用的 <code>bean</code>：<br>HAP 提供一个 接口 <code>com.hand.hap.activiti.custom.IActivitiBean</code>。<br>实现这个接口并被定义注册为 bean，其中的任何 <code>public</code> 方法都可以在工作流表达式中直接调用。<br>默认 bean 的 名字就是引用名，也可以覆盖接口的默认实现，指定名称。</p>
+<h3 id="-">审批动作</h3>
+<p>Hap 的工作流在审批的时候默认有两个标准的动作：</p>
+<ul>
+<li>同意（APPROVED）</li>
+<li>拒绝（REJECTED）</li>
+</ul>
+<p>当审批者点击按钮以后，审批动作 id 会被保存到流程的共享变量区域。
+key 为 <code>approveResult</code>，这个变量可以直接在表达式中使用。</p>
+<pre><code><span class="hljs-meta">$</span><span class="bash">{approveResult==<span class="hljs-string">'REJECTED'</span>}</span>
+</code></pre><p>流程设计时，可以控制这两个按钮显示的文本；也可以控制只显示其中的一个。</p>
+<p>允许自定义额外的审批动作，自动动作的 id 同样会保存在 <code>approveResult</code> 变量中，通常需要流程显示处理（比如选择网关）。</p>
+<p><img width='920' src='/assets/custom-approve-action.png'/></p>
+<h3 id="-hap-">自动结束流程（HAP 扩展特性）</h3>
+<p>当一个任务被拒绝时，绝大多数情况下，这个流程应该直接结束。<br>但在工作流中，<code>审批拒绝</code>和<code>审批同意</code> 仅仅是给变量赋的参数值不同而已，如果希望流程结束，应该加一个 <code>选择网关</code>，判断审批结果是否为 <code>拒绝</code> ，然后引导流程走向<code>结束事件</code>。</p>
+<p>显然，这很繁琐，尤其是当流程中<code>人工任务</code>节点比较多时。   </p>
+<p>HAP 做了一个优化：   </p>
+<blockquote>
+<p>如果一个<code>人工任务</code> 的下一个节点仍然是 <code>任务（Task 类型）</code>，那么 HAP 将会自动插入一个<code>选择网关</code>和<code>终止事件</code> 来自动做结束流程的操作</p>
+</blockquote>
+<p>这个优化在流程的图上是看不出来的，用户完全无感知。</p>
+<h3 id="-">会签设置</h3>
+<p>自定义属性：<code>nrOfApproved</code>，<code>nrOfRejected</code></p>
+<p>集合</p>
+<p>变量</p>
+<p>任务派遣</p>
+<p>完成条件</p>
+<h2 id="-">网关</h2>
+<hr>
+<p>选择网关</p>
+<blockquote>
+<p>选择网关<code>必须</code> 指定一个默认的连线，否则会出现不固定的行为。</p>
+</blockquote>
+<p>并行网关</p>
+<blockquote>
+<p>并行网关会在<code>所有连入</code>的连线都激活以后才会开始执行</p>
+</blockquote>
+<h2 id="servicetask">ServiceTask</h2>
+<hr>
+<h2 id="-">待办通知</h2>
+<hr>
+<h2 id="-">审批链</h2>
+<hr>
+<p>审批链功能不是 Activiti 的标准功能，属于 HAP 开发的外挂性质的扩展。</p>
+<p>功能入口是在 <code>流程设计</code> 界面。</p>
+<p><img width='460' src='/assets/approve_chain_entry.png'/></p>
+<p>点击 编辑图标 进入该流程的审批链配置界面</p>
+<p><img width='900' src='/assets/approve_chain@2x.png'/></p>
+<p>在这个编辑页面中，所有的 <code>UserTask</code> 节点会以 标签页的形式自动列出来。</p>
+<p>切换标签页，下方表格中的数据会自动刷新为对应节点的数据。</p>
+<p>上方的 操作按钮 是针对每个 标签页 操作的，并非针对整个页面。</p>
+<p>主要属性说明：</p>
+<ul>
+<li>名称<br>自定义，任意。<code>不允许重复</code>。<br>节点原始名称 和 审批链的名称 拼接起来 作为运行时的名称。</li>
+<li><p>审批人<br>内置 3 种 </p>
+<ul>
+<li>申请人（自己）</li>
+<li>上级（申请人直接领导）</li>
+<li><p>申请人部门领导   </p>
+<p>其他情况统统归为 <code>自定义表达式</code></p>
+</li>
+</ul>
+<blockquote>
+<p>注意，这个功能要求流程的初始化器（Initiator）必须指定为 <code>initiator</code></p>
+</blockquote>
+</li>
+<li><p>审批岗位<br>支持选择系统中的<code>岗位</code>，也支持自定义的<code>表达式</code></p>
+</li>
+</ul>
+<blockquote>
+<p>目前在指定了审批人的情况下，再指定审批岗位是无效果的</p>
+</blockquote>
+<ul>
+<li>表单<br>允许该轮次的审批显示指定的单据明细页面。<br>如果没有指定，则显示该节点原始设置的值。</li>
+<li>顺序号<br>用来控制审批的先后 （目前尚不支持多人同时在同一轮次审批）</li>
+<li>跳过条件<br>表达式，有值，且值为 true 时，当前轮次跳过。<br>默认留空，表示不跳过。</li>
+<li>当前轮次因为 <code>跳过条件</code>被跳过时，是否直接结束审批链</li>
+<li>启用<br>高优先级过滤条件（不启用肯定就没有作用）</li>
+<li>描述<br>无明确用途</li>
+</ul>
+<hr>
+<p>在设计器中设计审批节点时，由审批链控制的节点，不需要在去指定 <code>任务派遣</code>，可以完全在审批链中定义。即使指定了，也会被审批链中的值覆盖！</p>
+<p>除了与审批人、岗位有关的属性以外，其他属性的含义、作用保持不变。</p>
+<p><code>名称</code>稍微有变化：会和审批链的名称拼接在一起</p>
+<blockquote>
+<p>请注意：目前审批链还不支持多例（会签）</p>
+</blockquote>

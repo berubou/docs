@@ -1,0 +1,65 @@
+<h2 id="tledit">TlEdit</h2>
+<p>多语言编辑</p>
+<h5 id="xml-">xml配置</h5>
+<pre><code class="lang-xml"><span class="hljs-comment">&lt;!--h:为命名空间,必须要加的;tlEdit为组件名;id可写可不写--&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">h:tlEdit</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"tlEdit"</span>/&gt;</span>
+</code></pre>
+<h4 id="-"><strong>一般属性</strong></h4>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>idField</td>
+<td>String</td>
+</tr>
+<tr>
+<td>field</td>
+<td>String</td>
+</tr>
+<tr>
+<td>dto</td>
+<td>String</td>
+</tr>
+<tr>
+<td>model</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>open</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>close</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>placeholder</td>
+<td>String</td>
+</tr>
+<tr>
+<td>bind</td>
+<td>Function</td>
+</tr>
+</tbody>
+</table>
+<p>用法示例：</p>
+<pre><code class="lang-javascript"><span class="hljs-comment">//注意是写在script标签内的</span>
+<span class="hljs-keyword">var</span> viewModel = kendo.observable({
+    <span class="hljs-attr">data</span>:{}  
+});
+
+kendo.bind($(<span class="hljs-string">'#tl'</span>), viewModel);
+</code></pre>
+<pre><code class="lang-xml">&lt;h:tlEdit <span class="hljs-attribute">id</span>=<span class="hljs-string">"tl"</span> <span class="hljs-attribute">placeholder</span>=<span class="hljs-string">"多语言"</span> <span class="hljs-attribute">bind</span>=<span class="hljs-string">"value:data.name"</span> <span class="hljs-attribute">idField</span>=<span class="hljs-string">"id"</span> <span class="hljs-attribute">field</span>=<span class="hljs-string">"name"</span> <span class="hljs-attribute">dto</span>=<span class="hljs-string">"com.hand.hap.function.dto.Resource"</span> <span class="hljs-attribute">model</span>=<span class="hljs-string">"viewModel.data"</span>&gt;&lt;/h:tlEdit&gt;
+</code></pre>
+<blockquote>
+<p><strong>提示：</strong></p>
+<ul>
+<li>以上所有属性都直接可以添加到tlEdit标签上，用法皆为[<strong>属性名</strong>]=&quot;[<strong>属性值</strong>]&quot;</li>
+</ul>
+</blockquote>

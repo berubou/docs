@@ -1,0 +1,254 @@
+<h2 id="treeview">TreeView</h2>
+<p>树视图</p>
+<h5 id="xml-">xml配置</h5>
+<pre><code class="lang-xml"> <span class="hljs-comment">&lt;!--h:为命名空间,必须要加的;treeView为组件名;id可写可不写--&gt;</span>
+ <span class="hljs-tag">&lt;<span class="hljs-name">h:treeView</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"treeView"</span>/&gt;</span>
+</code></pre>
+<h4 id="-"><strong>一般属性</strong></h4>
+<blockquote>
+<p><strong>提示:</strong></p>
+<ul>
+<li>属性用法请参考kendoui API文档的treeView: <a href="http://docs.telerik.com/kendo-ui/api/javascript/ui/treeview">http://docs.telerik.com/kendo-ui/api/javascript/ui/treeview</a></li>
+</ul>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>animation</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>autoBind</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>autoScroll</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>checkboxes</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>dataImageUrlField</td>
+<td>String</td>
+</tr>
+<tr>
+<td>dataSource</td>
+<td>kendo.data.HierarchicalDataSource(Function)</td>
+</tr>
+<tr>
+<td>dataSpriteCssClassField</td>
+<td>String</td>
+</tr>
+<tr>
+<td>dataTextField</td>
+<td>String &amp; Array</td>
+</tr>
+<tr>
+<td>dataUrlField</td>
+<td>String </td>
+</tr>
+<tr>
+<td>dragAndDrop</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>loadOnDemand</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>treeListView</td>
+<td>Number</td>
+</tr>
+<tr>
+<td>template</td>
+<td>String &amp; Function</td>
+</tr>
+<tr>
+<td>change</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>check</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>collapse</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>dataBound</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>dragstart</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>drag</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>dragend</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>drop</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>expand</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>navigate</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>select</td>
+<td>Function</td>
+</tr>
+</tbody>
+</table>
+<p>用法示例：</p>
+<pre><code class="lang-javascript"><span class="hljs-comment">//注意是写在script标签里的内容</span>
+<span class="hljs-keyword">var</span> dataSource = <span class="hljs-keyword">new</span> kendo.data.HierarchicalDataSource({
+  data: [
+      { text: <span class="hljs-string">"foo"</span>, items: [
+        { text: <span class="hljs-string">"bar"</span> }
+      ] }
+    ]
+});
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">template</span><span class="hljs-params">()</span></span>{
+<span class="hljs-comment">//...</span>
+}
+</code></pre>
+<pre><code class="lang-xml">&lt;h:treeView <span class="hljs-attribute">id</span>=<span class="hljs-string">"treeView"</span> <span class="hljs-attribute">dataSource</span>=<span class="hljs-string">"dataSource"</span> checkboxes = <span class="hljs-string">"true"</span> dataTextField = <span class="hljs-string">"name1,name2"</span> <span class="hljs-attribute">template</span>=<span class="hljs-string">"fn:template"</span>/&gt;
+</code></pre>
+<blockquote>
+<p><strong>提示:</strong></p>
+<ul>
+<li>上述所有属性直接添加在标签内即可，（<strong>[属性名] = &quot;...&quot;</strong>）,对于类型是函数的属性，需要另外在script标签中具体定义函数，这里只是一个引用,对于类型<strong>既是函数又是字符串</strong>类型的属性，一定要加<strong>fn:</strong> 来区分，加fn:的代表这是一个函数，对于<strong>既是字符串又是数组</strong>的属性，数组内容只需要用<strong>逗号分割</strong>即可</li>
+</ul>
+</blockquote>
+<h4 id="-"><strong>子标签</strong></h4>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>animation</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>checkboxes</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>messages</td>
+<td>Object</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>animation</th>
+<th>类型 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>close</td>
+<td>Object </td>
+</tr>
+<tr>
+<td>open</td>
+<td>Object</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h:treeView</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"treeView"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h:animation</span>&gt;</span>
+       <span class="hljs-comment">&lt;!--当属性仍然为一个对象时，继续添加子标签--&gt;</span>
+       <span class="hljs-tag">&lt;<span class="hljs-name">h:close</span> <span class="hljs-attr">effects</span>=<span class="hljs-string">"zoom:out"</span> <span class="hljs-attr">duration</span>=<span class="hljs-string">"300"</span>/&gt;</span>
+       <span class="hljs-tag">&lt;<span class="hljs-name">h:open</span> <span class="hljs-attr">effects</span>=<span class="hljs-string">"zoom:in"</span> <span class="hljs-attr">duration</span>=<span class="hljs-string">"300"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">h:animation</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:treeView</span>&gt;</span>
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>checkboxes</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>checkChildren</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>name</td>
+<td>String</td>
+</tr>
+<tr>
+<td>template</td>
+<td>String &amp; Function</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h:treeView</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"treeView"</span>&gt;</span>
+   <span class="hljs-comment">&lt;!--template的前缀fn: 表明此时是函数--&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h:checkboxes</span> <span class="hljs-attr">checkChildren</span>=<span class="hljs-string">"true"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"checkedItems[]"</span> <span class="hljs-attr">template</span>=<span class="hljs-string">"fn:template"</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:treeView</span> &gt;</span>
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>messages</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>loading</td>
+<td>String</td>
+</tr>
+<tr>
+<td>requestFailed</td>
+<td>String</td>
+</tr>
+<tr>
+<td>retry</td>
+<td>String</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">template</span><span class="hljs-params">()</span></span>{
+<span class="hljs-comment">//...</span>
+}
+</code></pre>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h:treeView</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"treeView"</span>&gt;</span>
+   <span class="hljs-comment">&lt;!--template的前缀fn: 表明此时是函数--&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h:messages</span> <span class="hljs-attr">loading</span>=<span class="hljs-string">"loading..."</span> <span class="hljs-attr">requestFailed</span>=<span class="hljs-string">"fail..."</span> <span class="hljs-attr">retry</span>=<span class="hljs-string">"retry"</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:treeView</span> &gt;</span>
+</code></pre>
+<blockquote>
+<p><strong>提示</strong>：</p>
+<ul>
+<li>遇到<strong>object</strong>类型 就向下添加子标签，当遇到普通类型时，就添加到当前的标签上,就像处理一般属性那样。</li>
+</ul>
+</blockquote>

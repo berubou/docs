@@ -1,0 +1,312 @@
+<h2 id="dropdownlist">DropDownList</h2>
+<p>下拉选择框</p>
+<h5 id="xml-">xml配置</h5>
+<pre><code class="lang-xml"> <span class="hljs-comment">&lt;!--h:为命名空间,必须要加的;dropDownList为组件名;id可写可不写--&gt;</span>
+ <span class="hljs-tag">&lt;<span class="hljs-name">h:dropDownList</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"dropDownList"</span>/&gt;</span>
+</code></pre>
+<h4 id="-"><strong>一般属性</strong></h4>
+<blockquote>
+<p><strong>提示:</strong></p>
+<ul>
+<li>属性用法请参考kendoui API文档的dropdownlist:<a href="http://docs.telerik.com/kendo-ui/api/javascript/ui/dropdownlist">http://docs.telerik.com/kendo-ui/api/javascript/ui/dropdownlist</a></li>
+</ul>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>animation</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>autoBind</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>autoWidth</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>cascadeFrom</td>
+<td>String</td>
+</tr>
+<tr>
+<td>cascadeFromField</td>
+<td>String</td>
+</tr>
+<tr>
+<td>clearButton</td>
+<td>Boolean </td>
+</tr>
+<tr>
+<td>dataSource</td>
+<td>kendo.data.DataSource(Function)</td>
+</tr>
+<tr>
+<td>dataTextField</td>
+<td>String</td>
+</tr>
+<tr>
+<td>dataValueField</td>
+<td>String</td>
+</tr>
+<tr>
+<td>delay</td>
+<td>Number</td>
+</tr>
+<tr>
+<td>enable</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>enforceMinLength</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>filter</td>
+<td>String</td>
+</tr>
+<tr>
+<td>fixedGroupTemplate</td>
+<td>String &amp; Function</td>
+</tr>
+<tr>
+<td>footerTemplate</td>
+<td>String &amp; Function</td>
+</tr>
+<tr>
+<td>groupTemplate</td>
+<td>String &amp; Function</td>
+</tr>
+<tr>
+<td>height</td>
+<td>Number</td>
+</tr>
+<tr>
+<td>ignoreCase</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>index</td>
+<td>Number</td>
+</tr>
+<tr>
+<td>minLength</td>
+<td>Number</td>
+</tr>
+<tr>
+<td>noDataTemplate</td>
+<td>String &amp; Function</td>
+</tr>
+<tr>
+<td>optionLabel</td>
+<td>String</td>
+</tr>
+<tr>
+<td>optionLableTemplate</td>
+<td>String &amp; Function</td>
+</tr>
+<tr>
+<td>placeholder</td>
+<td>String</td>
+</tr>
+<tr>
+<td>headerTemplate</td>
+<td>String &amp; Function</td>
+</tr>
+<tr>
+<td>template</td>
+<td>String &amp; Function</td>
+</tr>
+<tr>
+<td>valueTemplate</td>
+<td>String &amp; Function</td>
+</tr>
+<tr>
+<td>text</td>
+<td>String</td>
+</tr>
+<tr>
+<td>value</td>
+<td>String</td>
+</tr>
+<tr>
+<td>valuePrimitive</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>virtual</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>change</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>close</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>dataBound</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>filtering</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>open</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>select</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>cascade</td>
+<td>Function</td>
+</tr>
+</tbody>
+</table>
+<p>用法示例：</p>
+<pre><code class="lang-javascript"><span class="hljs-comment">//注意是写在script标签内的</span>
+<span class="hljs-keyword">var</span> dataSource= <span class="hljs-keyword">new</span> kendo.data.DataSource({
+    data:[<span class="hljs-string">"one"</span>,<span class="hljs-string">"two"</span>]
+});
+
+<span class="hljs-keyword">var</span> template = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span></span>{
+<span class="hljs-comment">//...</span>
+}
+
+<span class="hljs-comment">//var change =function(){</span>
+<span class="hljs-comment">//...</span>
+<span class="hljs-comment">//}</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">change</span><span class="hljs-params">()</span></span>{
+<span class="hljs-comment">//...</span>
+}
+<span class="hljs-comment">//以上两种函数定义方法皆可</span>
+</code></pre>
+<pre><code class="lang-xml">&lt;h:dropDownList <span class="hljs-attribute">id</span>=<span class="hljs-string">"dropDownList"</span> <span class="hljs-attribute">dataSource</span>=<span class="hljs-string">"dataSource"</span> <span class="hljs-attribute">clearButton</span>=<span class="hljs-string">"true"</span> <span class="hljs-attribute">placeholder</span>=<span class="hljs-string">"test"</span> <span class="hljs-attribute">enable</span>=<span class="hljs-string">"false"</span> <span class="hljs-attribute">template</span>=<span class="hljs-string">"fn:template"</span> <span class="hljs-attribute">change</span>=<span class="hljs-string">"change"</span>/&gt;
+</code></pre>
+<blockquote>
+<p><strong>提示:</strong></p>
+<ul>
+<li>上述所有属性直接添加在标签内即可，（<strong>[属性名] = &quot;...&quot;</strong>）,对于既是<strong>String</strong>类型又是<strong>Function</strong>类型的属性，只需要加<strong>fn:</strong>前缀区分即可,（<strong>fn:函数名</strong>）</li>
+</ul>
+</blockquote>
+<h4 id="-"><strong>子标签</strong></h4>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>animation</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>popup</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>virtual</td>
+<td>Object</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>animation</th>
+<th>类型 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>close</td>
+<td>Object </td>
+</tr>
+<tr>
+<td>open</td>
+<td>Object</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h:dropDownList</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"drowDownList"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h:animation</span>&gt;</span>
+       <span class="hljs-comment">&lt;!--当属性仍然为一个对象时，继续添加子标签--&gt;</span>
+       <span class="hljs-tag">&lt;<span class="hljs-name">h:close</span> <span class="hljs-attr">effects</span>=<span class="hljs-string">"zoom:out"</span> <span class="hljs-attr">duration</span>=<span class="hljs-string">"300"</span>/&gt;</span>
+       <span class="hljs-tag">&lt;<span class="hljs-name">h:open</span> <span class="hljs-attr">effects</span>=<span class="hljs-string">"zoom:in"</span> <span class="hljs-attr">duration</span>=<span class="hljs-string">"300"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">h:animation</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:dropDownList</span> &gt;</span>
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>popup</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>appendTo</td>
+<td>String</td>
+</tr>
+<tr>
+<td>origin</td>
+<td>String</td>
+</tr>
+<tr>
+<td>position</td>
+<td>String</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h:dropDownList</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"dropDownList"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h:popup</span> <span class="hljs-attr">appendTo</span>=<span class="hljs-string">"container"</span> <span class="hljs-attr">origin</span>=<span class="hljs-string">"top left"</span> <span class="hljs-attr">position</span>=<span class="hljs-string">"top left"</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:dropDownList</span> &gt;</span>
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>virtual</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>itemHeight</td>
+<td>Number</td>
+</tr>
+<tr>
+<td>mapValueTo</td>
+<td>String</td>
+</tr>
+<tr>
+<td>valueMapper</td>
+<td>Function</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">valueMapper</span><span class="hljs-params">()</span></span>{
+<span class="hljs-comment">//...</span>
+}
+</code></pre>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h:dropDownList</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"dropDownList"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h:virtual</span> <span class="hljs-attr">itemHeight</span> =<span class="hljs-string">"20"</span> <span class="hljs-attr">mapValueTo</span>=<span class="hljs-string">"index"</span> <span class="hljs-attr">valueMapper</span>=<span class="hljs-string">"valueMapper"</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:dropDownList</span> &gt;</span>
+</code></pre>
+<blockquote>
+<p><strong>提示</strong>：</p>
+<ul>
+<li>遇到<strong>object</strong>类型 就向下添加子标签，当遇到普通类型时，就添加到当前的标签上。</li>
+</ul>
+</blockquote>

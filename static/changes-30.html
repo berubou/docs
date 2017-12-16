@@ -1,0 +1,146 @@
+<p>本文主要描述 HAP 3.0 所包含的主要更新内容.</p>
+<p>所描述内容均为 HAP 2.0 (2016-10-15) 发布之后的内容.</p>
+<h2 id="-">新特性</h2>
+<ol>
+<li><p>工作流审批链</p>
+<p> 为了满足比较灵活的 审批人、审批层级 控制需求，HAP 在 activiti 基础之上增加了<code>外挂审批链</code>的功能。</p>
+<p> 审批链的修改不要求发布新版本流程，并且会同时影响所有 <code>相同标识</code> 的流程（包括运行中的流程）</p>
+<p> <img width='900' src='/assets/approve_chain@2x.png'/></p>
+<p> 具体使用细节参考 <a href="activiti.md">工作流 - 审批链</a></p>
+</li>
+</ol>
+<ol>
+<li><p>可扩展开发模式</p>
+<p> 为了满足项目中对标准功能的客户化修改需求，HAP 引入一种可扩展的机制。（更长远一点，这个特性将会是 HAP SAAS 的基础）</p>
+<p> 该特性允许开发者为标准功能增加一些额外字段，通简单的配置，这些字段就会在<code>增删改查</code>中起作用。</p>
+<p> 整个机制分为 3 部分：</p>
+<ul>
+<li>DTO 层<br> 基于<code>接口 + 自动实现</code> 的扩展</li>
+<li>Service 层<br> 基于 <code>Listener</code> 模式的扩展</li>
+<li><p>View 层<br> 基于 <code>XML 配置</code> 化的定向扩展</p>
+<p>更多实现细节请参考 <a href="extensible_dev.md">扩展开发</a></p>
+</li>
+</ul>
+</li>
+<li><p>前端标签化开发</p>
+<p> HAP 3 正式引入全新的前台界面开发方式：标签化。</p>
+<p> 标签化并非完全 UI，只是另外一种开发方式，底层代码仍然是 HAP 2 相同的 KendoUI.</p>
+<p> 这种开发模式更加高效，风格也更容易统一。</p>
+<p> 同时，这种模式可以非常方便的进行扩展。</p>
+<p> <img width='840' src='/assets/taged_ui@2x.png'/></p>
+<p> 关于这个特性的更多内容的更多内容，请参考 <a href="viewTag/index.md">标签化</a> 、 以及 <a href="viewTag/mergeViewTag.md">标签扩展</a></p>
+</li>
+<li><p>自定义用户安全策略</p>
+<p> 现子项目可以自定义实现类，来实现特殊的用户账户控制需求。</p>
+<p> 目前自定义策略，可以在以下场景发挥作用：</p>
+<ul>
+<li>用户登录认证成功以后</li>
+<li>用户修改密码时</li>
+<li><p>新建用户时</p>
+<p>更多细节请参考 <a href="user_security_strategy.md">用户安全策略</a></p>
+</li>
+</ul>
+</li>
+<li><p>数据导出 Excel<br> 现在 HAP 支持使用自定义的 SQL 来将数据导出 excel 的功能。</p>
+<p> 基于 POI 的特性，这个功能可以在有限内存的情况下导出海量的数据（超过100万）。</p>
+<p> 具体使用方式，请参考 <code>功能维护</code> 页面的 导出 excel 按钮。</p>
+</li>
+</ol>
+<ol>
+<li><p>服务端脚本支持</p>
+<p> HAP 3 提供脚本化编程的支持，本质还是基于 JDK8 的 <code>Nashorn</code> 引擎。</p>
+<p> 并未做过多的封装，只是提供了几个内置的全局对象引用：</p>
+<ul>
+<li><code>applicationContext</code><br>  Spring 的 ApplicationContext， 可以用来获取 bean</li>
+<li><code>out</code><br>  <code>System.out</code> 的引用，用来打印内容到标准输出流</li>
+<li><p><code>logger</code><br>  用来输出日志的 logger</p>
+<p>使用该特性，仅需注入 <code>IScriptService</code> ，按照 API 说明调用即可。</p>
+<p>与此同时，还提供了一个通用的 <code>ScriptBasedJob</code> 计划任务实现类，可以在不写 JAVA 代码的情况下添加一个基于脚本的计划任务。</p>
+</li>
+</ul>
+</li>
+<li><p>接口透传</p>
+<p> 现在可以在系统中定义第三方接口的调用方式、数据格式，通过 HAP 来间接调用。</p>
+<p> 同时，HAP 可以监控这些接口的调用情况。</p>
+</li>
+<li><p>接口监控   </p>
+<p> HAP 可以对系统中<code>发布</code>和<code>调用</code>的接口进行监控</p>
+<ul>
+<li>RESTful<br>controller 加注解方式</li>
+<li>WebService (CXF)
+XML配置Interceptor    </li>
+</ul>
+</li>
+<li><p>工作流待办事项通知</p>
+<p> 现在系统中提供一个示例的通知现实 <code>DemoNotifier</code>。</p>
+<p> 项目上，请参考这个实现 来编写自己的通知类。</p>
+</li>
+</ol>
+<h2 id="-">更新项</h2>
+<ol>
+<li><p>为基础功能中的按钮统一增加图标</p>
+</li>
+<li><p>微调了默认的界面风格</p>
+<ul>
+<li>增大了 输入框高度、Grid 行高</li>
+<li>按钮变大，扁平化</li>
+</ul>
+</li>
+<li><p>工作流相关</p>
+<ul>
+<li>历史流程，现在可以选择查询<code>我参与的流程</code>，<code>我发起的流程</code></li>
+<li>历史流程，现在可以展示<code>最后审批人</code>，<code>审批动作</code></li>
+<li>流程设计，现在<code>发布按钮</code>会有两种状态 <code>绿色</code>（需要发布），<code>灰色</code>（不需要发布）</li>
+<li>流程设计器，人工任务，现在可以 <strong>选择</strong> 系统中的员工，岗位</li>
+</ul>
+</li>
+<li><p>现在可以为 WebService 接口配置用户名密码的认证方式</p>
+</li>
+<li><p>员工维护界面，现在可以根据选定的<code>员工</code>创建一个相应的<code>用户</code></p>
+</li>
+<li><p>新用户第一次登录时，要求必须修改密码<br>员工密码被管理员重置以后，首次登录要求必须修改密码。</p>
+</li>
+<li><p>计划任务，现在可以看到并可以控制<code>调度器</code>的状态</p>
+</li>
+<li><p>发送邮件，现在优先走<code>消息队列</code> 发送；与传统的 Job 方式并存。</p>
+</li>
+<li><p>优化了数据库异常信息，仅限以下两类    </p>
+<ul>
+<li>唯一索引</li>
+<li>非空约束</li>
+</ul>
+</li>
+<li><p><code>系统代码</code> 增加了排序字段，以方便固定显示的顺序</p>
+</li>
+</ol>
+<p>11.</p>
+<h2 id="-">注意事项！！</h2>
+<p>在升级 HAP 3 时，需要注意以下事项：</p>
+<p>HAP 3.0 可以由 HAP 2.x 版本平滑升级，不会有特别大的变化。</p>
+<blockquote>
+<p>不支持从 HAP 1.0 直接升级！</p>
+</blockquote>
+<ol>
+<li><p>表结构的增加和修改</p>
+<p> 新版不可避免的会有一些新的表加入。</p>
+<p> 请记得 执行数据库初始化命令 来增量的更新数据库。</p>
+<blockquote>
+<p>如果不想更新某些表的数据，比如 SYS_USER(密码)</p>
+<p>可以在执行命令的时候使用参数 <code>-Ddb.skipUpdateTables=SYS_USER</code> 来禁止更新数据（仍然会插入）</p>
+<p>使用逗号 <code>,</code> 分割多个表</p>
+</blockquote>
+</li>
+</ol>
+<ol>
+<li><p>配置文件<br> 如果项目上有自定义覆盖的配置文件，请仔细查看：</p>
+<ul>
+<li><code>config.properties</code> 本次更新引入新的 参数 <code>db.type</code>， 默认值 mysql<br>如果使用的数据库不是 mysql，那么 <code>activiti</code> 会报错！</li>
+<li><code>application*.xml</code> 如果项目上自定义覆盖过任何一个相关文件，请逐一检查是否需要更新   </li>
+<li><code>servlet-context.xml</code> 有增加新的内容，如果修改，务必更新！！</li>
+</ul>
+</li>
+<li><p><code>web.xml</code></p>
+<p> 新版本在 web.xml 中增加了新的内容，属于<code>必要</code>的内容.</p>
+<p> 如果项目中自定义过 web.xml ，请务必更新！！</p>
+</li>
+</ol>

@@ -1,0 +1,72 @@
+<h1 id="-">数据多语言</h1>
+<h2 id="-sys_role-">表结构(以sys_role为例)</h2>
+<h3 id="-">主表</h3>
+<p>多语言基表以<code>_B</code> 结尾,与非多语言的表没有大的差别</p>
+<pre><code class="lang-groovy"><span class="hljs-selector-tag">createTable</span>(<span class="hljs-attribute">tableName</span>: <span class="hljs-string">"SYS_ROLE_B"</span>){
+    <span class="hljs-selector-tag">column</span>(<span class="hljs-attribute">name</span>:<span class="hljs-string">"ROLE_ID"</span>,<span class="hljs-attribute">type</span>:<span class="hljs-string">"bigint"</span>,<span class="hljs-attribute">autoIncrement</span>: <span class="hljs-string">"true"</span>, <span class="hljs-attribute">startWith</span>:<span class="hljs-string">"10001"</span>,<span class="hljs-attribute">remarks</span>: <span class="hljs-string">"表ID，主键"</span>){
+        <span class="hljs-selector-tag">constraints</span>(<span class="hljs-attribute">nullable</span>: <span class="hljs-string">"false"</span>, <span class="hljs-attribute">primaryKey</span>: <span class="hljs-string">"true"</span>,<span class="hljs-attribute">primaryKeyName</span>: <span class="hljs-string">"SYS_ROLE_B_PK"</span>)
+    }
+    <span class="hljs-selector-tag">column</span>(<span class="hljs-attribute">name</span>:<span class="hljs-string">"ROLE_CODE"</span>,<span class="hljs-attribute">type</span>:<span class="hljs-string">"varchar(40)"</span>,<span class="hljs-attribute">remarks</span>: <span class="hljs-string">"角色编码"</span>){
+        <span class="hljs-selector-tag">constraints</span>(<span class="hljs-attribute">nullable</span>: <span class="hljs-string">"false"</span>,<span class="hljs-attribute">unique</span>: <span class="hljs-string">"true"</span>,<span class="hljs-attribute">uniqueConstraintName</span>: <span class="hljs-string">"SYS_ROLE_B_U1"</span>)
+    }
+    <span class="hljs-selector-tag">column</span>(<span class="hljs-attribute">name</span>:<span class="hljs-string">"ROLE_NAME"</span>,<span class="hljs-attribute">type</span>:<span class="hljs-string">"varchar(150)"</span>,<span class="hljs-attribute">remarks</span>: <span class="hljs-string">"角色名称"</span>){
+        <span class="hljs-selector-tag">constraints</span>(<span class="hljs-attribute">nullable</span>: <span class="hljs-string">"false"</span>)
+    }
+    <span class="hljs-selector-tag">column</span>(<span class="hljs-attribute">name</span>:<span class="hljs-string">"ROLE_DESCRIPTION"</span>,<span class="hljs-attribute">type</span>:<span class="hljs-string">"varchar(240)"</span>,<span class="hljs-attribute">remarks</span>: <span class="hljs-string">"角色描述"</span>)
+    <span class="hljs-selector-tag">column</span>(<span class="hljs-attribute">name</span>:<span class="hljs-string">"START_ACTIVE_DATE"</span>,<span class="hljs-attribute">type</span>:<span class="hljs-string">"DATE"</span>,<span class="hljs-attribute">remarks</span>:<span class="hljs-string">"开始生效日期"</span>)
+    <span class="hljs-selector-tag">column</span>(<span class="hljs-attribute">name</span>:<span class="hljs-string">"END_ACTIVE_DATE"</span>,<span class="hljs-attribute">type</span>:<span class="hljs-string">"DATE"</span>,<span class="hljs-attribute">remarks</span>:<span class="hljs-string">"截至生效日期"</span>)
+    <span class="hljs-selector-tag">column</span>(<span class="hljs-attribute">name</span>:<span class="hljs-string">"ENABLE_FLAG"</span>,<span class="hljs-attribute">type</span>:<span class="hljs-string">"VARCHAR(1)"</span>,<span class="hljs-attribute">remarks</span>:<span class="hljs-string">"启用标记"</span>, <span class="hljs-attribute">defaultValue</span>: <span class="hljs-string">"Y"</span>)
+    ...
+}
+</code></pre>
+<h3 id="-">多语言表</h3>
+<p>多语言表以<code>_TL</code> 结尾,主要包含以下字段:</p>
+<ul>
+<li>基表主键</li>
+<li>LANG</li>
+<li>多语言字段</li>
+</ul>
+<pre><code class="lang-groovy"><span class="hljs-selector-tag">createTable</span>(<span class="hljs-attribute">tableName</span>:<span class="hljs-string">"SYS_ROLE_TL"</span>) {
+    <span class="hljs-selector-tag">column</span>(<span class="hljs-attribute">name</span>: <span class="hljs-string">"ROLE_ID"</span>, <span class="hljs-attribute">type</span>: <span class="hljs-string">"bigint"</span>, <span class="hljs-attribute">remarks</span>: <span class="hljs-string">"角色ID"</span>) {
+        <span class="hljs-selector-tag">constraints</span>(<span class="hljs-attribute">nullable</span>: <span class="hljs-string">"false"</span>, <span class="hljs-attribute">primaryKey</span>: <span class="hljs-string">"true"</span>)
+    }
+    <span class="hljs-selector-tag">column</span>(<span class="hljs-attribute">name</span>: <span class="hljs-string">"LANG"</span>, <span class="hljs-attribute">type</span>: <span class="hljs-string">"varchar(10)"</span>, <span class="hljs-attribute">remarks</span>: <span class="hljs-string">"语言"</span>) {
+        <span class="hljs-selector-tag">constraints</span>(<span class="hljs-attribute">nullable</span>: <span class="hljs-string">"false"</span>, <span class="hljs-attribute">primaryKey</span>: <span class="hljs-string">"true"</span>)
+    }
+    <span class="hljs-selector-tag">column</span>(<span class="hljs-attribute">name</span>: <span class="hljs-string">"ROLE_NAME"</span>, <span class="hljs-attribute">type</span>: <span class="hljs-string">"varchar(150)"</span>, <span class="hljs-attribute">remarks</span>: <span class="hljs-string">"角色名称"</span>)
+    <span class="hljs-selector-tag">column</span>(<span class="hljs-attribute">name</span>: <span class="hljs-string">"ROLE_DESCRIPTION"</span>, <span class="hljs-attribute">type</span>: <span class="hljs-string">"varchar(240)"</span>, <span class="hljs-attribute">remarks</span>: <span class="hljs-string">"角色描述"</span>)
+    ...
+}
+</code></pre>
+<h2 id="dto">DTO</h2>
+<h3 id="-">多语言注解</h3>
+<ul>
+<li>MultiLanguage</li>
+</ul>
+<p>多语言主表对应的 DTO 需要添加 MultiLanguage 注解</p>
+<pre><code class="lang-java"><span class="hljs-meta">@MultiLanguage</span>
+<span class="hljs-meta">@Table</span>(name = <span class="hljs-string">"sys_role_b"</span>)
+public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Role</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseDTO</span> <span class="hljs-title">implements</span> <span class="hljs-title">IRole</span> </span>{
+  ...
+}
+</code></pre>
+<ul>
+<li>MultiLanguageField
+多语言字段需要添加 MultiLanguageField注解</li>
+</ul>
+<pre><code class="lang-java"><span class="hljs-meta">@MultiLanguage</span>
+<span class="hljs-meta">@Table</span>(name = <span class="hljs-string">"sys_role_b"</span>)
+public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Role</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseDTO</span> <span class="hljs-title">implements</span> <span class="hljs-title">IRole</span> </span>{
+
+    <span class="hljs-meta">@MultiLanguageField</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-type">String</span> name;
+
+    <span class="hljs-meta">@MultiLanguageField</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-type">String</span> description;
+}
+</code></pre>
+<h2 id="-">说明</h2>
+<ol>
+<li>HAP 中多语言<code>新增</code>,<code>更新</code>,<code>删除</code> 逻辑是通过 MyBatis 的 Interceptor 来实现的，具体可参考实现类 <code>MultiLanguageInterceptor</code></li>
+<li>HAP 根据 DTO 中的注解自动生成查询 SQL 关联多语言表，具体相关类 <code>SqlHelper</code></li>
+</ol>

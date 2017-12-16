@@ -1,0 +1,222 @@
+<h1 id="-">消息系统</h1>
+<h2 id="1-">1.简介</h2>
+<p>HAP 的消息系统提供<code>队列</code>和<code>广播</code>两种方式，实现方式为 Redis 和 RabbitMQ。 用户在 <code>config.properties</code> 中 message.provider 来实现切换。 <code>applicationContext-msg.xml</code> 根据 <code>config.properties</code> 中的配置选择加载 <code>message/rabbitmq.xml</code> 或 <code>message/redis.xml</code>。</p>
+<p><img src="/assets/mq1.png" alt=""></p>
+<h3 id="1-1-redis">1.1 Redis</h3>
+<p>Redis 本身支持MQ功能，是一个轻量级的队列服务，具有高效性，但不具有可靠性（数据丢失），不提供队列监控。Redis 消息队列多应用于即时数据分析、秒杀计数器、缓存等轻量级，高并发，延迟敏感场景。</p>
+<h3 id="1-2-rabbitmq-3-1-0-release-">1.2 RabbitMQ (3.1.0-RELEASE)</h3>
+<p>RabbitMQ 是实现 AMQP（高级消息队列协议）的消息中间件的一种，用于在分布式系统中存储转发消息，在易用性、扩展性、高可用性等方面表现不俗。消息中间件主要用于组件之间的解耦。rabbitmq多应用于批量数据异步处理、并行任务串行化，高负载任务的负载均衡等 重量级，高并发，异步高可靠性场景。</p>
+<h2 id="2-">2 队列</h2>
+<p>队列的特点是：一个消息只能被一个消费者消费一次，即使是在集群或者多线程环境下。</p>
+<blockquote>
+<p>一般来讲，如果一个队列有多个消费者，这些消费者取到消息的概率大致是相同的。</p>
+<p>大批量的消息，会大致均匀分散给所有消费者处理。</p>
+</blockquote>
+<h3 id="2-1-">2.1 向队列发送一个消息</h3>
+<p>在 java 代码中，注入 IMessagePublisher 类。</p>
+<pre><code class="lang-java">
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">XXXSenderTest</span> </span>{
+
+ <span class="hljs-meta">@Autowired</span>
+
+ <span class="hljs-keyword">private</span> IMessagePublisher messagePublisher;
+
+
+
+ <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">sendMessageTest</span> <span class="hljs-params">()</span></span>{
+
+   <span class="hljs-comment">// 向 队列：queue1 中发送消息 ： message1（字符串）</span>
+
+   messagePublisher.message(<span class="hljs-string">"queue1"</span>,<span class="hljs-string">"message1"</span>);
+
+   User user = <span class="hljs-keyword">new</span> User();
+
+   user.setUserName(<span class="hljs-string">"YJP"</span>);
+
+ <span class="hljs-comment">// 向队列：queue2 中发送消息：bean（对象）</span>
+
+  messagePublisher.message(<span class="hljs-string">"queue2"</span>, user);
+ }
+}
+</code></pre>
+<blockquote>
+<p>之前的 rPush 命令不再推荐使用，改为 message</p>
+</blockquote>
+<p>以上代码示例了如何发送一个消息</p>
+<ol>
+<li><p>注入 IMessagePublisher 用于发送消息</p>
+</li>
+<li><p>message 方法执行发送命令，注意 2 个参数的类型</p>
+</li>
+<li><p>消息类型是对象的会转换为 json 格式</p>
+</li>
+</ol>
+<blockquote>
+<p>类型的转换是透明的，调用者一般不需要关心</p>
+</blockquote>
+<h3 id="2-2-">2.2 监听队列中的消息</h3>
+<p>监听队列消息的 java 实现</p>
+<pre><code class="lang-java">
+@QueueMonitor(<span class="hljs-built_in">queue</span>=<span class="hljs-string">"queue1"</span>)
+
+<span class="hljs-keyword">public</span> XXXReceiver implements IMessageConsumer&lt;<span class="hljs-built_in">String</span>&gt;{
+
+ <span class="hljs-comment">/**
+  * 第一个参数的类型，与 IMessageConsumer 的泛型类型一致
+  */</span>
+
+ <span class="hljs-keyword">public</span> <span class="hljs-literal">void</span> onMessage(<span class="hljs-built_in">String</span> message,<span class="hljs-built_in">String</span> <span class="hljs-built_in">queue</span>) {
+
+   System.out.println(<span class="hljs-string">"got message :"</span>+message);
+
+ }
+}
+</code></pre>
+<p>关键点：</p>
+<ol>
+<li>监听类需要在 Spring 中定义为 bean （也可以通过 @Component 之类的注解自动扫描注册）</li>
+<li>添加注解 QueueMonitor，表示这个类要监听队列 <code>queue1</code></li>
+<li>实现接口 IMessageConsumer，指定泛型类型</li>
+</ol>
+<p>如果消息类型是 java bean 对象，比如 1.1章节 例子中 的 User，那么需要实现的接口是IMessageConsumer&lt; User&gt;。</p>
+<blockquote>
+<p>绝大部分时候，都要保证发送的消息类型与接收的类型一致!</p>
+</blockquote>
+<h2 id="3-">3 发布/订阅</h2>
+<p>发布订阅模式的特点是：一个消息会被所有订阅者收到（只会收到一次）。</p>
+<p>在redis中，发布的消息会被所有db共享，可以通过配置<code>消息前缀</code>，区分不同项目的消息：</p>
+<blockquote>
+<p>多个项目共用一个redis，给每个项目添加一个不同的消息前缀</p>
+</blockquote>
+<p>在<code>config.properties</code> 添加如下配置即可：</p>
+<pre><code>  redis<span class="hljs-selector-class">.topic</span><span class="hljs-selector-class">.channel</span><span class="hljs-selector-class">.prefix</span>=HAP
+</code></pre><blockquote>
+<p>redis 中的队列（Queue）消息是绑定到某个db，不需要用消息前缀区分。</p>
+</blockquote>
+<h3 id="3-1-">3.1 发布一个消息</h3>
+<p>发布一条消息的 java 代码实例</p>
+<pre><code class="lang-java">
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">XXXPublisher</span> </span>{
+
+ <span class="hljs-meta">@Autowired</span>
+
+ <span class="hljs-keyword">private</span> IMessagePublisher messagePublisher;
+
+
+
+ <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">publishTest</span> <span class="hljs-params">()</span></span>{
+
+ <span class="hljs-comment">// 向频道 : channel1 发布一个字符串消息</span>
+
+ messagePublisher.publish(<span class="hljs-string">"channel1"</span>,<span class="hljs-string">"message1"</span>);
+
+
+
+ User bean = <span class="hljs-keyword">new</span> User();
+
+ bean.setUserName(<span class="hljs-string">"YPP"</span>);
+
+ <span class="hljs-comment">// 向频道：channel2 发布一个 java bean</span>
+
+ messagePublisher.publish(<span class="hljs-string">"channel2"</span>,bean);
+
+ }
+
+}
+</code></pre>
+<p>基本点，与章节 3.1 类似</p>
+<ol>
+<li><p>注入 IMessagePublisher</p>
+</li>
+<li><p>publish 方法（这个与队列不同！）</p>
+</li>
+<li><p>支持多种类型</p>
+</li>
+</ol>
+<h3 id="3-2-">3.2 订阅一个消息</h3>
+<p>示例 java 类</p>
+<pre><code class="lang-java">
+<span class="hljs-meta">@TopicMonitor</span>(channel={<span class="hljs-string">"channel1"</span>})
+
+publish <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">XXXSubscriber</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">IMessageConsumer</span>&lt;<span class="hljs-title">String</span>&gt;</span>{
+
+ public <span class="hljs-keyword">void</span> onMessage(<span class="hljs-built_in">String</span> message,<span class="hljs-built_in">String</span> pattern) {
+
+ System.out.println(<span class="hljs-string">"onMessage:"</span>+message);
+
+ }
+
+}
+</code></pre>
+<p>基本点，与章节 3.2 类似</p>
+<ol>
+<li><p>添加注解 TopicMonitor，channel是一个数组，可以同时订阅多个频道，需要保证消息类型一致。</p>
+</li>
+<li><p>实现接口 IMessageConsumer，用于接收消息</p>
+</li>
+</ol>
+<p>这个类需要定义为 Spring bean，或者通过注解自动扫描注册。</p>
+<h2 id="4-rabbitmq">4.扩展RabbitMQ</h2>
+<p>若使用框架默认的RabbitMQ不能满足你的需求，你可以通过自定义消息队列满足你的需求。你可以在项目中新建</p>
+<p>applicationContext-xxx.xml文件（配置如下）。</p>
+<h3 id="4-1-">4.1 获取连接</h3>
+<p>通过connectionFactory获取与RabbitMQ服务器的连接。你可以再此配置所需<strong>缓存</strong>(模式，大小),<strong>virtual-host</strong>(默认”\/&quot;)等属性</p>
+<pre><code class="lang-xml">
+&lt;rabbit:connection-factory <span class="hljs-attribute">id</span>=<span class="hljs-string">"connectionFactory"</span> <span class="hljs-attribute">host</span>=<span class="hljs-string">"<span class="hljs-variable">${rabbitmq.host}</span>"</span> <span class="hljs-attribute">username</span>=<span class="hljs-string">"<span class="hljs-variable">${rabbitmq.username}</span>"</span> <span class="hljs-attribute">password</span>=<span class="hljs-string">"<span class="hljs-variable">${rabbitmq.password}</span>"</span> <span class="hljs-attribute">port</span>=<span class="hljs-string">"<span class="hljs-variable">${rabbitmq.port}</span>"</span>/&gt;
+</code></pre>
+<h3 id="4-2-">4.2 队列</h3>
+<p>hap中队列根据注解动态初始化，默认队列为持久化，广播队列为非持久化。用户也可在xml通过&lt;<strong>rabbit:queue&gt;标签</strong>根据自身需求定义所需的队列属性如：<strong>durable</strong>( 持久化属性 ),<strong>auto-delete</strong>(连接关闭后是否删除队列)<strong>。</strong></p>
+<pre><code class="lang-xml">
+&lt;rabbit:<span class="hljs-built_in">queue</span> name=<span class="hljs-string">"queueTest"</span> durable=<span class="hljs-string">"true"</span> <span class="hljs-keyword">auto</span>-<span class="hljs-keyword">delete</span>=<span class="hljs-string">"false"</span>&gt;&lt;/rabbit:<span class="hljs-built_in">queue</span>&gt;
+</code></pre>
+<h3 id="4-3-">4.3 路由</h3>
+<p>rabbitmq主要由3种路由方式<strong>direct(单播),topic(多播),fanout(广播),</strong>rabbitmq会根据使用的路由通过routing-key发送给路由里的队列。路由通过&lt;<strong>rabbit:direct-exchange&gt;</strong>&lt;<strong>rabbit:</strong> <strong>topic-exchange&gt;</strong>&lt;<strong>rabbit:</strong> <strong>fanout-exchange&gt;标签</strong>申明<strong>。</strong></p>
+<h3 id="4-4-">4.4 绑定路由</h3>
+<p>将队列绑定到相应路由，把队列和路由联系起来。由 <strong> &lt;rabbit:bindings&gt; 标签</strong>声明。（示例如下</p>
+<pre><code class="lang-xml">
+<span class="hljs-comment">&lt;!-- 定义direct exchange，绑定queueTest --&gt;</span>
+
+ <span class="hljs-tag">&lt;<span class="hljs-name">rabbit:direct-exchange</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"exchangeTest"</span> <span class="hljs-attr">durable</span>=<span class="hljs-string">"true"</span> <span class="hljs-attr">auto-delete</span>=<span class="hljs-string">"false"</span>&gt;</span>
+
+ <span class="hljs-tag">&lt;<span class="hljs-name">rabbit:bindings</span>&gt;</span>
+
+ <span class="hljs-tag">&lt;<span class="hljs-name">rabbit:binding</span> <span class="hljs-attr">queue</span>=<span class="hljs-string">"queueTest"</span> <span class="hljs-attr">key</span>=<span class="hljs-string">"queueTestKey"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">rabbit:binding</span>&gt;</span>
+
+ <span class="hljs-tag">&lt;/<span class="hljs-name">rabbit:bindings</span>&gt;</span>
+
+ <span class="hljs-tag">&lt;/<span class="hljs-name">rabbit:direct-exchange</span>&gt;</span>
+</code></pre>
+<h3 id="4-5-rabbittemplate">4.5 RabbitTemplate</h3>
+<p>用于发送消息，通过 <code>rabbit:template</code> 标签声明，注入bean后可使用convertAndSend等方法发送信息也可使用receiveAndConvert等方法<strong>同步</strong>接受消息。需要参数exchange和 routing-key来确定发往的队列。 可使用自定义的retryTemplate扩展retry机制。</p>
+<pre><code class="lang-xml">
+!--定义rabbit template用于数据的接收和发送 --&gt;
+
+ &lt;rabbit:template <span class="hljs-attribute">id</span>=<span class="hljs-string">"amqpTemplate"</span> <span class="hljs-attribute">connection-factory</span>=<span class="hljs-string">"connectionFactory"</span>
+
+ <span class="hljs-attribute">routing-key</span>=<span class="hljs-string">"queueTestKey"</span> <span class="hljs-attribute">exchange</span>=<span class="hljs-string">"exchangeTest"</span>/&gt;
+</code></pre>
+<h3 id="5-6-">5.6 监听队列（异步接收消息）</h3>
+<p>通过container容易声明监听，在容器中配置监听所需队列名称和监听的方法messageRciver</p>
+<pre><code class="lang-xml">
+ <span class="hljs-tag">&lt;<span class="hljs-name">rabbit:listener-container</span>
+
+ <span class="hljs-attr">connection-factory</span>=<span class="hljs-string">"connectionFactory"</span>&gt;</span>
+
+ <span class="hljs-tag">&lt;<span class="hljs-name">rabbit:listener</span> <span class="hljs-attr">queues</span>=<span class="hljs-string">"queueTest"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"messageReceiver"</span> /&gt;</span>
+
+ <span class="hljs-tag">&lt;/<span class="hljs-name">rabbit:listener-container</span>&gt;</span>
+
+
+
+<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"messageRecevicer"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"com.hand.hap.QueueListenter"</span>&gt;</span>
+</code></pre>
+<p>队列监听java类</p>
+<pre><code class="lang-java">
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">QueueListenter</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">MessageListener</span> </span>{
+
+ <span class="hljs-meta">@Override</span>
+ <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onMessage</span><span class="hljs-params">(Message msg)</span> </span>{
+ <span class="hljs-comment">//相关业务处理</span>
+ }
+}
+</code></pre>

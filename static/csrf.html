@@ -1,0 +1,21 @@
+<h1 id="-csrf-">跨站请求伪造（csrf）攻击</h1>
+<h2 id="-">简介：</h2>
+<p>CSRF（Cross-site request forgery）跨站请求伪造，也被称为“One Click Attack”或者Session Riding，通常缩写为CSRF或者XSRF，是一种对网站的恶意利用。尽管听起来像跨站脚本（<a href="http://baike.baidu.com/view/50325.htm">XSS</a>），但它与XSS非常不同，XSS利用站点内的信任用户，而CSRF则通过伪装来自受信任用户的请求来利用受信任的网站。与<a href="http://baike.baidu.com/view/50325.htm">XSS</a>攻击相比，CSRF攻击往往不大流行（因此对其进行防范的资源也相当稀少）和难以防范，所以被认为比<a href="http://baike.baidu.com/view/50325.htm">XSS</a>更具危险性。</p>
+<h2 id="-">防御原理：</h2>
+<p>在web应用中增加前置过滤器，对需要验证的请求验证是否包含csrf的token信息，如果不包含，则报错。这样攻击网站无法获取到token信息，则跨域提交的信息都无法通过过滤器的校验。 hap通过spring-security开启csrf验证功能。</p>
+<h2 id="-">实现过程：</h2>
+<p>1.首先开启csrf验证。</p>
+<p><img src="/assets/csrf1.png" alt=""></p>
+<p>2.通过bean csrfSecurityRequestMatcher进行url过滤 默认只拦截所有的post请求,可以再bean中配置excludeUrls属性来添加不需验证的url如\/login。</p>
+<p><img src="/assets/csrf2.png" alt=""></p>
+<p>3.将session中用于验证csrf的token值放入heade.html的meta属性中</p>
+<p><img src="/assets/csrf3.png" alt=""></p>
+<p>4.在kendo.hap.js中添加脚本为所有的ajax请求添加token值。</p>
+<p><img src="/assets/csrf4.png" alt=""></p>
+<p>5.若是form表单post操作需要为请求添加token请求参数。</p>
+<h2 id="-">使用说明：</h2>
+<p>1.若为普通form表单（非文件上传）请求 在form中添加</p>
+<p>_&lt;input type=&quot;hidden&quot; name=&quot;${_csrf.parameterName}&quot; value=&quot;${_csrf.token}&quot; \/&gt;_</p>
+<p>2.若为文件上传form表单请求则在action的url后添加参数如： \/XXX?_${_csrf.parameterName}=${_csrf.token}_</p>
+<p>3.若为后台自动发送post请求则在session获取csrf值自行构建post请求。</p>
+<p><img src="/assets/csrf7.png" alt=""></p>

@@ -1,0 +1,25 @@
+<h1 id="-cors-">跨域访问（CORS）</h1>
+<h2 id="-">简介：</h2>
+<p>CORS需要浏览器和服务器同时支持。目前，所有浏览器都支持该功能，IE浏览器不能低于IE10。</p>
+<p>整个CORS通信过程，都是浏览器自动完成，不需要用户参与。对于开发者来说，CORS通信与同源的AJAX通信没有差别，代码完全一样。浏览器一旦发现AJAX请求跨源，就会自动添加一些附加的头信息，有时还会多出一次附加的请求，但用户不会有感觉。</p>
+<p>因此，实现CORS通信的关键是服务器。只要服务器实现了CORS接口，就可以跨源通信。</p>
+<h2 id="-">使用说明：</h2>
+<h4 id="1-web-xml-">1.修改web.xml文件：</h4>
+<p>添加Filter：</p>
+<p><img src="/assets/cors-web.png" alt=""></p>
+<p>各参数含义：</p>
+<p>allowedMappings: 允许跨域资源（必填）</p>
+<p>allowedHeader:(允许的头部参数）</p>
+<p>allowedOrigin(允许的请求源）</p>
+<p>allowedMethod(允许的请求方法)</p>
+<p>allowedCredentials(是否允许携带证书）</p>
+<p>MaxAge(最大时长）</p>
+<h4 id="2-">2.发送跨域请求：</h4>
+<p>2.1 跨域登录，观察http请求response</p>
+<p><img src="/assets/cors-login.png" alt=""></p>
+<p>2.2 登录成功所返回的信息：sessionId(用于用户登录验证） csrf_token（用于csrf验证）</p>
+<p><img src="/assets/cors-login1.png" alt=""></p>
+<p>2.3  将sessionId(Authorization)  csrf__token(X-CSRF-_TOKEN)添加进requestHeader中进行后续访问</p>
+<p><img src="/assets/cors-query.png" alt=""></p>
+<p>2.4 得到返回信息</p>
+<p><img src="/assets/cors-quer1.png" alt=""></p>

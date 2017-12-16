@@ -1,0 +1,73 @@
+<h2 id="querypanel">QueryPanel</h2>
+<p>高级查询</p>
+<h5 id="xml-">xml配置</h5>
+<pre><code class="lang-xml"><span class="hljs-comment">&lt;!--h:为命名空间,必须要加的;queryPanel为组件名;id可写可不写--&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">h:queryPanel</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"queryPanel"</span>/&gt;</span>
+</code></pre>
+<h4 id="-"><strong>一般属性</strong></h4>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>queryFunction</td>
+<td>Function</td>
+</tr>
+<tr>
+<td>resetFunction</td>
+<td>Function</td>
+</tr>
+</tbody>
+</table>
+<p>用法示例：</p>
+<pre><code class="lang-javascript"><span class="hljs-comment">//注意是写在script标签内的</span>
+<span class="hljs-keyword">var</span> viewModel = kendo.observable({
+    data:{},
+    queryFunction:<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(e)</span></span>{
+    },
+    resetFunction:<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(e)</span></span>{
+    }    
+});
+</code></pre>
+<pre><code class="lang-xml">&lt;h:queryPanel <span class="hljs-attribute">id</span>=<span class="hljs-string">"queryPanel"</span> <span class="hljs-attribute">queryFunction</span>=<span class="hljs-string">"viewModel.queryFunction"</span> <span class="hljs-attribute">resetFunction</span>=<span class="hljs-string">"viewModel.resetFunction"</span>/&gt;
+</code></pre>
+<h4 id="-"><strong>子标签</strong></h4>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>common</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>advance</td>
+<td>Object</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h:queryPanel</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"queryPanel"</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">h:common</span>&gt;</span>
+      <span class="hljs-comment">&lt;!--自定义区域 简单查询内容--&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h:maskedTextBox</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"maskedTextBox1"</span>/&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">h:common</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">h:advance</span>&gt;</span>
+      <span class="hljs-comment">&lt;!--自定义区域 高级查询内容--&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h:maskedTextBox</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"maskedTextBox2"</span>/&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">h:advance</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">h:queryPanel</span>&gt;</span>
+</code></pre>
+<blockquote>
+<p><strong>提示：</strong></p>
+<ul>
+<li>自定义区域内用来定义新的标签 <strong>common</strong> 和 <strong>advance</strong>标签内都属于自定义标签范围</li>
+</ul>
+</blockquote>

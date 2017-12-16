@@ -1,0 +1,267 @@
+<p>本文描述 HAP 自 1.0 版发布(2016-06-15)以来 的变化概要汇总.
+目前这些内容均包含在 HAP2.0 中.</p>
+<h2 id="-">新特性</h2>
+<ol>
+<li>新增组织架构模块<ul>
+<li>现在系统带有组织结构的功能,可以维护<code>公司</code>,<code>员工</code>,<code>部门</code>,<code>岗位</code>的基础数据</li>
+</ul>
+</li>
+<li>自定义缓存 自动扫描<ul>
+<li>对于实现了<code>Cache &lt; T &gt;</code> 接口的缓存实现,现在会被自动扫描注册,不需要再修改 xml 配置文件手动注册</li>
+</ul>
+</li>
+<li>自定义 FreeMarker bean 的注解支持<ul>
+<li>现在可以使用注解@FreeMarkerBean 来自定义一个会被自动加载的 bean,在 freemarker 标记中使用</li>
+</ul>
+</li>
+<li>权限校验,现在支持参数化 url 匹配<ul>
+<li>现在可以注册参数化的 url,比如: <code>sys/file/{fileId}/view</code></li>
+</ul>
+</li>
+<li><p>升级通用 mapper 的排序功能</p>
+<ul>
+<li>现在根据 BaseDTO 中的 <code>sortname</code>,<code>sortorder</code> 来动态生成排序的 sql</li>
+<li>同时会结合主键,来保证排序的唯一性</li>
+</ul>
+<blockquote>
+<p>自动生成的 sql,会检查合法性,阻止 sql 注入</p>
+</blockquote>
+</li>
+<li>乐观锁机制<ul>
+<li>通用mapper 的 更新类操作增加 where 条件 object_version_number (如果存在的话)</li>
+<li>通用 Service的基础方法,会对  更新类操作的返回值进行校验,判断是否操作失败</li>
+<li>新增 mybatis拦截器,会在 insert,update 成功以后,修改参数中的object_version_number 字段</li>
+</ul>
+</li>
+<li>基础数据管理<ul>
+<li>基础建表脚本,全部采用 liquibase 命令</li>
+<li>基础数据管理,基于 excel,可持续维护</li>
+</ul>
+</li>
+<li><p>多角色合并</p>
+<ul>
+<li>现在登录系统时不再需要选择角色</li>
+<li>用户的看到的菜单,权限,由所有角色合并而来</li>
+</ul>
+<blockquote>
+<p>IRequest 中仍然有一个默认的角色ID</p>
+</blockquote>
+</li>
+<li>OAuth 在使用用户名密码获取凭证时,会直接使用系统中的用户</li>
+<li>优化计划任务<ul>
+<li>当任务类名无效时,现在的错误提示更容易看懂</li>
+<li>现在AbstractJob 可以监听自己的执行状态<ul>
+<li>执行之前:jobToBeExecuted</li>
+<li>执行之后:jobWasExecuted</li>
+<li>执行之后,可以获取到当前执行记录的 ID</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>功能定义,采用全新标准的字体图标<ul>
+<li>现在图标为标准的 fontawesome 图标 fa fa-xx</li>
+</ul>
+</li>
+<li>新增系统配置功能<ul>
+<li>验证码策略</li>
+<li>新用户密码</li>
+<li>系统 logo,title 等</li>
+<li>支持 API 级别的参数订阅</li>
+</ul>
+</li>
+<li>主动加载通用描述<ul>
+<li>现在会自动加载以 hap.开头的描述</li>
+</ul>
+</li>
+<li>IRequest 增加 employeeCode 属性<ul>
+<li>对应工作流需求</li>
+</ul>
+</li>
+<li><p>工作流(详见下文)</p>
+</li>
+<li><p><a href="webservice-cxf.md">增加 WebService 发布支持</a></p>
+<ul>
+<li>自动扫描 cxf-beans-*.xml 中定义的 service</li>
+<li>默认没有权限控制, 可修改 cxfSecurity.xml 自定义</li>
+</ul>
+</li>
+</ol>
+<p></p>
+<h2 id="bug-">bug 修复</h2>
+<ol>
+<li>修复 _token 验证的 bug<ul>
+<li>现在是根据主键是否有值来决定是否跳过校验</li>
+</ul>
+</li>
+<li>修复静态资源文件不能被浏览器缓存的问题</li>
+<li>修复OAuth 与 CAS 一起时用时,无法使用 secret 获取 token 的问题</li>
+<li>修复验证码 cookie 问题<ul>
+<li>部署 hap 在根路径时,ie 浏览器无法获取验证码 cookie</li>
+</ul>
+</li>
+<li>修复功能分配导致403 的问题<ul>
+<li>给功能分配新的资源时,删除了已分配的资源</li>
+</ul>
+</li>
+<li>修复功能定义 缓存只影响当前语言环境的问题</li>
+<li>修复资源分配会删除没有查询出来的数据的问题<ul>
+<li>现在不再分页</li>
+<li>会增量更新发生变化的数据</li>
+</ul>
+</li>
+<li>优化角色删除逻辑<ul>
+<li>现在会一同删除角色附加的资源<ul>
+<li>用户分配角色</li>
+<li>角色分配的功能</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>修复html 自动映射 url 的问题<ul>
+<li>当 url 有4段时,无法正确映射 url</li>
+</ul>
+</li>
+<li>修复后台解析日期字符串的问题<ul>
+<li>现在对于空字符串,null 等值,解析时不再报错</li>
+</ul>
+</li>
+<li>修复配置维护的若干问题<ul>
+<li>修改ProfileMapper.xml ,继承错误</li>
+<li>mysql 中,主键被错误的定义为 VARCHAR</li>
+<li>sql 语句包含了 oracle 特有函数</li>
+<li>查询排序不唯一的问题</li>
+</ul>
+</li>
+<li>修复计划任务查询的问题<ul>
+<li>当任务没有执行过时,无法查到这个任务</li>
+</ul>
+</li>
+<li>修复 oracle 数据库插入/更新 null 值可能会报错的问题<ul>
+<li>添加配置文件,jdbcTypeForNull 为 NULL</li>
+</ul>
+</li>
+<li>修复功能定义循环,无明显错误提示的问题<ul>
+<li>现在在功能分配时,会有一个很明显的错误提示,指出定义出错的地方</li>
+</ul>
+</li>
+<li>修复无法上传特殊类型附件的问题<ul>
+<li>去除 contentType 验证</li>
+</ul>
+</li>
+<li>sys_user 表 user_name 不再区分大小写<ul>
+<li>现在新增用户不在要求用户名必须大写</li>
+<li>登录时也不做要求
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="api-">API变更</h2>
+<ol>
+<li>IBaseService  <del>selectAll()</del><ul>
+<li>该方法已不推荐使用,无法正确查询多语言数据</li>
+<li>新的方法为  <code>selectAll(IRequest)</code></li>
+</ul>
+</li>
+<li>BaseServiceImpl 新增 <code>boolean useSelectiveUpdate()</code><ul>
+<li>返回值将决定:在 <code>batchUpdate</code> 方法中,对于更新操作,使用的 <code>updateByPrimaryKey</code> 还是 <code>updateByPrimaryKeySelective</code></li>
+</ul>
+</li>
+<li>新增注解<code>@ExtensionAttribute(disable=true)</code><ul>
+<li>添加在 DTO 类上,允许相关表没有扩展字段</li>
+</ul>
+</li>
+<li>新增注解<code>@FreeMarkerBean</code><ul>
+<li>具有这个注解并在 spring context 中存在的 bean,将可以在 freemarker 标记中使用</li>
+</ul>
+</li>
+<li>新增接口<code>IAuthenticationSuccessListener</code><ul>
+<li>实现此接口并在spring context 中存在的 bean,将会在登录成功以后被调用</li>
+<li>可以在此阶段执行一些操作</li>
+<li>可以通过抛出异常的方式终止登录</li>
+</ul>
+</li>
+<li>增加 <code>SysConfigListener</code> 接口<ul>
+<li>匹配新增加的 <code>系统配置功能</code></li>
+<li>用法与 <code>GlobalProfileListener</code> 相同</li>
+</ul>
+</li>
+<li>增加<code>SqlMapper</code> 工具类<ul>
+<li>用于手动执行 带有参数标签的 sql</li>
+</ul>
+</li>
+<li>工作流:增加接口<code>IActivitiBean</code><ul>
+<li>用于自定义可在流程运行时调用的 bean</li>
+</ul>
+</li>
+<li>工作流:增加接口 <code>IUserTaskNotifier</code><ul>
+<li>用于自定义待办事项通知</li>
+</ul>
+</li>
+</ol>
+<p></p>
+<h2 id="-">工作流</h2>
+<ol>
+<li>基于 Activiti 6 Beta4</li>
+<li>基础功能<ul>
+<li>工作流测试</li>
+<li>代办事项(列表,明细页面)</li>
+<li>历史流程查看</li>
+<li>流程设计(列表,导入导出,设计器)</li>
+<li>部署管理</li>
+</ul>
+</li>
+<li>支持嵌入自定义展示页面<ul>
+<li>通过 <code>businessKey</code> 参数传递业务主键</li>
+<li>自定义页面可以获取当前任务的信息</li>
+<li>自定义页面可以设置变量到流程中</li>
+</ul>
+</li>
+<li>支持自定义审批按钮<ul>
+<li>通过约定的表单属性,可以控制审批按钮是否存在,以及按钮显示的文本</li>
+</ul>
+</li>
+<li>自定义可在流程中调用的bean <ul>
+<li>自定义<code>IActivitiBean</code> 接口</li>
+<li>实现此接口的 bean,可以在流程中直接调用</li>
+</ul>
+</li>
+<li>支持代办事项的通知<ul>
+<li>自定义<code>IUserTaskNotifier</code> 接口</li>
+<li>实现此接口bean 的实例,将会在任务创建时被调用</li>
+</ul>
+</li>
+<li>支持审批意见,审批动作的保存<ul>
+<li>可以在审批历史中看到具体的操作,以及意见</li>
+</ul>
+</li>
+<li>会签功能增强, 支持自定义的属性<ul>
+<li><code>nrOfApproved</code>: 已审批通过的数量</li>
+<li><code>nrOfRejected</code>: 已审批拒绝的数量</li>
+</ul>
+</li>
+<li>支持流程的转交</li>
+<li>支持节点跳转<ul>
+<li>在 API 级别,支持跳转到指定的节点</li>
+</ul>
+</li>
+<li>审批权限控制<ul>
+<li>管理员可以执行任何操作</li>
+<li>其他人执行操作(查看,审批,转交等)时,会经过控制</li>
+</ul>
+</li>
+<li>自定义人员与组的支持<ul>
+<li>与组织架构紧密结合</li>
+<li>流程中指定的人,组均为组织架构中实际存在的数据</li>
+</ul>
+</li>
+<li>多个常见 demo<ul>
+<li>普通审批节点,页面嵌入</li>
+<li>分支控制</li>
+<li>表达式判断</li>
+<li>会签</li>
+<li>外部消息接收</li>
+<li>Service 任务</li>
+<li>邮件</li>
+</ul>
+</li>
+</ol>

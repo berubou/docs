@@ -1,0 +1,35 @@
+<h1 id="checkbox-">checkbox 标签</h1>
+<p>checkbox框</p>
+<pre><code class="lang-xml">&lt;h:checkbox <span class="hljs-attribute">id</span>=<span class="hljs-string">"testCheckbox"</span>/&gt;
+</code></pre>
+<h3 id="-"><strong>主要属性</strong></h3>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>checkedValue</td>
+<td>String</td>
+<td>选中时input框的值</td>
+</tr>
+<tr>
+<td>uncheckedValue</td>
+<td>String</td>
+<td>未选中时input框的值</td>
+</tr>
+<tr>
+<td>readonly</td>
+<td>Boolean</td>
+<td>是否是可点击的</td>
+</tr>
+</tbody>
+</table>
+<h3 id="-"><strong>用法示例</strong></h3>
+<pre><code class="lang-xml">&lt;h:checkbox <span class="hljs-attribute">id</span>=<span class="hljs-string">"testCheckbox"</span>
+<span class="hljs-attribute">bind</span>=<span class="hljs-string">"value:model.checked"</span> <span class="hljs-attribute">readonly</span>=<span class="hljs-string">"false"</span> <span class="hljs-attribute">checkedValue</span>=<span class="hljs-string">"Y"</span> <span class="hljs-attribute">uncheckedValue</span>=<span class="hljs-string">"N"</span>/&gt;
+</code></pre>

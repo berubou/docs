@@ -1,0 +1,77 @@
+<p>Kendo UI Validator</p>
+<hr>
+<h4 id="-kendoui-"><strong>简介</strong>：kendoui 验证的基本格式</h4>
+<p>Kendo UI 提供两种验证方式，一种为表单验证，一种为表格验证。</p>
+<h2 id="-">表单验证</h2>
+<pre><code class="lang-html"><span class="xml">//html代码
+<span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"form-horizontal"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"form1"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"form-group"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"col-sm-2 control-label"</span>&gt;</span>TextBox:<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"col-sm-4"</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"userId"</span> <span class="hljs-attr">required</span> <span class="hljs-attr">validationMessage</span>=<span class="hljs-string">"Enter </span></span></span><span class="hljs-template-variable">{0}</span><span class="xml"><span class="hljs-tag"><span class="hljs-string">"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"maskedtextbox"</span> <span class="hljs-attr">data-role</span>=<span class="hljs-string">"maskedtextbox"</span> <span class="hljs-attr">data-bind</span>=<span class="hljs-string">"enabled: isEnabled, value:data.userId"</span> <span class="hljs-attr">style</span>=<span class="hljs-string">"width:100%"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"k-textbox"</span>&gt;</span>
+       <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+       <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+            kendo.bind($(<span class="hljs-string">'#maskedtextbox'</span>), viewModel);
+       </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+       <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"col-sm-2 control-label"</span>&gt;</span>ComboBox:<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
+       <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"col-sm-4"</span>&gt;</span>
+           <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"combobox"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"combobox"</span> <span class="hljs-attr">required</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">"combobox"</span> <span class="hljs-attr">data-role</span>=<span class="hljs-string">"combobox"</span> <span class="hljs-attr">data-value-primitive</span>=<span class="hljs-string">"true"</span> <span class="hljs-attr">data-text-field</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">data-value-field</span>=<span class="hljs-string">"value"</span> <span class="hljs-attr">data-bind</span>=<span class="hljs-string">"enabled: isEnabled, source: comboboxSource, value:data.productId"</span> <span class="hljs-attr">style</span>=<span class="hljs-string">"width: 100%;"</span>/&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+           kendo.bind($(<span class="hljs-string">'#combobox'</span>), viewModel);
+      </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+      //表单验证这里<span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>标签用来决定验证信息出现的位置
+      <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"k-invalid-msg"</span> <span class="hljs-attr">data-for</span>=<span class="hljs-string">"combobox"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span></span>
+</code></pre>
+<pre><code class="lang-javascript"><span class="hljs-comment">//js代码</span>
+<span class="hljs-keyword">var</span> errorTemplate = '&lt;div <span class="hljs-class"><span class="hljs-keyword">class</span></span>=<span class="hljs-string">"k-widget k-tooltip k-tooltip-validation"</span>' + <span class="hljs-symbol">'style</span>=<span class="hljs-string">"margin:0.5em"</span>&gt;&lt;span <span class="hljs-class"><span class="hljs-keyword">class</span></span>=<span class="hljs-string">"k-icon k-warning"</span>&gt; &lt;/span&gt;' + '#=message#&lt;div <span class="hljs-class"><span class="hljs-keyword">class</span></span>=<span class="hljs-string">"k-callout k-callout-n"</span>&gt;&lt;/div&gt;&lt;/div&gt;'
+<span class="hljs-keyword">var</span> validator = $(<span class="hljs-string">"#form1"</span>).kendoValidator({
+    valid: function (e) {
+        console.log(<span class="hljs-symbol">'vali</span>d')
+    },
+    <span class="hljs-comment">//验证样式 默认为default </span>
+    invalidMessageType : <span class="hljs-string">"tooltip"</span>,
+    <span class="hljs-comment">//自定义错误模板</span>
+    errorTemplate: errorTemplate
+}).data(<span class="hljs-string">"kendoValidator"</span>);
+</code></pre>
+<p><strong>invalidMessageType</strong>用法：</p>
+<p>1.表单默认样式验证(&quot;default&quot;)</p>
+<p><img src="/assets/validator2.png" alt=""></p>
+<p>2.表单自定义样式验证(&quot;tooltip&quot;)</p>
+<p><img src="/assets/validator1.png" alt=""></p>
+<p>区别：自定义样式验证会将验证信息变成tip，当鼠标移入浮现，移出消失，并且边框会变红</p>
+<h2 id="-">表格验证</h2>
+<pre><code class="lang-javascript"><span class="hljs-comment">//dataSource</span>
+model:{
+   <span class="hljs-attr">id</span>:<span class="hljs-string">"resourceId"</span>,
+   <span class="hljs-attr">field</span>:{
+       <span class="hljs-attr">url</span>: {
+          <span class="hljs-comment">//这里也要validation 保存时会验证每个字段</span>
+           validation: {
+               <span class="hljs-attr">required</span>: <span class="hljs-literal">true</span>,
+               <span class="hljs-comment">//可以自定义函数，每次验证时会调用</span>
+               test:<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">e</span>)</span>{
+               }
+           }
+       }
+    }
+}
+<span class="hljs-comment">//grid</span>
+{
+   <span class="hljs-attr">field</span>: <span class="hljs-string">"url"</span>,
+   <span class="hljs-attr">title</span>: <span class="hljs-string">'&lt;@spring.message "resource.url"/&gt;'</span>,
+   <span class="hljs-attr">width</span>: <span class="hljs-number">250</span>,
+   <span class="hljs-attr">editor</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">container, options</span>) </span>{
+       <span class="hljs-comment">//注意required 这里是用来验证的</span>
+       $(<span class="hljs-string">'&lt;input required  name="'</span> + options.field + <span class="hljs-string">'"/&gt;'</span>).appendTo(container).kendoMaskedTextBox({});
+   }
+}
+</code></pre>
+<p><strong>注意:</strong></p>
+<pre><code><span class="hljs-symbol">$</span>(<span class="hljs-string">'&lt;input required name="'</span> + <span class="hljs-keyword">options</span>.field + <span class="hljs-string">'"/&gt;'</span>).appendTo(container).kendoMaskedTextBox({});
+<span class="hljs-comment">//其中data-msg(data-required-msg) 或者 validationMessage可以写自定义验证信息</span>
+</code></pre><p>参考:
+<a href="http://docs.telerik.com/kendo-ui/api/javascript/ui/validator">http://docs.telerik.com/kendo-ui/api/javascript/ui/validator</a></p>
